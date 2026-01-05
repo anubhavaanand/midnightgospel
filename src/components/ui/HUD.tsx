@@ -3,6 +3,7 @@ import { useSceneStore } from '@store/sceneStore';
 import { LEVEL_RANGES } from '@utils/constants';
 import NavigationPanel from './NavigationPanel';
 import DebugPanel from './DebugPanel';
+import { QuickHelpButton } from './TouchTutorial';
 
 /**
  * HUD overlay with level info and interactive elements.
@@ -178,6 +179,10 @@ export default function HUD() {
           </div>
         </div>
       )}
+
+      {/* Quick Help Button */}
+      <QuickHelpButton />
     </div>
   );
 }
+
