@@ -63,27 +63,32 @@ export const CHARACTERS = [
         role: 'The Spacecaster',
         voice: 'Duncan Trussell',
         description: 'A lazy spacecaster who interviews beings from dying worlds using his multiverse simulator.',
-        color: '#ff66cc'
+        color: '#ff66cc',
+        image: '/images/characters/clancy.png'
     },
     {
         name: 'The Simulator',
         role: 'Universe Engine',
         voice: 'Biological Computer',
-        description: 'A glitchy, organic machine shaped like a giant Vagina that generates simulated worlds.',
-        color: '#33ff33'
+        description: 'A glitchy, organic machine shaped like a giant bio-computer that generates simulated worlds.',
+        color: '#33ff33',
+        image: '/images/characters/simulator.png'
     },
     {
         name: 'Death',
         role: 'The Ultimate End',
         voice: 'Caitlin Doughty',
         description: 'A warm, surprisingly friendly personification of the end of biological life.',
-        color: '#ffffff'
+        color: '#ffffff',
+        image: '/images/characters/death.png'
     },
     {
         name: 'Charlotte',
         role: 'The Dog/Soul',
         voice: 'The Faithful Companion',
         description: 'A dog that lives in Clancy\'s hat and possesses infinite wisdom of the universe.',
-        color: '#ffcc00'
+        color: '#ffcc00',
+        image: '/images/characters/charlotte.png'
     }
 ];
+

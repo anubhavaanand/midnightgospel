@@ -151,56 +151,46 @@ export const EpisodeSection: React.FC<UIProps> = ({ currentUniverse, setUniverse
 
 const CharacterAvatar: React.FC<{ character: typeof CHARACTERS[0] }> = ({ character }) => {
     return (
-        <div className="relative w-36 h-36 md:w-48 md:h-48 mb-6 md:mb-8 flex items-center justify-center group-hover:scale-125 transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)]">
+        <div className="relative w-36 h-36 md:w-48 md:h-48 mb-6 md:mb-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+            {/* Glow effect */}
             <div
-                className="absolute inset-0 rounded-full blur-2xl opacity-10 group-hover:opacity-40 transition-opacity duration-700"
+                className="absolute inset-0 rounded-full blur-2xl opacity-20 group-hover:opacity-50 transition-opacity duration-700"
                 style={{ backgroundColor: character.color }}
             />
-            <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-white/10 bg-black/40 backdrop-blur-sm overflow-hidden flex items-center justify-center group-hover:border-white/40 transition-colors duration-700">
-                <svg viewBox="0 0 100 100" className="w-20 h-20 md:w-24 md:h-24 fill-current transition-all group-hover:rotate-6 group-hover:scale-110 duration-700" style={{ color: character.color }}>
-                    {character.name === 'Clancy Gilroy' && (
-                        <g>
-                            <path d="M20 50 Q50 10 80 50 L80 85 L20 85 Z" fillOpacity="0.3" stroke="currentColor" strokeWidth="2" />
-                            <circle cx="50" cy="50" r="12" />
-                            <rect x="35" y="65" width="30" height="15" rx="4" />
-                            <circle cx="45" cy="48" r="2" fill="white" className="animate-pulse" />
-                            <circle cx="55" cy="48" r="2" fill="white" className="animate-pulse" />
-                        </g>
-                    )}
-                    {character.name === 'The Simulator' && (
-                        <g>
-                            <ellipse cx="50" cy="50" rx="30" ry="45" fillOpacity="0.2" stroke="currentColor" strokeWidth="1" />
-                            <path d="M50 20 C60 40 60 60 50 80 C40 60 40 40 50 20" fill="currentColor" opacity="0.6" className="animate-pulse" />
-                            <circle cx="50" cy="50" r="10" className="animate-ping" style={{ transformOrigin: 'center' }} />
-                            <path d="M10 50 L30 50 M70 50 L90 50" stroke="currentColor" strokeWidth="1" />
-                        </g>
-                    )}
-                    {character.name === 'Death' && (
-                        <g>
-                            <path d="M30 30 Q50 15 70 30 L75 70 Q50 85 25 70 Z" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
-                            <circle cx="40" cy="45" r="5" />
-                            <circle cx="60" cy="45" r="5" />
-                            <path d="M45 60 Q50 65 55 60" stroke="currentColor" strokeWidth="2" fill="none" />
-                            <rect x="40" y="20" width="20" height="5" rx="2" />
-                        </g>
-                    )}
-                    {character.name === 'Charlotte' && (
-                        <g>
-                            <circle cx="50" cy="40" r="15" fillOpacity="0.4" />
-                            <path d="M35 30 L25 15 M65 30 L75 15" stroke="currentColor" strokeWidth="3" />
-                            <circle cx="50" cy="70" r="20" fillOpacity="0.1" stroke="currentColor" strokeDasharray="4 2" />
-                            <circle cx="45" cy="40" r="2" fill="white" />
-                            <circle cx="55" cy="40" r="2" fill="white" />
-                        </g>
-                    )}
-                </svg>
+
+            {/* Character image container */}
+            <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-white/20 bg-black/60 backdrop-blur-sm overflow-hidden flex items-center justify-center group-hover:border-white/50 transition-all duration-700 shadow-2xl">
+                {character.image ? (
+                    <img
+                        src={character.image}
+                        alt={character.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                            // Fallback to colored circle if image fails
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                    />
+                ) : (
+                    <div
+                        className="w-20 h-20 rounded-full opacity-50"
+                        style={{ backgroundColor: character.color }}
+                    />
+                )}
             </div>
-            <div className="absolute inset-0 border-2 border-dashed border-white/5 rounded-full animate-[spin_15s_linear_infinite] group-hover:scale-110 transition-transform" />
-            <div className="absolute inset-2 border border-white/10 rounded-full animate-[spin_10s_linear_infinite_reverse] group-hover:scale-105 transition-transform" />
-            <div className="absolute -top-1 left-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full shadow-lg shadow-white/20 group-hover:animate-bounce" style={{ backgroundColor: character.color }} />
+
+            {/* Rotating rings */}
+            <div className="absolute inset-0 border-2 border-dashed border-white/5 rounded-full animate-[spin_20s_linear_infinite] group-hover:scale-110 transition-transform" />
+            <div className="absolute inset-2 border border-white/10 rounded-full animate-[spin_15s_linear_infinite_reverse] group-hover:scale-105 transition-transform" />
+
+            {/* Color indicator dot */}
+            <div
+                className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full shadow-lg group-hover:animate-bounce"
+                style={{ backgroundColor: character.color, boxShadow: `0 0 20px ${character.color}` }}
+            />
         </div>
     );
 };
+
 
 export const CharactersSection: React.FC<{ config: UniverseConfig }> = ({ config: _config }) => {
     return (

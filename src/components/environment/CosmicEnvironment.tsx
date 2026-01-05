@@ -4,7 +4,8 @@ import * as THREE from 'three';
 
 /**
  * CosmicEnvironment - Shared cosmic space background for all levels
- * Creates immersive cosmos feeling with stars, nebulae, and cosmic dust
+ * Creates immersive cosmos feeling with PITCH DARK BLACK space,
+ * subtle distant stars, and very faint nebulae
  */
 
 interface CosmicEnvironmentProps {
@@ -15,7 +16,22 @@ interface CosmicEnvironmentProps {
 }
 
 /**
- * Starfield - Dense star background
+ * Deep Space Background - Pitch black void
+ */
+export function DeepSpaceVoid() {
+    return (
+        <mesh position={[0, 0, 0]} scale={[500, 500, 500]}>
+            <sphereGeometry args={[1, 32, 32]} />
+            <meshBasicMaterial
+                color="#000000"
+                side={THREE.BackSide}
+            />
+        </mesh>
+    );
+}
+
+/**
+ * Starfield - Dense star background against pitch black
  */
 export function Starfield({ count = 2000, depth = 100 }: { count?: number; depth?: number }) {
     const starsRef = useRef<THREE.Points>(null);
@@ -28,29 +44,34 @@ export function Starfield({ count = 2000, depth = 100 }: { count?: number; depth
             // Spherical distribution
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
-            const r = 50 + Math.random() * depth;
+            const r = 60 + Math.random() * depth;
 
             pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
             pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
             pos[i * 3 + 2] = r * Math.cos(phi);
 
-            // Star colors - white, blue-white, yellow
+            // Most stars are dim, few are bright
+            const brightness = Math.random();
+            const isBright = brightness > 0.95;
+            const baseBrightness = isBright ? 0.8 + Math.random() * 0.2 : 0.2 + Math.random() * 0.3;
+
+            // Star colors - mostly white/blue-white against black
             const colorChoice = Math.random();
-            if (colorChoice < 0.6) {
-                // White stars
-                cols[i * 3] = 1;
-                cols[i * 3 + 1] = 1;
-                cols[i * 3 + 2] = 1;
-            } else if (colorChoice < 0.8) {
+            if (colorChoice < 0.7) {
+                // White/dim white stars
+                cols[i * 3] = baseBrightness;
+                cols[i * 3 + 1] = baseBrightness;
+                cols[i * 3 + 2] = baseBrightness;
+            } else if (colorChoice < 0.9) {
                 // Blue-white stars
-                cols[i * 3] = 0.7;
-                cols[i * 3 + 1] = 0.85;
-                cols[i * 3 + 2] = 1;
+                cols[i * 3] = baseBrightness * 0.7;
+                cols[i * 3 + 1] = baseBrightness * 0.85;
+                cols[i * 3 + 2] = baseBrightness;
             } else {
-                // Yellow/orange stars
-                cols[i * 3] = 1;
-                cols[i * 3 + 1] = 0.9;
-                cols[i * 3 + 2] = 0.7;
+                // Rare yellow/orange stars
+                cols[i * 3] = baseBrightness;
+                cols[i * 3 + 1] = baseBrightness * 0.8;
+                cols[i * 3 + 2] = baseBrightness * 0.5;
             }
         }
 
@@ -59,8 +80,9 @@ export function Starfield({ count = 2000, depth = 100 }: { count?: number; depth
 
     useFrame((state) => {
         if (starsRef.current) {
-            starsRef.current.rotation.y = state.clock.elapsedTime * 0.01;
-            starsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.005) * 0.05;
+            // Very slow rotation to show we're in space
+            starsRef.current.rotation.y = state.clock.elapsedTime * 0.002;
+            starsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.001) * 0.02;
         }
     });
 
@@ -81,7 +103,7 @@ export function Starfield({ count = 2000, depth = 100 }: { count?: number; depth
                 />
             </bufferGeometry>
             <pointsMaterial
-                size={0.15}
+                size={0.08}
                 sizeAttenuation
                 vertexColors
                 transparent
@@ -93,18 +115,20 @@ export function Starfield({ count = 2000, depth = 100 }: { count?: number; depth
 }
 
 /**
- * Nebula - Volumetric cosmic cloud
+ * Nebula - Very subtle, distant cosmic cloud
  */
 export function Nebula({
     color1 = '#ff007f',
     color2 = '#00ffff',
     position = [0, 0, -50] as [number, number, number],
-    scale = 1
+    scale = 1,
+    opacity = 0.15
 }: {
     color1?: string;
     color2?: string;
     position?: [number, number, number];
     scale?: number;
+    opacity?: number;
 }) {
     const meshRef = useRef<THREE.Mesh>(null);
 
@@ -112,7 +136,8 @@ export function Nebula({
         uTime: { value: 0 },
         uColor1: { value: new THREE.Color(color1) },
         uColor2: { value: new THREE.Color(color2) },
-    }), [color1, color2]);
+        uOpacity: { value: opacity },
+    }), [color1, color2, opacity]);
 
     useFrame((state) => {
         if (meshRef.current) {
@@ -123,10 +148,8 @@ export function Nebula({
 
     const vertexShader = `
     varying vec2 vUv;
-    varying vec3 vPosition;
     void main() {
       vUv = uv;
-      vPosition = position;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `;
@@ -135,10 +158,10 @@ export function Nebula({
     uniform float uTime;
     uniform vec3 uColor1;
     uniform vec3 uColor2;
+    uniform float uOpacity;
     varying vec2 vUv;
-    varying vec3 vPosition;
     
-    // Simplex noise function
+    // Simplex noise
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -181,10 +204,7 @@ export function Nebula({
       vec3 p2 = vec3(a1.xy, h.z);
       vec3 p3 = vec3(a1.zw, h.w);
       vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
-      p0 *= norm.x;
-      p1 *= norm.y;
-      p2 *= norm.z;
-      p3 *= norm.w;
+      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
       vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
       m = m * m;
       return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
@@ -193,31 +213,19 @@ export function Nebula({
     void main() {
       vec2 uv = vUv - 0.5;
       float dist = length(uv);
-      
-      // Animated noise
-      float noise1 = snoise(vec3(vUv * 2.0, uTime * 0.1));
-      float noise2 = snoise(vec3(vUv * 4.0 + 10.0, uTime * 0.15));
-      float noise3 = snoise(vec3(vUv * 8.0 + 20.0, uTime * 0.2));
-      
-      float combinedNoise = noise1 * 0.5 + noise2 * 0.3 + noise3 * 0.2;
-      
-      // Nebula shape
-      float nebula = smoothstep(0.8, 0.0, dist + combinedNoise * 0.3);
-      nebula *= 0.6 + combinedNoise * 0.4;
-      
-      // Color mixing
+      float noise1 = snoise(vec3(vUv * 1.5, uTime * 0.03));
+      float noise2 = snoise(vec3(vUv * 3.0 + 10.0, uTime * 0.05));
+      float combinedNoise = noise1 * 0.6 + noise2 * 0.4;
+      float nebula = smoothstep(0.8, 0.0, dist + combinedNoise * 0.2);
+      nebula *= 0.5 + combinedNoise * 0.3;
       vec3 color = mix(uColor1, uColor2, noise1 * 0.5 + 0.5);
-      color = mix(color, vec3(1.0), noise3 * 0.1);
-      
-      // Fade at edges
-      float alpha = nebula * smoothstep(0.6, 0.2, dist);
-      
-      gl_FragColor = vec4(color, alpha * 0.4);
+      float alpha = nebula * smoothstep(0.6, 0.1, dist) * uOpacity;
+      gl_FragColor = vec4(color, alpha);
     }
   `;
 
     return (
-        <mesh ref={meshRef} position={position} scale={scale * 40}>
+        <mesh ref={meshRef} position={position} scale={scale * 50}>
             <planeGeometry args={[1, 1, 32, 32]} />
             <shaderMaterial
                 vertexShader={vertexShader}
@@ -233,29 +241,24 @@ export function Nebula({
 }
 
 /**
- * CosmicDust - Subtle floating particles throughout space
+ * CosmicDust - Very subtle floating particles
  */
-export function CosmicDust({ count = 500 }: { count?: number }) {
+export function CosmicDust({ count = 300 }: { count?: number }) {
     const dustRef = useRef<THREE.Points>(null);
 
     const positions = useMemo(() => {
         const pos = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
-            pos[i * 3] = (Math.random() - 0.5) * 100;
-            pos[i * 3 + 1] = (Math.random() - 0.5) * 100;
-            pos[i * 3 + 2] = (Math.random() - 0.5) * 100;
+            pos[i * 3] = (Math.random() - 0.5) * 150;
+            pos[i * 3 + 1] = (Math.random() - 0.5) * 150;
+            pos[i * 3 + 2] = (Math.random() - 0.5) * 150;
         }
         return pos;
     }, [count]);
 
     useFrame((state) => {
         if (dustRef.current) {
-            dustRef.current.rotation.y = state.clock.elapsedTime * 0.02;
-            const positions = dustRef.current.geometry.attributes.position.array as Float32Array;
-            for (let i = 0; i < count; i++) {
-                positions[i * 3 + 1] += Math.sin(state.clock.elapsedTime + i) * 0.001;
-            }
-            dustRef.current.geometry.attributes.position.needsUpdate = true;
+            dustRef.current.rotation.y = state.clock.elapsedTime * 0.005;
         }
     });
 
@@ -270,11 +273,11 @@ export function CosmicDust({ count = 500 }: { count?: number }) {
                 />
             </bufferGeometry>
             <pointsMaterial
-                size={0.05}
+                size={0.02}
                 sizeAttenuation
-                color="#ffffff"
+                color="#555555"
                 transparent
-                opacity={0.3}
+                opacity={0.15}
                 depthWrite={false}
             />
         </points>
@@ -282,7 +285,7 @@ export function CosmicDust({ count = 500 }: { count?: number }) {
 }
 
 /**
- * DistantGalaxy - Spiral galaxy in the background
+ * DistantGalaxy - Very distant, subtle spiral galaxy
  */
 export function DistantGalaxy({
     position = [30, 20, -80] as [number, number, number],
@@ -294,7 +297,7 @@ export function DistantGalaxy({
     color?: string;
 }) {
     const galaxyRef = useRef<THREE.Points>(null);
-    const particleCount = 1000;
+    const particleCount = 600;
 
     const [positions, colors] = useMemo(() => {
         const pos = new Float32Array(particleCount * 3);
@@ -303,22 +306,21 @@ export function DistantGalaxy({
         const coreColor = new THREE.Color('#ffffff');
 
         for (let i = 0; i < particleCount; i++) {
-            // Spiral galaxy pattern
             const arm = Math.floor(Math.random() * 2);
             const angle = (i / particleCount) * Math.PI * 6 + arm * Math.PI;
-            const radius = (i / particleCount) * 10 + Math.random() * 2;
-            const spread = Math.random() * 0.5;
+            const radius = (i / particleCount) * 8 + Math.random() * 1.5;
+            const spread = Math.random() * 0.3;
 
             pos[i * 3] = Math.cos(angle) * radius + (Math.random() - 0.5) * spread;
-            pos[i * 3 + 1] = (Math.random() - 0.5) * spread * 2;
+            pos[i * 3 + 1] = (Math.random() - 0.5) * spread * 1.5;
             pos[i * 3 + 2] = Math.sin(angle) * radius + (Math.random() - 0.5) * spread;
 
-            // Color gradient from core to arms
-            const t = radius / 12;
+            const t = radius / 10;
             const mixedColor = coreColor.clone().lerp(galaxyColor, t);
-            cols[i * 3] = mixedColor.r;
-            cols[i * 3 + 1] = mixedColor.g;
-            cols[i * 3 + 2] = mixedColor.b;
+            const dimFactor = 0.25 + Math.random() * 0.15;
+            cols[i * 3] = mixedColor.r * dimFactor;
+            cols[i * 3 + 1] = mixedColor.g * dimFactor;
+            cols[i * 3 + 2] = mixedColor.b * dimFactor;
         }
 
         return [pos, cols];
@@ -326,7 +328,7 @@ export function DistantGalaxy({
 
     useFrame((state) => {
         if (galaxyRef.current) {
-            galaxyRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+            galaxyRef.current.rotation.y = state.clock.elapsedTime * 0.015;
         }
     });
 
@@ -347,11 +349,11 @@ export function DistantGalaxy({
                 />
             </bufferGeometry>
             <pointsMaterial
-                size={0.1}
+                size={0.05}
                 sizeAttenuation
                 vertexColors
                 transparent
-                opacity={0.8}
+                opacity={0.5}
                 depthWrite={false}
                 blending={THREE.AdditiveBlending}
             />
@@ -361,29 +363,44 @@ export function DistantGalaxy({
 
 /**
  * CosmicEnvironment - Complete cosmic space background
+ * PITCH BLACK void with subtle distant elements
  */
 export default function CosmicEnvironment({
     intensity = 1,
     nebulaColor1 = '#2e004f',
     nebulaColor2 = '#ff007f',
-    starCount = 1500
+    starCount = 2000
 }: CosmicEnvironmentProps) {
     return (
         <group>
-            {/* Dense starfield */}
-            <Starfield count={Math.floor(starCount * intensity)} depth={150} />
+            {/* Pitch black void background */}
+            <DeepSpaceVoid />
 
-            {/* Cosmic dust particles */}
-            <CosmicDust count={Math.floor(300 * intensity)} />
+            {/* Dense but dim starfield against the black */}
+            <Starfield count={Math.floor(starCount * intensity)} depth={200} />
 
-            {/* Multiple nebulae at different positions */}
-            <Nebula color1={nebulaColor1} color2={nebulaColor2} position={[20, 10, -60]} scale={1.5} />
-            <Nebula color1="#00ffff" color2="#2e004f" position={[-30, -15, -80]} scale={1.2} />
-            <Nebula color1="#ff007f" color2="#00ffff" position={[0, 30, -100]} scale={2} />
+            {/* Very subtle cosmic dust */}
+            <CosmicDust count={Math.floor(200 * intensity)} />
 
-            {/* Distant galaxies */}
-            <DistantGalaxy position={[50, 30, -120]} scale={0.8} color="#ff007f" />
-            <DistantGalaxy position={[-60, -20, -100]} scale={0.6} color="#00ffff" />
+            {/* Very distant, subtle nebulae - barely visible */}
+            <Nebula
+                color1={nebulaColor1}
+                color2={nebulaColor2}
+                position={[40, 20, -150]}
+                scale={1.0}
+                opacity={0.06}
+            />
+            <Nebula
+                color1="#00ffff"
+                color2="#2e004f"
+                position={[-50, -25, -180]}
+                scale={0.8}
+                opacity={0.04}
+            />
+
+            {/* Very distant galaxies */}
+            <DistantGalaxy position={[100, 50, -250]} scale={0.4} color="#ff007f" />
+            <DistantGalaxy position={[-120, -40, -220]} scale={0.3} color="#00ffff" />
         </group>
     );
 }
