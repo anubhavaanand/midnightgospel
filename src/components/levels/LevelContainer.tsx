@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react';
 import CosmicEnvironment from '@components/environment/CosmicEnvironment';
+import FloatingQuote from '@components/ui/FloatingQuote';
+import { getQuotesForLevel } from '@utils/quotes';
 
 const ChromaticVoid = lazy(() => import('./ChromaticVoid'));
 const ZombieApocalypse = lazy(() => import('./ZombieApocalypse'));
@@ -48,6 +50,9 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   const activeLevel = getActiveLevel(scrollProgress);
   const cosmicTheme = LEVEL_COSMIC_THEMES[activeLevel];
 
+  // Get quotes for current level
+  const levelQuotes = getQuotesForLevel(activeLevel);
+
   return (
     <group>
       {/* Cosmic Space Environment - Always visible, changes color per level */}
@@ -57,6 +62,19 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
         nebulaColor2={cosmicTheme.nebula2}
         starCount={1500}
       />
+
+      {/* Floating Quotes - Philosophical dialogue from the show */}
+      {levelQuotes.map((quote, index) => (
+        <FloatingQuote
+          key={`quote-${activeLevel}-${index}`}
+          text={quote.text}
+          author={quote.author}
+          position={quote.position}
+          rotation={quote.rotation}
+          scale={quote.scale}
+          isActive={true}
+        />
+      ))}
 
       <Suspense fallback={null}>
         {/* Level 0: Chromatic Void */}
