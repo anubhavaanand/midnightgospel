@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import GrindingMechanism from './GrindingMechanism';
 import ClownCrowd from './ClownCrowd';
-import FloatingQuote from '@components/ui/FloatingQuote';
-import { LEVEL_QUOTES } from '@utils/quotes';
 
 /**
  * Level 2: Clown Planet (Officers & Wolves)
@@ -183,15 +181,6 @@ export default function ClownPlanet({ isActive }: ClownPlanetProps) {
           emissiveIntensity={0.2}
         />
       </mesh>
-
-      {/* Floating Quotes */}
-      {LEVEL_QUOTES.filter(q => q.level === 2).map((quote, i) => (
-        <FloatingQuote
-          key={i}
-          {...quote}
-          isActive={isActive}
-        />
-      ))}
 
 
       {/* Optional: Stage lights for carnival atmosphere */}

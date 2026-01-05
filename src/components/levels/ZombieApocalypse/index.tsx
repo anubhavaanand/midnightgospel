@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import DistortedBuilding from './DistortedBuilding';
 import ZombieCrowd from './ZombieCrowd';
-import FloatingQuote from '@components/ui/FloatingQuote';
-import { LEVEL_QUOTES } from '@utils/quotes';
 
 /**
  * Level 1: Zombie Apocalypse (Taste of the King)
@@ -158,15 +156,6 @@ export default function ZombieApocalypse({ isActive }: ZombieApocalypseProps) {
           emissiveIntensity={0.1}
         />
       </mesh>
-
-      {/* Floating Quotes */}
-      {LEVEL_QUOTES.filter(q => q.level === 1).map((quote, i) => (
-        <FloatingQuote
-          key={i}
-          {...quote}
-          isActive={isActive}
-        />
-      ))}
     </group>
   );
 }

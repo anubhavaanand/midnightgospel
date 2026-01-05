@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useSceneStore } from '@store/sceneStore';
 import { LEVEL_RANGES } from '@utils/constants';
 import NavigationPanel from './NavigationPanel';
@@ -55,16 +56,32 @@ const EPISODE_DATA = [
 ];
 
 export default function HUD() {
+  const navigate = useNavigate();
   const activeLevel = useSceneStore((state) => state.activeLevel);
   const scrollProgress = useSceneStore((state) => state.scrollProgress);
 
   const currentLevel = LEVEL_RANGES[activeLevel];
   const episodeData = EPISODE_DATA[activeLevel];
 
+  const handleBackToLanding = () => {
+    navigate('/');
+  };
+
   return (
     <div className="fixed inset-0 pointer-events-none">
+      {/* Back to Landing Button */}
+      <button
+        onClick={handleBackToLanding}
+        className="absolute top-8 left-8 glass-panel px-3 py-2 pointer-events-auto hover:bg-white/10 transition-colors group mb-2"
+        style={{ transform: 'translateY(-50px)' }}
+      >
+        <span className="text-white/60 text-xs group-hover:text-white transition-colors flex items-center gap-2">
+          <span className="text-midnight-cyan">←</span> EXIT_SIMULATOR
+        </span>
+      </button>
+
       {/* Top-left: Level Info with Episode Data */}
-      <div className="absolute top-8 left-8 glass-panel p-4 pointer-events-auto max-w-xs">
+      <div className="absolute top-20 left-8 glass-panel p-4 pointer-events-auto max-w-xs">
         <div className="flex items-center gap-2 mb-2">
           <div
             className="w-2 h-2 rounded-full animate-pulse"
