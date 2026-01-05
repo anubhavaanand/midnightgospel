@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'space': ['Space Grotesk', 'sans-serif'],
+        'syne': ['Syne', 'sans-serif'],
+      },
       colors: {
         midnight: {
           void: '#2E004F',
