@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { useThree } from '@react-three/fiber';
 
 /**
  * Procedural Audio Drone Generator
@@ -7,7 +6,6 @@ import { useThree } from '@react-three/fiber';
  * No external files required.
  */
 export default function SynthesizerDrone() {
-    const { camera } = useThree();
     const audioContextRef = useRef<AudioContext | null>(null);
     const gainNodeRef = useRef<GainNode | null>(null);
 

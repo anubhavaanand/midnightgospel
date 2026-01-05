@@ -3,7 +3,6 @@ import { Suspense, useRef, useEffect } from 'react';
 import { Physics } from '@react-three/rapier';
 import { useSceneStore } from '@store/sceneStore';
 import { useCameraPath } from '@hooks/useCameraPath';
-import VoxelArtifact from './interactive/VoxelArtifact';
 import SynthesizerDrone from './audio/SynthesizerDrone';
 import { useScrollProgress } from '@hooks/useScrollProgress';
 import { useDeviceDetection } from '@hooks/useMobileResponsive';

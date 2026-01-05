@@ -1,6 +1,6 @@
 import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { RigidBody, CuboidCollider, RigidBodyProps } from '@react-three/rapier';
+import { RigidBody } from '@react-three/rapier';
 import * as THREE from 'three';
 
 interface VoxelProps {
@@ -86,7 +86,7 @@ export default function VoxelArtifact({ position, scale = 1 }: GlitchArtifactPro
         // Add logic to apply impulse if possible, but switching to dynamic usually causes gravity to take over which is satisfying enough.
     };
 
-    useFrame((state) => {
+    useFrame((_state) => {
         if (!isExploded && groupRef.current) {
             // Rotate entire artifact when whole
             groupRef.current.rotation.x += 0.005;

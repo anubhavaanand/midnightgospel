@@ -202,7 +202,7 @@ const CharacterAvatar: React.FC<{ character: typeof CHARACTERS[0] }> = ({ charac
     );
 };
 
-export const CharactersSection: React.FC<{ config: UniverseConfig }> = ({ config }) => {
+export const CharactersSection: React.FC<{ config: UniverseConfig }> = ({ config: _config }) => {
     return (
         <section className="relative px-6 max-w-7xl mx-auto z-10 py-16 md:py-32">
             <div className="text-center mb-16 md:mb-24">

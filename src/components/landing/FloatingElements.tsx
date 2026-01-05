@@ -13,9 +13,8 @@ export const SimulationCube: React.FC<SceneProps> = ({ config, analyzer }) => {
     const { mouse } = useThree();
     const dataArray = useMemo(() => new Uint8Array(analyzer?.frequencyBinCount || 0), [analyzer]);
 
-    useFrame((state) => {
+    useFrame(() => {
         if (!meshRef.current) return;
-        const time = state.clock.getElapsedTime();
 
         // Respond to mouse
         meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, mouse.y * 0.5, 0.1);
@@ -50,7 +49,7 @@ export const SimulationCube: React.FC<SceneProps> = ({ config, analyzer }) => {
     );
 };
 
-export const ParticleTrail: React.FC<SceneProps> = ({ config, analyzer }) => {
+export const ParticleTrail: React.FC<SceneProps> = ({ config, analyzer: _analyzer }) => {
     const { mouse, viewport } = useThree();
     const pointsRef = useRef<THREE.Points>(null);
     const particleCount = 1000;
