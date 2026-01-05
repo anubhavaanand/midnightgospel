@@ -5,6 +5,7 @@ import ChromaticVoidBackground from './Background';
 import SimulatorPod from './SimulatorPod';
 import FloatingTape from './FloatingTape';
 import VoxelArtifact from '@components/interactive/VoxelArtifact';
+import ChromaticRibbon from '@components/environment/ChromaticRibbon';
 
 /**
  * Level 0: Chromatic Void
@@ -111,6 +112,11 @@ export default function ChromaticVoid({ isActive }: ChromaticVoidProps) {
 
       {/* Interactive Glitch Artifact */}
       <VoxelArtifact position={[3, -1, -5]} scale={0.5} />
+
+      {/* Chromatic Ribbon - Clancy's home dimension */}
+      <ChromaticRibbon position={[0, 3, -20]} scale={0.8} />
+      <ChromaticRibbon position={[-5, -2, -25]} scale={0.5} color1="#2e004f" color2="#00ffff" />
+      <ChromaticRibbon position={[8, 5, -30]} scale={0.4} color1="#00ffff" color2="#ff007f" speed={0.7} />
     </group>
   );
 }
