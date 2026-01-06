@@ -3,26 +3,13 @@
  * Enhanced for cinematic, cosmic feel with level-specific adjustments.
  * FIXED: Removed Vignette and ChromeAberration to prevent blue edge glow.
  */
-import { EffectComposer, Bloom, Noise, Glitch } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Glitch } from '@react-three/postprocessing';
 import { useSceneStore } from '@store/sceneStore';
 import { useAdaptivePostProcessing } from '@hooks/useAdaptivePostProcessing';
 
-// Level-specific bloom intensities
-const LEVEL_BLOOM_INTENSITY = [
-  1.5,   // Level 0: Chromatic Void - moderate glow
-  1.2,   // Level 1: Zombie - dimmer, decay
-  2.0,   // Level 2: Clown Planet - bright carnival
-  1.0,   // Level 3: Ass Cream - underwater, softer
-  0.8,   // Level 4: Soul Prison - dark, oppressive
-  2.5,   // Level 5: The Exit - transcendent, bright
-];
-
 export default function PostProcessingEffects() {
   const isTransitioning = useSceneStore((state) => state.isTransitioning);
-  const activeLevel = useSceneStore((state) => state.activeLevel);
   const quality = useAdaptivePostProcessing(60, 30);
-
-  const bloomIntensity = LEVEL_BLOOM_INTENSITY[activeLevel] || 1.5;
 
   return (
     <EffectComposer>

@@ -1,6 +1,6 @@
-import { ScrollControls, Stars } from '@react-three/drei';
+import { ScrollControls } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
-import { useThree, useFrame } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useSceneStore } from '@store/sceneStore';
@@ -31,32 +31,7 @@ function PitchBlackSpace() {
   return null;
 }
 
-/**
- * Minimal Starfield using drei's Stars
- * Renders distant, subtle stars against pitch black
- */
-function MinimalStarfield() {
-  const ref = useRef<THREE.Points>(null);
-
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.y = state.clock.elapsedTime * 0.01;
-    }
-  });
-
-  return (
-    <Stars
-      ref={ref}
-      radius={100}
-      depth={100}
-      count={3000}
-      factor={2}
-      saturation={0}
-      fade
-      speed={0.5}
-    />
-  );
-}
+// MinimalStarfield component removed - unused
 
 /**
  * Main scene wrapper with ScrollControls and spline camera integration.

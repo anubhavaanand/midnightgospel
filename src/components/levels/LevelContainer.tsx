@@ -1,6 +1,4 @@
-import { lazy, Suspense, useEffect, useState, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import FloatingQuote from '@components/ui/FloatingQuote';
 import { getQuotesForLevel } from '@utils/quotes';
 import { useSceneStore } from '@store/sceneStore';
@@ -17,56 +15,21 @@ const TheExit = lazy(() => import('./TheExit'));
  * Redesigned for pitch black space with floating colorful elements
  */
 
-// Level-specific themes
-const LEVEL_THEMES = [
-  { color: '#ff007f', name: 'Chromatic Void' },    // Hot pink
-  { color: '#ff3333', name: 'Zombie Apocalypse' }, // Red
-  { color: '#ffcc00', name: 'Clown Planet' },      // Yellow
-  { color: '#00ffff', name: 'Ass Cream' },         // Cyan
-  { color: '#9900ff', name: 'Soul Prison' },       // Purple
-  { color: '#ffffff', name: 'The Exit' },          // White
-];
+// Level-specific themes (available for future use)
+// const LEVEL_THEMES = [
+//   { color: '#ff007f', name: 'Chromatic Void' },    // Hot pink
+//   { color: '#ff3333', name: 'Zombie Apocalypse' }, // Red
+//   { color: '#ffcc00', name: 'Clown Planet' },      // Yellow
+//   { color: '#00ffff', name: 'Ass Cream' },         // Cyan
+//   { color: '#9900ff', name: 'Soul Prison' },       // Purple
+//   { color: '#ffffff', name: 'The Exit' },          // White
+// ];
 
 interface LevelContainerProps {
   scrollProgress: number;
 }
 
-/**
- * Floating Orb Light - Colored point light that floats in space
- */
-function FloatingLight({ color, position, intensity = 1 }: {
-  color: string;
-  position: [number, number, number];
-  intensity?: number
-}) {
-  const lightRef = useRef<THREE.PointLight>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (lightRef.current && meshRef.current) {
-      // Gentle floating motion
-      lightRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.5;
-      meshRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.5;
-    }
-  });
-
-  return (
-    <group position={position}>
-      <pointLight
-        ref={lightRef}
-        color={color}
-        intensity={intensity}
-        distance={20}
-        decay={2}
-      />
-      <mesh ref={meshRef}>
-        <sphereGeometry args={[0.05, 16, 16]} />
-        <meshBasicMaterial color={color} toneMapped={false} />
-      </mesh>
-    </group>
-  );
-}
+// FloatingLight component removed - unused in current implementation
 
 export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
   const prevLevelRef = useRef<number>(0);
@@ -84,7 +47,6 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   };
 
   const activeLevel = getActiveLevel(scrollProgress);
-  const theme = LEVEL_THEMES[activeLevel];
 
   // Detect level transitions
   useEffect(() => {
