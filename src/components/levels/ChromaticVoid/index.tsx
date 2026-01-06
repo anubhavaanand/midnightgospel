@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import ChromaticVoidBackground from './Background';
 import SimulatorPod from './SimulatorPod';
 import FloatingTape from './FloatingTape';
 import VoxelArtifact from '@components/interactive/VoxelArtifact';
@@ -9,77 +8,77 @@ import ChromaticRibbon from '@components/environment/ChromaticRibbon';
 
 /**
  * Level 0: Chromatic Void
- * Introduction to the simulator with floating tapes, particle field, and entry pod.
- * Scroll 0-15% of journey.
+ * Redesigned for pitch black space with floating neon elements
  * 
- * Visual Theme:
- * - Empty void filled with digital artifacts (tapes)
- * - Particle field suggests data/consciousness streaming
- * - Central pod waiting for user interaction
- * - Color palette: #2E004F (base), #FF007F (accents), #00FFFF (energy)
+ * The Chromatic Void is Clancy's home dimension - a colorful void
+ * where he lives on the Chromatic Ribbon with his bio-organic simulator.
  */
 interface ChromaticVoidProps {
   isActive: boolean;
 }
 
 /**
- * Floating particle system - suggests digital consciousness entering the void
+ * Floating particles - sparse cyan dots against black
  */
-function ParticleField() {
+function SparseParticles() {
   const particlesRef = useRef<THREE.Points>(null);
+  const count = 100;
 
-  useFrame((state: any) => {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 50;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 30;
+    positions[i * 3 + 2] = Math.random() * -40 - 5;
+  }
+
+  useFrame((state) => {
     if (particlesRef.current) {
-      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
-
-      // Animate particles in a spiral pattern
-      for (let i = 0; i < positions.length; i += 3) {
-        const x = positions[i];
-        const y = positions[i + 1];
-
-        const angle = Math.atan2(y, x) + state.clock.elapsedTime * 0.1;
-        const radius = Math.sqrt(x * x + y * y);
-
-        positions[i] = Math.cos(angle) * radius;
-        positions[i + 1] = Math.sin(angle) * radius + Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.05;
-      }
-
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.02;
     }
   });
-
-  const particleCount = 250; // Optimized from 400 for 15% FPS improvement
-  const particles = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < particleCount; i++) {
-    const angle = (Math.random() * Math.PI * 2);
-    const radius = Math.random() * 20 + 5;
-    const height = (Math.random() - 0.5) * 20;
-
-    particles[i * 3] = Math.cos(angle) * radius;
-    particles[i * 3 + 1] = height;
-    particles[i * 3 + 2] = Math.sin(angle) * radius;
-  }
 
   return (
     <points ref={particlesRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particleCount}
-          array={particles}
+          count={count}
+          array={positions}
           itemSize={3}
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.15}
-        sizeAttenuation
+        size={0.08}
         color="#00ffff"
         transparent
-        opacity={0.4}
+        opacity={0.6}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
     </points>
+  );
+}
+
+/**
+ * Neon Grid floor - cyberpunk aesthetic
+ */
+function NeonGrid() {
+  const gridRef = useRef<THREE.GridHelper>(null);
+
+  useFrame((state) => {
+    if (gridRef.current) {
+      gridRef.current.position.z = (state.clock.elapsedTime * 2) % 2;
+    }
+  });
+
+  return (
+    <group position={[0, -8, -20]} rotation={[-Math.PI / 2, 0, 0]}>
+      <gridHelper
+        ref={gridRef}
+        args={[100, 50, '#ff007f', '#2e004f']}
+      />
+    </group>
   );
 }
 
@@ -88,22 +87,21 @@ export default function ChromaticVoid({ isActive }: ChromaticVoidProps) {
 
   return (
     <group>
-      {/* Background shader with enhanced domain warping */}
-      <ChromaticVoidBackground />
+      {/* Sparse floating particles */}
+      <SparseParticles />
 
-      {/* Particle field - digital consciousness */}
-      <ParticleField />
+      {/* Neon grid for cyberpunk feel */}
+      <NeonGrid />
 
-      {/* Lighting hierarchy - minimal for dark space */}
-      <ambientLight intensity={0.15} color="#ffffff" />
-      <pointLight position={[5, 5, 5]} intensity={0.8} color="#ff007f" castShadow distance={30} />
-      <pointLight position={[-5, -5, 5]} intensity={0.5} color="#2e004f" castShadow distance={25} />
-      <pointLight position={[0, 0, 10]} intensity={0.3} color="#00ffff" castShadow distance={40} />
+      {/* Localized lighting - only on objects, not flooding the scene */}
+      <pointLight position={[0, 2, 0]} intensity={2} color="#ff007f" distance={10} decay={2} />
+      <pointLight position={[-8, 0, -10]} intensity={1.5} color="#00ffff" distance={15} decay={2} />
+      <pointLight position={[8, 0, -10]} intensity={1.5} color="#2e004f" distance={15} decay={2} />
 
       {/* Simulator entry pod - center stage */}
       <SimulatorPod />
 
-      {/* Floating tapes scattered in void - asymmetric arrangement */}
+      {/* Floating tapes scattered in void */}
       <FloatingTape position={[-10, 4, -12]} rotation={[0.3, 0.5, 0.1]} scale={0.85} />
       <FloatingTape position={[8, -3, -14]} rotation={[-0.2, -0.3, 0.2]} scale={0.95} />
       <FloatingTape position={[3, 7, -10]} rotation={[0.1, 0.1, -0.3]} scale={0.75} />
@@ -113,7 +111,7 @@ export default function ChromaticVoid({ isActive }: ChromaticVoidProps) {
       {/* Interactive Glitch Artifact */}
       <VoxelArtifact position={[3, -1, -5]} scale={0.5} />
 
-      {/* Chromatic Ribbon - Clancy's home dimension */}
+      {/* Chromatic Ribbons - the colorful bands of Clancy's dimension */}
       <ChromaticRibbon position={[0, 3, -20]} scale={0.8} />
       <ChromaticRibbon position={[-5, -2, -25]} scale={0.5} color1="#2e004f" color2="#00ffff" />
       <ChromaticRibbon position={[8, 5, -30]} scale={0.4} color1="#00ffff" color2="#ff007f" speed={0.7} />

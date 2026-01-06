@@ -1,6 +1,6 @@
-import { ScrollControls } from '@react-three/drei';
+import { ScrollControls, Stars } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
-import { useThree } from '@react-three/fiber';
+import { useThree, useFrame } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useSceneStore } from '@store/sceneStore';
@@ -13,16 +13,49 @@ import LevelContainer from './levels/LevelContainer';
 import PerformanceMonitor from '@components/utils/PerformanceMonitor';
 
 /**
- * Sets the scene background to pitch black
+ * Pitch Black Space Background
+ * Ensures the scene background is pure black
  */
-function BlackBackground() {
-  const { scene } = useThree();
+function PitchBlackSpace() {
+  const { gl, scene } = useThree();
 
   useEffect(() => {
-    scene.background = new THREE.Color('#000000');
-  }, [scene]);
+    // Set renderer clear color to black
+    gl.setClearColor(0x000000, 1);
+    // Set scene background to black
+    scene.background = new THREE.Color(0x000000);
+    // Disable fog if any
+    scene.fog = null;
+  }, [gl, scene]);
 
   return null;
+}
+
+/**
+ * Minimal Starfield using drei's Stars
+ * Renders distant, subtle stars against pitch black
+ */
+function MinimalStarfield() {
+  const ref = useRef<THREE.Points>(null);
+
+  useFrame((state) => {
+    if (ref.current) {
+      ref.current.rotation.y = state.clock.elapsedTime * 0.01;
+    }
+  });
+
+  return (
+    <Stars
+      ref={ref}
+      radius={100}
+      depth={100}
+      count={3000}
+      factor={2}
+      saturation={0}
+      fade
+      speed={0.5}
+    />
+  );
 }
 
 /**
@@ -38,12 +71,12 @@ export default function Scene() {
       pages={8}
       damping={config.isMobile ? 0.15 : 0.25}
     >
-      <BlackBackground />
+      <PitchBlackSpace />
+      <MinimalStarfield />
       <SceneContent scrollControlsRef={scrollControlsRef} />
     </ScrollControls>
   );
 }
-
 
 function SceneContent({ scrollControlsRef }: any) {
   const scrollProgress = useScrollProgress();
@@ -110,7 +143,8 @@ function SceneContent({ scrollControlsRef }: any) {
         <SynthesizerDrone />
         <LevelContainer scrollProgress={scrollProgress} />
       </Physics>
-      {/* Lighting and environment will be added in level components */}
+      {/* Minimal ambient light - just enough to see */}
+      <ambientLight intensity={0.05} />
     </Suspense>
   );
 }

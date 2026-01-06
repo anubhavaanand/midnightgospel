@@ -1,9 +1,9 @@
-import { lazy, Suspense, useEffect, useState, useRef } from 'react';
-import CosmicEnvironment from '@components/environment/CosmicEnvironment';
+import { lazy, Suspense, useEffect, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 import FloatingQuote from '@components/ui/FloatingQuote';
 import { getQuotesForLevel } from '@utils/quotes';
 import { useSceneStore } from '@store/sceneStore';
-import { AmbientParticles, ChromaticFlash } from '@components/effects/LevelTransition';
 
 const ChromaticVoid = lazy(() => import('./ChromaticVoid'));
 const ZombieApocalypse = lazy(() => import('./ZombieApocalypse'));
@@ -14,33 +14,62 @@ const TheExit = lazy(() => import('./TheExit'));
 
 /**
  * Level Container - Routes active level based on scroll progress
- * 
- * Level Structure (6 segments):
- * 0: Chromatic Void        [0.00 - 0.15]  Intro/Simulator Hub
- * 1: Zombie Apocalypse     [0.15 - 0.35]  Taste of the King
- * 2: Clown Planet          [0.35 - 0.55]  Officers & Wolves
- * 3: Ass Cream             [0.55 - 0.75]  Hunters Without Home
- * 4: Soul Prison           [0.75 - 0.90]  Annihilation of Joy
- * 5: The Exit              [0.90 - 1.00]  Climax
+ * Redesigned for pitch black space with floating colorful elements
  */
 
-// Level-specific cosmic color themes based on research data
-const LEVEL_COSMIC_THEMES = [
-  { nebula1: '#2e004f', nebula2: '#ff007f', intensity: 1.0, ambient: '#ff007f' },
-  { nebula1: '#1a0a0a', nebula2: '#ff3333', intensity: 0.7, ambient: '#ff3333' },
-  { nebula1: '#ff66cc', nebula2: '#ffff00', intensity: 0.9, ambient: '#ffff00' },
-  { nebula1: '#004466', nebula2: '#00ffff', intensity: 0.8, ambient: '#00ffff' },
-  { nebula1: '#1a0033', nebula2: '#9900ff', intensity: 0.6, ambient: '#9900ff' },
-  { nebula1: '#ffffff', nebula2: '#00ffff', intensity: 1.2, ambient: '#ffffff' },
+// Level-specific themes
+const LEVEL_THEMES = [
+  { color: '#ff007f', name: 'Chromatic Void' },    // Hot pink
+  { color: '#ff3333', name: 'Zombie Apocalypse' }, // Red
+  { color: '#ffcc00', name: 'Clown Planet' },      // Yellow
+  { color: '#00ffff', name: 'Ass Cream' },         // Cyan
+  { color: '#9900ff', name: 'Soul Prison' },       // Purple
+  { color: '#ffffff', name: 'The Exit' },          // White
 ];
 
 interface LevelContainerProps {
   scrollProgress: number;
 }
 
+/**
+ * Floating Orb Light - Colored point light that floats in space
+ */
+function FloatingLight({ color, position, intensity = 1 }: {
+  color: string;
+  position: [number, number, number];
+  intensity?: number
+}) {
+  const lightRef = useRef<THREE.PointLight>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (lightRef.current && meshRef.current) {
+      // Gentle floating motion
+      lightRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.5;
+      meshRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.5;
+    }
+  });
+
+  return (
+    <group position={position}>
+      <pointLight
+        ref={lightRef}
+        color={color}
+        intensity={intensity}
+        distance={15}
+        decay={2}
+      />
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[0.1, 16, 16]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+    </group>
+  );
+}
+
 export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
   const prevLevelRef = useRef<number>(0);
-  const [showFlash, setShowFlash] = useState(false);
   const setActiveLevel = useSceneStore((state) => state.setActiveLevel);
   const setIsTransitioning = useSceneStore((state) => state.setIsTransitioning);
 
@@ -55,20 +84,16 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   };
 
   const activeLevel = getActiveLevel(scrollProgress);
-  const cosmicTheme = LEVEL_COSMIC_THEMES[activeLevel];
+  const theme = LEVEL_THEMES[activeLevel];
 
   // Detect level transitions
   useEffect(() => {
     if (prevLevelRef.current !== activeLevel) {
-      // Level changed - trigger transition effects
       setIsTransitioning(true);
-      setShowFlash(true);
       setActiveLevel(activeLevel);
 
-      // Reset transition state after animation
       const timer = setTimeout(() => {
         setIsTransitioning(false);
-        setShowFlash(false);
       }, 500);
 
       prevLevelRef.current = activeLevel;
@@ -86,30 +111,12 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
 
   return (
     <group>
-      {/* Cosmic Space Environment - Always visible, changes color per level */}
-      <CosmicEnvironment
-        intensity={cosmicTheme.intensity}
-        nebulaColor1={cosmicTheme.nebula1}
-        nebulaColor2={cosmicTheme.nebula2}
-        starCount={1500}
-      />
+      {/* Level-specific accent lights */}
+      <FloatingLight color={theme.color} position={[-5, 3, -8]} intensity={2} />
+      <FloatingLight color={theme.color} position={[5, -2, -10]} intensity={1.5} />
+      <FloatingLight color="#00ffff" position={[0, 5, -15]} intensity={1} />
 
-      {/* Ambient floating particles */}
-      <AmbientParticles
-        count={80}
-        color={cosmicTheme.ambient}
-        speed={0.3}
-        spread={40}
-      />
-
-      {/* Level transition flash */}
-      <ChromaticFlash
-        color={cosmicTheme.ambient}
-        isActive={showFlash}
-        duration={0.3}
-      />
-
-      {/* Floating Quotes - Philosophical dialogue from the show */}
+      {/* Floating Quotes */}
       {levelQuotes.map((quote, index) => (
         <FloatingQuote
           key={`quote-${activeLevel}-${index}`}
@@ -144,4 +151,3 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
     </group>
   );
 }
-

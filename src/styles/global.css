@@ -13,8 +13,8 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0a0e27;
+  font-family: 'Space Grotesk', 'Segoe UI', Tahoma, sans-serif;
+  background: #000000;
   color: #f0f0f0;
   overflow: hidden;
   position: fixed;
@@ -44,11 +44,12 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
+  background: #000000;
 }
 
 /* Glassmorphism utilities */
 .glass-panel {
-  @apply backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg;
+  @apply backdrop-blur-xl bg-black/40 border border-white/10 rounded-lg;
 }
 
 .glass-button {
@@ -57,4 +58,19 @@ canvas {
 
 .glitch-text {
   @apply animate-glitch;
+}
+
+/* Neon glow utilities */
+.neon-glow {
+  text-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px currentColor;
+}
+
+.neon-border {
+  box-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    inset 0 0 5px currentColor;
 }
