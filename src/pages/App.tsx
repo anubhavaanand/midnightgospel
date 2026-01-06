@@ -40,6 +40,7 @@ export default function SimulatorApp() {
     });
 
     console.log('✅ Simulator initialized');
+    console.log('☢️ NUCLEAR BLACK MODE ACTIVE - If you see blue glow, RESTART SERVER');
   }, []);
 
   return (
@@ -59,7 +60,7 @@ export default function SimulatorApp() {
       >
         <Suspense fallback={null}>
           <Scene />
-          <PostProcessingEffects />
+          {/* <PostProcessingEffects /> - REMOVED entirely to debug blue glow */}
         </Suspense>
       </Canvas>
       <HUD />
