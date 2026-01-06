@@ -59,7 +59,7 @@ export default function SimulatorApp() {
       >
         <Suspense fallback={null}>
           <Scene />
-          <PostProcessingEffects />
+          {/* <PostProcessingEffects /> */}
         </Suspense>
       </Canvas>
       <HUD />

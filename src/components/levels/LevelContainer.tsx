@@ -5,7 +5,7 @@ import FloatingQuote from '@components/ui/FloatingQuote';
 import { getQuotesForLevel } from '@utils/quotes';
 import { useSceneStore } from '@store/sceneStore';
 
-const ChromaticVoid = lazy(() => import('./ChromaticVoid'));
+const ChromaticVoid = lazy(() => import('./ChromaticVoid/Level0'));
 const ZombieApocalypse = lazy(() => import('./ZombieApocalypse'));
 const ClownPlanet = lazy(() => import('./ClownPlanet'));
 const AssCream = lazy(() => import('./AssCream'));
@@ -112,8 +112,8 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   return (
     <group>
       {/* Level-specific accent lights */}
-      <FloatingLight color={theme.color} position={[-8, 5, -10]} intensity={2} />
-      <FloatingLight color={theme.color} position={[8, -4, -12]} intensity={1.5} />
+      {/* <FloatingLight color={theme.color} position={[-8, 5, -10]} intensity={2} /> */}
+      {/* <FloatingLight color={theme.color} position={[8, -4, -12]} intensity={1.5} /> */}
 
       {/* Floating Quotes */}
       {levelQuotes.map((quote, index) => (
