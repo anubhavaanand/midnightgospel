@@ -27,21 +27,23 @@ export default function PostProcessingEffects() {
   return (
     <EffectComposer>
       {[
-        // Bloom - enhanced glow for cosmic elements
+        // Bloom - reduced intensity to prevent screen takeover
         quality.bloom && (
           <Bloom
             key="bloom"
-            intensity={bloomIntensity}
-            kernelSize={3}
-            luminanceThreshold={0.5} // Lower threshold to catch neon
-            luminanceSmoothing={0.3}
+            intensity={0.2} // Drastically reduced from 1.5
+            kernelSize={2}
+            luminanceThreshold={0.8}
+            luminanceSmoothing={0.1}
           />
         ),
 
-        // Noise - subtle film grain for texture
+        // Noise - REMOVED to ensure pitch black background
+        /*
         quality.noise && (
           <Noise key="noise" opacity={0.05} />
         ),
+        */
 
         // Glitch - only during transitions
         quality.glitch && isTransitioning && (

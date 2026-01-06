@@ -72,7 +72,7 @@ export default function Scene() {
       damping={config.isMobile ? 0.15 : 0.25}
     >
       <PitchBlackSpace />
-      <MinimalStarfield />
+      {/* <MinimalStarfield /> - Commented out to verify black background */}
       <SceneContent scrollControlsRef={scrollControlsRef} />
     </ScrollControls>
   );
