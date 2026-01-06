@@ -2,7 +2,7 @@
  * Global post-processing effects configuration.
  * Enhanced for cinematic, cosmic feel with level-specific adjustments.
  */
-import { EffectComposer, Bloom, ChromaticAberration, Noise, Glitch, Vignette } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, ChromaticAberration, Noise, Glitch } from '@react-three/postprocessing';
 import { useSceneStore } from '@store/sceneStore';
 import { useAdaptivePostProcessing } from '@hooks/useAdaptivePostProcessing';
 
@@ -26,7 +26,8 @@ export default function PostProcessingEffects() {
   return (
     <EffectComposer>
       {[
-        // Bloom - enhanced glow for cosmic elements
+        // Bloom - REMOVED to test edge glow
+        /* 
         quality.bloom && (
           <Bloom
             key="bloom"
@@ -36,8 +37,10 @@ export default function PostProcessingEffects() {
             luminanceSmoothing={0.3}
           />
         ),
+        */
 
-        // Chromatic Aberration - subtle color fringing
+        // Chromatic Aberration - REMOVED to test edge glow
+        /*
         quality.chromatic && (
           <ChromaticAberration
             key="chromatic"
@@ -46,14 +49,9 @@ export default function PostProcessingEffects() {
             modulationOffset={0.2}
           />
         ),
+        */
 
-        // Vignette - cinematic dark edges
-        <Vignette
-          key="vignette"
-          offset={0.3}
-          darkness={0.6}
-          eskil={false}
-        />,
+        // REMOVED VIGNETTE - caused blue edge glow against black background
 
         // Noise - subtle film grain
         quality.noise && (
@@ -73,4 +71,3 @@ export default function PostProcessingEffects() {
     </EffectComposer>
   ) as any;
 }
-

@@ -3,17 +3,11 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /**
- * ChromaticRibbon - The membranous, tape-like planet where Clancy lives
- * 
- * From Research:
- * "Membranous, tape-like planet where Clancy lives, described as 'colorful void'"
- * "Flowing neon ribbons with Perlin noise domain warping"
- * 
- * This creates the iconic flowing ribbon that represents the Chromatic Ribbon
- * dimension - Clancy's home base in the multiverse.
+ * Ribbon.tsx - Thinner, more elegant version of ChromaticRibbon
+ * Fixed geometry to ensure it doesn't block the view
  */
 
-interface ChromaticRibbonProps {
+interface RibbonProps {
     position?: [number, number, number];
     scale?: number;
     color1?: string;
@@ -21,13 +15,13 @@ interface ChromaticRibbonProps {
     speed?: number;
 }
 
-export default function ChromaticRibbon({
+export default function Ribbon({
     position = [0, 0, -15],
     scale = 1,
     color1 = '#ff007f',
     color2 = '#00ffff',
     speed = 1
-}: ChromaticRibbonProps) {
+}: RibbonProps) {
     const meshRef = useRef<THREE.Mesh>(null);
 
     const uniforms = useMemo(() => ({
@@ -140,8 +134,8 @@ export default function ChromaticRibbon({
       color *= shimmer;
       
       // Edge glow
-      float edge = smoothstep(0.0, 0.1, vUv.y) * smoothstep(1.0, 0.9, vUv.y);
-      float alpha = edge * 0.85;
+      float edge = smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
+      float alpha = edge * 0.9;
       
       // Add sparkle
       float sparkle = pow(sin(vUv.x * 50.0 + uTime * 5.0) * 0.5 + 0.5, 8.0);
@@ -153,49 +147,13 @@ export default function ChromaticRibbon({
 
     return (
         <group position={position}>
-            {/* Main ribbon mesh - narrower and longer */}
+            {/* Main thinner ribbon */}
             <mesh ref={meshRef} scale={scale}>
-                <planeGeometry args={[50, 0.5, 128, 16]} />
+                <planeGeometry args={[60, 0.5, 128, 16]} />
                 <shaderMaterial
                     vertexShader={vertexShader}
                     fragmentShader={fragmentShader}
                     uniforms={uniforms}
-                    transparent
-                    depthWrite={false}
-                    side={THREE.DoubleSide}
-                    blending={THREE.AdditiveBlending}
-                />
-            </mesh>
-
-            {/* Secondary ribbon for depth */}
-            <mesh position={[2, 1, -2]} rotation={[0.2, 0.1, -0.1]} scale={scale * 0.7}>
-                <planeGeometry args={[30, 0.3, 64, 8]} />
-                <shaderMaterial
-                    vertexShader={vertexShader}
-                    fragmentShader={fragmentShader}
-                    uniforms={{
-                        ...uniforms,
-                        uColor1: { value: new THREE.Color('#2e004f') },
-                        uColor2: { value: new THREE.Color('#ff007f') },
-                    }}
-                    transparent
-                    depthWrite={false}
-                    side={THREE.DoubleSide}
-                    blending={THREE.AdditiveBlending}
-                />
-            </mesh>
-
-            {/* Tertiary ribbon */}
-            <mesh position={[-3, -0.5, -4]} rotation={[-0.1, -0.2, 0.15]} scale={scale * 0.5}>
-                <planeGeometry args={[25, 0.2, 48, 8]} />
-                <shaderMaterial
-                    vertexShader={vertexShader}
-                    fragmentShader={fragmentShader}
-                    uniforms={{
-                        ...uniforms,
-                        uColor1: { value: new THREE.Color('#00ffff') },
-                        uColor2: { value: new THREE.Color('#2e004f') },
-                    }}
                     transparent
                     depthWrite={false}
                     side={THREE.DoubleSide}

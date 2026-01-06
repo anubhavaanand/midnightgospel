@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import FloatingQuote from '@components/ui/FloatingQuote';
@@ -57,12 +57,12 @@ function FloatingLight({ color, position, intensity = 1 }: {
         ref={lightRef}
         color={color}
         intensity={intensity}
-        distance={15}
+        distance={20}
         decay={2}
       />
       <mesh ref={meshRef}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        <meshBasicMaterial color={color} />
+        <sphereGeometry args={[0.05, 16, 16]} />
+        <meshBasicMaterial color={color} toneMapped={false} />
       </mesh>
     </group>
   );
@@ -112,9 +112,8 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   return (
     <group>
       {/* Level-specific accent lights */}
-      <FloatingLight color={theme.color} position={[-5, 3, -8]} intensity={2} />
-      <FloatingLight color={theme.color} position={[5, -2, -10]} intensity={1.5} />
-      <FloatingLight color="#00ffff" position={[0, 5, -15]} intensity={1} />
+      <FloatingLight color={theme.color} position={[-8, 5, -10]} intensity={2} />
+      <FloatingLight color={theme.color} position={[8, -4, -12]} intensity={1.5} />
 
       {/* Floating Quotes */}
       {levelQuotes.map((quote, index) => (

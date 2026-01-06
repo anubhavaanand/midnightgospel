@@ -51,7 +51,7 @@ export default function SimulatorApp() {
         }}
         gl={{
           antialias: !mobileConfig.isLowEnd,
-          alpha: true,
+          alpha: false,
           preserveDrawingBuffer: true,
           powerPreference: mobileConfig.isLowEnd ? 'low-power' : 'default',
           pixelRatio: mobileConfig.dpr,
