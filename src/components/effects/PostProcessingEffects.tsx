@@ -1,8 +1,9 @@
 /**
  * Global post-processing effects configuration.
  * Enhanced for cinematic, cosmic feel with level-specific adjustments.
+ * FIXED: Removed Vignette and ChromeAberration to prevent blue edge glow.
  */
-import { EffectComposer, Bloom, ChromaticAberration, Noise, Glitch } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Noise, Glitch } from '@react-three/postprocessing';
 import { useSceneStore } from '@store/sceneStore';
 import { useAdaptivePostProcessing } from '@hooks/useAdaptivePostProcessing';
 
@@ -26,36 +27,20 @@ export default function PostProcessingEffects() {
   return (
     <EffectComposer>
       {[
-        // Bloom - REMOVED to test edge glow
-        /* 
+        // Bloom - enhanced glow for cosmic elements
         quality.bloom && (
           <Bloom
             key="bloom"
             intensity={bloomIntensity}
             kernelSize={3}
-            luminanceThreshold={0.7}
+            luminanceThreshold={0.5} // Lower threshold to catch neon
             luminanceSmoothing={0.3}
           />
         ),
-        */
 
-        // Chromatic Aberration - REMOVED to test edge glow
-        /*
-        quality.chromatic && (
-          <ChromaticAberration
-            key="chromatic"
-            offset={[0.0008, 0.0008] as unknown as any}
-            radialModulation={true}
-            modulationOffset={0.2}
-          />
-        ),
-        */
-
-        // REMOVED VIGNETTE - caused blue edge glow against black background
-
-        // Noise - subtle film grain
+        // Noise - subtle film grain for texture
         quality.noise && (
-          <Noise key="noise" opacity={0.08} />
+          <Noise key="noise" opacity={0.05} />
         ),
 
         // Glitch - only during transitions
