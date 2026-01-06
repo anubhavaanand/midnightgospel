@@ -156,9 +156,23 @@ export default function HUD() {
 
       {/* Bottom-center: Scroll Hint (Level 0 only) */}
       {activeLevel === 0 && scrollProgress < 0.05 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 glass-panel p-4 pointer-events-auto animate-pulse">
-          <p className="text-midnight-light text-sm text-center">↓ SCROLL TO BEGIN ↓</p>
-          <p className="text-white/30 text-[10px] text-center mt-1">Enter the Multiverse Simulator</p>
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none">
+          {/* Animated scroll icon */}
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2 mb-3">
+            <div className="w-1.5 h-3 bg-cyan-400 rounded-full animate-bounce" />
+          </div>
+
+          <div className="glass-panel px-6 py-3 text-center">
+            <p className="text-midnight-light text-sm font-bold tracking-widest animate-pulse">
+              ↓ SCROLL TO EXPLORE ↓
+            </p>
+            <p className="text-white/40 text-[10px] mt-2">
+              Enter the Multiverse Simulator
+            </p>
+            <p className="text-white/20 text-[8px] mt-1 hidden md:block">
+              Or press ↓ • 1-6 to jump • L for menu
+            </p>
+          </div>
         </div>
       )}
 
