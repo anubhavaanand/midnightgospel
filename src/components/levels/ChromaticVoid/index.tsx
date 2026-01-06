@@ -94,11 +94,11 @@ export default function ChromaticVoid({ isActive }: ChromaticVoidProps) {
       {/* Particle field - digital consciousness */}
       <ParticleField />
 
-      {/* Lighting hierarchy */}
-      <ambientLight intensity={0.4} color="#00ffff" />
-      <pointLight position={[5, 5, 5]} intensity={1.0} color="#ff007f" castShadow distance={30} />
-      <pointLight position={[-5, -5, 5]} intensity={0.7} color="#2e004f" castShadow distance={25} />
-      <pointLight position={[0, 0, 10]} intensity={0.5} color="#00ffff" castShadow distance={40} />
+      {/* Lighting hierarchy - minimal for dark space */}
+      <ambientLight intensity={0.15} color="#ffffff" />
+      <pointLight position={[5, 5, 5]} intensity={0.8} color="#ff007f" castShadow distance={30} />
+      <pointLight position={[-5, -5, 5]} intensity={0.5} color="#2e004f" castShadow distance={25} />
+      <pointLight position={[0, 0, 10]} intensity={0.3} color="#00ffff" castShadow distance={40} />
 
       {/* Simulator entry pod - center stage */}
       <SimulatorPod />

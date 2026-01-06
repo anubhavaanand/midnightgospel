@@ -4,6 +4,7 @@ import * as THREE from 'three';
 /**
  * Procedural chromatic void shader.
  * Uses Perlin noise and domain warping for organic liquid feel.
+ * Blends into pitch black at edges for depth.
  */
 export const ChromaticVoidMaterial = shaderMaterial(
   {
@@ -88,16 +89,26 @@ export const ChromaticVoidMaterial = shaderMaterial(
       col = mix(col, colorB, liquid);
       col = mix(col, colorC, wave * 0.6);
       
-      // Add subtle rim lighting effect
-      float rim = length(vUv - 0.5) * 2.0;
-      rim = smoothstep(1.5, 0.5, rim);
-      col += vec3(0.1, 0.05, 0.15) * rim;
+      // Calculate distance from center for vignette/fade effect
+      float centerDist = length(vUv - 0.5) * 2.0;
       
-      // Add pulsing energy
-      float pulse = sin(time * 0.8) * 0.1 + 0.1;
-      col += vec3(pulse * 0.3, pulse * 0.1, pulse * 0.4);
+      // Strong fade to black at edges - space is BLACK
+      float edgeFade = smoothstep(0.3, 1.0, centerDist);
+      col = mix(col, vec3(0.0), edgeFade);
       
-      gl_FragColor = vec4(col, 1.0);
+      // Reduce overall brightness for darker feel
+      col *= 0.6;
+      
+      // Add subtle pulsing energy (reduced)
+      float pulse = sin(time * 0.8) * 0.05 + 0.05;
+      col += vec3(pulse * 0.2, pulse * 0.05, pulse * 0.25);
+      
+      // Fade out alpha at edges too for transparent blend with black void
+      float alpha = 1.0 - smoothstep(0.4, 1.0, centerDist);
+      alpha = max(alpha, 0.2); // Minimum opacity to keep some color visible
+      
+      gl_FragColor = vec4(col, alpha);
     }
   `
 );
+

@@ -1,6 +1,8 @@
 import { ScrollControls } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
+import * as THREE from 'three';
 import { useSceneStore } from '@store/sceneStore';
 import { useCameraPath } from '@hooks/useCameraPath';
 import SynthesizerDrone from './audio/SynthesizerDrone';
@@ -9,6 +11,19 @@ import { useDeviceDetection } from '@hooks/useMobileResponsive';
 import CameraRig from './CameraRig';
 import LevelContainer from './levels/LevelContainer';
 import PerformanceMonitor from '@components/utils/PerformanceMonitor';
+
+/**
+ * Sets the scene background to pitch black
+ */
+function BlackBackground() {
+  const { scene } = useThree();
+
+  useEffect(() => {
+    scene.background = new THREE.Color('#000000');
+  }, [scene]);
+
+  return null;
+}
 
 /**
  * Main scene wrapper with ScrollControls and spline camera integration.
@@ -23,10 +38,12 @@ export default function Scene() {
       pages={8}
       damping={config.isMobile ? 0.15 : 0.25}
     >
+      <BlackBackground />
       <SceneContent scrollControlsRef={scrollControlsRef} />
     </ScrollControls>
   );
 }
+
 
 function SceneContent({ scrollControlsRef }: any) {
   const scrollProgress = useScrollProgress();

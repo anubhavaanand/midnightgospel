@@ -16,7 +16,7 @@ export default {
           pink: '#FF007F',
           cyan: '#00FFFF',
           light: '#F0F0F0',
-          dark: '#0A0E27',
+          dark: '#000000',  // Pure black space
         },
       },
       animation: {
