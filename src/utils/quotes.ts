@@ -129,11 +129,40 @@ export const LEVEL_QUOTES: Quote[] = [
         episodeRef: "Ep. 3: Hunters Without a Home",
     },
 
-    // Level 4: Soul Prison / Annihilation of Joy (Episode 5)
+    // Level 4: Blinded by My End (Episode 4)
+    {
+        text: "Forgiveness is giving up the hope that the past could have been any different.",
+        author: "Trudy Goodman",
+        level: 4,
+        position: [0, 6, -5],
+        rotation: [0, 0, 0],
+        scale: 1,
+        episodeRef: "Ep. 4: Blinded by My End",
+    },
+    {
+        text: "To listen is to lean in softly with a willingness to be changed by what we hear.",
+        author: "Trudy Goodman",
+        level: 4,
+        position: [-5, 3, -2],
+        rotation: [0, 0.3, 0],
+        scale: 0.9,
+        episodeRef: "Ep. 4: Blinded by My End",
+    },
+    {
+        text: "There is a kind of love that doesn't care if you're broken.",
+        author: "Clancy",
+        level: 4,
+        position: [4, 4, 3],
+        rotation: [0, -0.4, 0],
+        scale: 0.8,
+        episodeRef: "Ep. 4: Blinded by My End",
+    },
+
+    // Level 5: Soul Prison / Annihilation of Joy (Episode 5)
     {
         text: "You can't die in a sim prison. You can only be reborn.",
         author: "Jason Louv",
-        level: 4,
+        level: 5,
         position: [0, 6, -5],
         rotation: [0, 0, 0],
         scale: 1,
@@ -142,7 +171,7 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "The ego is just a spacesuit for the soul.",
         author: "Clancy",
-        level: 4,
+        level: 5,
         position: [6, 3, 0],
         rotation: [0, -0.5, 0],
         scale: 0.8,
@@ -151,7 +180,7 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "All souls are connected like Indra's Net - one infinite web of consciousness.",
         author: "Soul Bird Jason",
-        level: 4,
+        level: 5,
         position: [-4, 5, -2],
         rotation: [0, 0.3, 0],
         scale: 0.75,
@@ -160,18 +189,18 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "Hopelessness is liberation from expectation.",
         author: "Prisoner Bob",
-        level: 4,
+        level: 5,
         position: [3, 2, 4],
         rotation: [0, -0.2, 0],
         scale: 0.7,
         episodeRef: "Ep. 5: Annihilation of Joy",
     },
 
-    // Level 5: The Exit / Transcendence (Finale themes)
+    // Level 6: The Exit / Transcendence (Finale themes)
     {
         text: "Even through catastrophe, there is opportunity to grow.",
         author: "The Midnight Gospel",
-        level: 5,
+        level: 6,
         position: [0, 8, -8],
         rotation: [0, 0, 0],
         scale: 1.1,
@@ -180,7 +209,7 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "Love transcends physical death. It's the only thing that truly remains.",
         author: "Deneen Fendig",
-        level: 5,
+        level: 6,
         position: [-4, 5, -5],
         rotation: [0, 0.3, 0],
         scale: 0.85,
@@ -189,7 +218,7 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "Death is not an ending. It's a transformation into something infinite.",
         author: "Caitlin Doughty",
-        level: 5,
+        level: 6,
         position: [5, 6, -3],
         rotation: [0, -0.4, 0],
         scale: 0.8,
@@ -198,7 +227,7 @@ export const LEVEL_QUOTES: Quote[] = [
     {
         text: "We are not trapped in our bodies. We are wearing them temporarily.",
         author: "Clancy",
-        level: 5,
+        level: 6,
         position: [0, 3, 0],
         rotation: [0, 0, 0],
         scale: 0.9,

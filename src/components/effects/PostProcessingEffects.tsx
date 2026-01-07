@@ -13,8 +13,9 @@ const LEVEL_EFFECTS = [
   { bloom: 0.4, aberration: 0.003, noise: 0.04 },    // Level 1: Zombie - decay effect
   { bloom: 0.8, aberration: 0.002, noise: 0.02 },    // Level 2: Clown - vibrant carnival
   { bloom: 0.3, aberration: 0.004, noise: 0.02 },    // Level 3: Ass Cream - dreamlike
-  { bloom: 0.2, aberration: 0.001, noise: 0.05 },    // Level 4: Soul Prison - oppressive
-  { bloom: 1.2, aberration: 0.005, noise: 0.03 },    // Level 5: The Exit - transcendent
+  { bloom: 0.5, aberration: 0.002, noise: 0.03 },    // Level 4: Blinded by My End - warm/healing
+  { bloom: 0.2, aberration: 0.001, noise: 0.05 },    // Level 5: Soul Prison - oppressive
+  { bloom: 1.2, aberration: 0.005, noise: 0.03 },    // Level 6: The Exit - transcendent
 ];
 
 export default function PostProcessingEffects() {

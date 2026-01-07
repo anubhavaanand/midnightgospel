@@ -2,11 +2,13 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 import FloatingQuote from '@components/ui/FloatingQuote';
 import { getQuotesForLevel } from '@utils/quotes';
 import { useSceneStore } from '@store/sceneStore';
+import { LEVEL_RANGES } from '@utils/constants';
 
 const ChromaticVoid = lazy(() => import('./ChromaticVoid/Level0'));
 const ZombieApocalypse = lazy(() => import('./ZombieApocalypse'));
 const ClownPlanet = lazy(() => import('./ClownPlanet'));
 const AssCream = lazy(() => import('./AssCream'));
+const BlindedByEnd = lazy(() => import('./BlindedByEnd'));
 const SoulPrison = lazy(() => import('./SoulPrison'));
 const TheExit = lazy(() => import('./TheExit'));
 
@@ -15,35 +17,24 @@ const TheExit = lazy(() => import('./TheExit'));
  * Redesigned for pitch black space with floating colorful elements
  */
 
-// Level-specific themes (available for future use)
-// const LEVEL_THEMES = [
-//   { color: '#ff007f', name: 'Chromatic Void' },    // Hot pink
-//   { color: '#ff3333', name: 'Zombie Apocalypse' }, // Red
-//   { color: '#ffcc00', name: 'Clown Planet' },      // Yellow
-//   { color: '#00ffff', name: 'Ass Cream' },         // Cyan
-//   { color: '#9900ff', name: 'Soul Prison' },       // Purple
-//   { color: '#ffffff', name: 'The Exit' },          // White
-// ];
-
 interface LevelContainerProps {
   scrollProgress: number;
 }
-
-// FloatingLight component removed - unused in current implementation
 
 export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
   const prevLevelRef = useRef<number>(0);
   const setActiveLevel = useSceneStore((state) => state.setActiveLevel);
   const setIsTransitioning = useSceneStore((state) => state.setIsTransitioning);
 
-  // Determine active level from scroll progress
+  // Determine active level from scroll progress using constants
   const getActiveLevel = (progress: number): number => {
-    if (progress < 0.15) return 0;
-    if (progress < 0.35) return 1;
-    if (progress < 0.55) return 2;
-    if (progress < 0.75) return 3;
-    if (progress < 0.90) return 4;
-    return 5;
+    // Find the level where progress is within [start, end)
+    const level = LEVEL_RANGES.find(
+      (l) => progress >= l.scrollStart && progress < l.scrollEnd
+    );
+    // If exact 1.0 or somehow missed, return last level
+    if (!level && progress >= 0.9) return LEVEL_RANGES[LEVEL_RANGES.length - 1].level;
+    return level ? level.level : 0;
   };
 
   const activeLevel = getActiveLevel(scrollProgress);
@@ -73,10 +64,6 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
 
   return (
     <group>
-      {/* Level-specific accent lights */}
-      {/* <FloatingLight color={theme.color} position={[-8, 5, -10]} intensity={2} /> */}
-      {/* <FloatingLight color={theme.color} position={[8, -4, -12]} intensity={1.5} /> */}
-
       {/* Floating Quotes */}
       {levelQuotes.map((quote, index) => (
         <FloatingQuote
@@ -103,11 +90,14 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
         {/* Level 3: Ass Cream */}
         <AssCream isActive={activeLevel === 3} />
 
-        {/* Level 4: Soul Prison */}
-        <SoulPrison isActive={activeLevel === 4} />
+        {/* Level 4: Blinded by My End */}
+        <BlindedByEnd isActive={activeLevel === 4} />
 
-        {/* Level 5: The Exit */}
-        <TheExit isActive={activeLevel === 5} />
+        {/* Level 5: Soul Prison */}
+        <SoulPrison isActive={activeLevel === 5} />
+
+        {/* Level 6: The Exit */}
+        <TheExit isActive={activeLevel === 6} />
       </Suspense>
     </group>
   );
