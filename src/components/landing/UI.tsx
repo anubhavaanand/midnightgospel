@@ -74,7 +74,7 @@ export const Hero: React.FC<{ config: UniverseConfig }> = ({ config }) => {
                 </div>
 
                 <p className="text-base md:text-3xl text-white/60 max-w-3xl mx-auto font-medium leading-tight px-4">
-                    Navigating the <span className="text-white italic underline decoration-wavy" style={{ textDecorationColor: config.primaryColor }}>Chromatic Ribbon</span> to interview simulated beings across dying worlds.
+                    Navigating the <span className="text-white italic font-bold" style={{ color: config.primaryColor }}>Chromatic Ribbon</span> to interview simulated beings across dying worlds.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center pt-4 md:pt-8">
