@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense, useEffect } from 'react';
 import Scene from '@components/Scene';
+import PostProcessingEffects from '@components/effects/PostProcessingEffects';
 import Loading from '@components/ui/Loading';
 import HUD from '@components/ui/HUD';
 import MobileUI from '@components/ui/MobileUI';
@@ -58,7 +59,7 @@ export default function SimulatorApp() {
       >
         <Suspense fallback={null}>
           <Scene />
-          {/* <PostProcessingEffects /> */}
+          <PostProcessingEffects />
         </Suspense>
       </Canvas>
       <HUD />

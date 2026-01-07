@@ -47,9 +47,26 @@ canvas {
   background: #000000;
 }
 
-/* Glassmorphism utilities */
+/* Glassmorphism utilities - Enhanced for Midnight Gospel theme */
 .glass-panel {
-  @apply backdrop-blur-xl bg-black/40 border border-white/10 rounded-lg;
+  @apply backdrop-blur-xl bg-black/40 border border-white/10 rounded-lg transition-all duration-300;
+}
+
+.glass-panel:hover {
+  @apply bg-black/50 border-white/20;
+}
+
+/* Psychedelic glow effect */
+.glass-panel.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1);
+}
+
+.glass-panel.glow-pink {
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.3), inset 0 0 10px rgba(255, 0, 127, 0.1);
+}
+
+.glass-panel.glow-purple {
+  box-shadow: 0 0 20px rgba(153, 0, 255, 0.3), inset 0 0 10px rgba(153, 0, 255, 0.1);
 }
 
 .glass-button {
@@ -60,7 +77,7 @@ canvas {
   @apply animate-glitch;
 }
 
-/* Neon glow utilities */
+/* Neon glow utilities - Core to Midnight Gospel aesthetic */
 .neon-glow {
   text-shadow:
     0 0 5px currentColor,
@@ -73,4 +90,27 @@ canvas {
     0 0 5px currentColor,
     0 0 10px currentColor,
     inset 0 0 5px currentColor;
+}
+
+/* Chromatic aberration simulation with CSS */
+@keyframes chromatic-drift {
+  0% {
+    text-shadow:
+      -2px 0 rgba(255, 0, 0, 0.5),
+      2px 0 rgba(0, 255, 255, 0.5);
+  }
+  50% {
+    text-shadow:
+      -1px 0 rgba(255, 0, 0, 0.5),
+      1px 0 rgba(0, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow:
+      -2px 0 rgba(255, 0, 0, 0.5),
+      2px 0 rgba(0, 255, 255, 0.5);
+  }
+}
+
+.chromatic-text {
+  animation: chromatic-drift 3s ease-in-out infinite;
 }

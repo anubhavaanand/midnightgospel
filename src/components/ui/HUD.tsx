@@ -7,59 +7,66 @@ import { QuickHelpButton } from './TouchTutorial';
 
 /**
  * HUD overlay with level info and interactive elements.
- * Enhanced with episode data from Midnight Gospel research.
+ * Enhanced with episode data from Midnight Gospel research and theme-specific styling.
  */
 
-// Episode metadata from research
+// Episode metadata with thematic colors from Midnight Gospel visual language
 const EPISODE_DATA = [
   {
     episode: 'INTRO',
     theme: 'The Chromatic Ribbon',
     guest: 'Universe Simulator',
     topic: 'Multiverse Navigation',
-    color: '#00ffff'
+    color: '#00ffff',
+    glowColor: 'cyan',
   },
   {
     episode: 'EP. 1',
     theme: 'Taste of the King',
     guest: 'Dr. Drew Pinsky',
     topic: 'Drugs & Spirituality',
-    color: '#ff3333'
+    color: '#ff3333',
+    glowColor: 'red',
   },
   {
     episode: 'EP. 2',
     theme: 'Officers and Wolves',
     guest: 'Anne Lamott',
     topic: 'Death & Acceptance',
-    color: '#ffcc00'
+    color: '#ffcc00',
+    glowColor: 'yellow',
   },
   {
     episode: 'EP. 3',
     theme: 'Hunters Without a Home',
     guest: 'Damien Echols',
     topic: 'Magic & Enlightenment',
-    color: '#00ffff'
+    color: '#00ffff',
+    glowColor: 'cyan',
   },
   {
     episode: 'EP. 4',
     theme: 'Blinded by My End',
     guest: 'Trudy Goodman',
     topic: 'Forgiveness & Listening',
-    color: '#ff9900'
+    color: '#ff9900',
+    glowColor: 'orange',
   },
   {
     episode: 'EP. 5',
     theme: 'Annihilation of Joy',
     guest: 'Jason Louv',
     topic: 'Ego Death & Rebirth',
-    color: '#9900ff'
+    color: '#9900ff',
+    glowColor: 'purple',
   },
   {
     episode: 'FINALE',
     theme: 'Transcendence',
     guest: 'Cosmic Consciousness',
     topic: 'Return to Infinite',
-    color: '#ffffff'
+    color: '#ffffff',
+    glowColor: 'white',
   },
 ];
 
@@ -88,12 +95,21 @@ export default function HUD() {
         </span>
       </button>
 
-      {/* Top-left: Level Info with Episode Data */}
-      <div className="absolute top-20 left-8 glass-panel p-4 pointer-events-auto max-w-xs">
+      {/* Top-left: Level Info with Episode Data - Enhanced Glassmorphism */}
+      <div 
+        className="absolute top-20 left-8 glass-panel p-4 pointer-events-auto max-w-xs backdrop-blur-xl border border-white/20 shadow-2xl"
+        style={{
+          background: `rgba(0, 0, 0, 0.4)`,
+          boxShadow: `0 0 30px ${episodeData.color}33`
+        }}
+      >
         <div className="flex items-center gap-2 mb-2">
           <div
-            className="w-2 h-2 rounded-full animate-pulse"
-            style={{ backgroundColor: episodeData.color }}
+            className="w-2 h-2 rounded-full animate-pulse shadow-lg"
+            style={{ 
+              backgroundColor: episodeData.color,
+              boxShadow: `0 0 10px ${episodeData.color}`
+            }}
           />
           <span className="text-white/50 text-[10px] tracking-[0.3em] uppercase">
             {episodeData.episode}
@@ -140,8 +156,14 @@ export default function HUD() {
         </div>
       </div>
 
-      {/* Top-right: Cosmic Coordinates */}
-      <div className="absolute top-8 right-8 glass-panel p-3 pointer-events-auto text-right">
+      {/* Top-right: Cosmic Coordinates - Enhanced Glassmorphism */}
+      <div 
+        className="absolute top-8 right-8 glass-panel p-3 pointer-events-auto text-right backdrop-blur-xl border border-white/20 shadow-2xl"
+        style={{
+          background: `rgba(0, 0, 0, 0.4)`,
+          boxShadow: `0 0 30px ${episodeData.color}33`
+        }}
+      >
         <div className="text-[8px] text-white/30 tracking-[0.5em] mb-1">DIMENSION</div>
         <div className="text-midnight-cyan text-sm font-mono">
           {activeLevel === 0 ? 'CHROMATIC RIBBON' :

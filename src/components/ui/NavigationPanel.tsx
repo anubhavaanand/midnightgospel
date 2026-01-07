@@ -8,6 +8,7 @@ const LEVEL_EPISODES = [
   { shortName: 'Ep. 1', episode: 'Taste of the King', color: '#ff3333' },
   { shortName: 'Ep. 2', episode: 'Officers & Wolves', color: '#ffcc00' },
   { shortName: 'Ep. 3', episode: 'Hunters Without Home', color: '#00ffff' },
+  { shortName: 'Ep. 4', episode: 'Blinded by My End', color: '#ff9900' },
   { shortName: 'Ep. 5', episode: 'Annihilation of Joy', color: '#9900ff' },
   { shortName: 'Finale', episode: 'Transcendence', color: '#ffffff' },
 ];
@@ -51,6 +52,7 @@ export default function NavigationPanel() {
         case '4':
         case '5':
         case '6':
+        case '7':
           e.preventDefault();
           handleLevelSelect(parseInt(e.key) - 1);
           break;
@@ -108,8 +110,8 @@ export default function NavigationPanel() {
                 key={level.level}
                 onClick={() => handleLevelSelect(level.level)}
                 className={`w-full text-left glass-panel p-3 transition-all relative overflow-hidden ${isActive
-                    ? 'bg-white/20 border-l-2'
-                    : 'hover:bg-white/10'
+                  ? 'bg-white/20 border-l-2'
+                  : 'hover:bg-white/10'
                   }`}
                 style={{ borderLeftColor: isActive ? episode.color : 'transparent' }}
               >
