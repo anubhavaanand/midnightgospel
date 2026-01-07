@@ -41,6 +41,13 @@ const EPISODE_DATA = [
     color: '#00ffff'
   },
   {
+    episode: 'EP. 4',
+    theme: 'Blinded by My End',
+    guest: 'Trudy Goodman',
+    topic: 'Forgiveness & Listening',
+    color: '#ff9900'
+  },
+  {
     episode: 'EP. 5',
     theme: 'Annihilation of Joy',
     guest: 'Jason Louv',
