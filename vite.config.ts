@@ -22,11 +22,13 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
+    chunkSizeWarningLimit: 3000, // Suppress warnings for large vendor chunks
     rollupOptions: {
       output: {
         manualChunks: {
           three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing'],
+          r3f: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing', '@react-three/rapier'],
+          utils: ['zustand', 'gsap', 'framer-motion'],
         },
       },
     },
