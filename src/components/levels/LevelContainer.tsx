@@ -14,12 +14,23 @@ const TheExit = lazy(() => import('./TheExit'));
 
 /**
  * Level Container - Routes active level based on scroll progress
- * Redesigned for pitch black space with floating colorful elements
+ * Only renders the currently active level for performance and correct isolation
  */
 
 interface LevelContainerProps {
   scrollProgress: number;
 }
+
+// Map level index to component
+const LEVEL_COMPONENTS = [
+  { Component: ChromaticVoid, name: 'ChromaticVoid' },
+  { Component: ZombieApocalypse, name: 'ZombieApocalypse' },
+  { Component: ClownPlanet, name: 'ClownPlanet' },
+  { Component: AssCream, name: 'AssCream' },
+  { Component: BlindedByEnd, name: 'BlindedByEnd' },
+  { Component: SoulPrison, name: 'SoulPrison' },
+  { Component: TheExit, name: 'TheExit' },
+];
 
 export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
   const prevLevelRef = useRef<number>(0);
@@ -62,6 +73,10 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   // Get quotes for current level
   const levelQuotes = getQuotesForLevel(activeLevel);
 
+  // Get the active level component
+  const ActiveLevelData = LEVEL_COMPONENTS[activeLevel];
+  const ActiveLevelComponent = ActiveLevelData?.Component;
+
   return (
     <group>
       {/* Floating Quotes */}
@@ -77,28 +92,18 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
         />
       ))}
 
+      {/* Only render the active level */}
       <Suspense fallback={null}>
-        {/* Level 0: Chromatic Void */}
-        <ChromaticVoid isActive={activeLevel === 0} />
-
-        {/* Level 1: Zombie Apocalypse */}
-        <ZombieApocalypse isActive={activeLevel === 1} />
-
-        {/* Level 2: Clown Planet */}
-        <ClownPlanet isActive={activeLevel === 2} />
-
-        {/* Level 3: Ass Cream */}
-        <AssCream isActive={activeLevel === 3} />
-
-        {/* Level 4: Blinded by My End */}
-        <BlindedByEnd isActive={activeLevel === 4} />
-
-        {/* Level 5: Soul Prison */}
-        <SoulPrison isActive={activeLevel === 5} />
-
-        {/* Level 6: The Exit */}
-        <TheExit isActive={activeLevel === 6} />
+        {ActiveLevelComponent && (
+          // @ts-ignore - Dynamic component props
+          <ActiveLevelComponent
+            key={`level-${activeLevel}`}
+            isActive={true}
+            scrollProgress={scrollProgress}
+          />
+        )}
       </Suspense>
     </group>
   );
 }
+

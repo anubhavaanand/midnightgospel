@@ -11,6 +11,8 @@ import { useDeviceDetection } from '@hooks/useMobileResponsive';
 import CameraRig from './CameraRig';
 import LevelContainer from './levels/LevelContainer';
 import PerformanceMonitor from '@components/utils/PerformanceMonitor';
+import ParticleTrail from './effects/ParticleTrail';
+import ScreenShake from '@hooks/useScreenShake';
 
 /**
  * Pitch Black Space Background
@@ -117,9 +119,16 @@ function SceneContent({ scrollControlsRef }: any) {
         <PerformanceMonitor />
         <SynthesizerDrone />
         <LevelContainer scrollProgress={scrollProgress} />
+
+        {/* E2: Particle Trail - cursor following particles */}
+        <ParticleTrail />
+
+        {/* E4: Screen Shake - camera shake on level transitions */}
+        <ScreenShake intensity={0.3} decay={0.9} />
       </Physics>
       {/* Minimal ambient light - just enough to see */}
       <ambientLight intensity={0.05} />
     </Suspense>
   );
 }
+

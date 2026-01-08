@@ -4,6 +4,11 @@ import { LEVEL_RANGES } from '@utils/constants';
 import NavigationPanel from './NavigationPanel';
 import DebugPanel from './DebugPanel';
 import { QuickHelpButton } from './TouchTutorial';
+import AudioControls from './AudioControls';
+import ScreenshotButton from './ScreenshotButton';
+import KeyboardShortcuts, { KeyboardShortcutsButton } from './KeyboardShortcuts';
+import MiniMap from './MiniMap';
+import QuoteJournal, { QuoteJournalButton } from './QuoteJournal';
 
 /**
  * HUD overlay with level info and interactive elements.
@@ -96,7 +101,7 @@ export default function HUD() {
       </button>
 
       {/* Top-left: Level Info with Episode Data - Enhanced Glassmorphism */}
-      <div 
+      <div
         className="absolute top-20 left-8 glass-panel p-4 pointer-events-auto max-w-xs backdrop-blur-xl border border-white/20 shadow-2xl"
         style={{
           background: `rgba(0, 0, 0, 0.4)`,
@@ -106,7 +111,7 @@ export default function HUD() {
         <div className="flex items-center gap-2 mb-2">
           <div
             className="w-2 h-2 rounded-full animate-pulse shadow-lg"
-            style={{ 
+            style={{
               backgroundColor: episodeData.color,
               boxShadow: `0 0 10px ${episodeData.color}`
             }}
@@ -157,7 +162,7 @@ export default function HUD() {
       </div>
 
       {/* Top-right: Cosmic Coordinates - Enhanced Glassmorphism */}
-      <div 
+      <div
         className="absolute top-8 right-8 glass-panel p-3 pointer-events-auto text-right backdrop-blur-xl border border-white/20 shadow-2xl"
         style={{
           background: `rgba(0, 0, 0, 0.4)`,
@@ -225,7 +230,30 @@ export default function HUD() {
 
       {/* Quick Help Button */}
       <QuickHelpButton />
+
+      {/* U1: Audio Controls */}
+      <AudioControls />
+
+      {/* U4: Mini-Map */}
+      <MiniMap />
+
+      {/* Bottom Right Tool Buttons */}
+      <div className="fixed bottom-8 right-24 flex gap-2 pointer-events-auto z-50">
+        {/* U2: Screenshot Button */}
+        <ScreenshotButton />
+
+        {/* U3: Keyboard Shortcuts Button */}
+        <KeyboardShortcutsButton />
+
+        {/* U5: Quote Journal Button */}
+        <QuoteJournalButton />
+      </div>
+
+      {/* U3: Keyboard Shortcuts Panel (modal) */}
+      <KeyboardShortcuts />
+
+      {/* U5: Quote Journal Panel (modal) */}
+      <QuoteJournal />
     </div>
   );
 }
-
