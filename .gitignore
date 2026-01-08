@@ -1,7 +1,24 @@
-.env.local
+.env
+.env.*
+!.env.example
 node_modules/
 dist/
 .DS_Store
 *.log
 .vscode/
 .idea/
+.agent/
+.venv/
+MIDNIGHT_GOSPEL_RESEARCH.json
+# Ignore development reports and internal docs
+*_REPORT.md
+*_SUMMARY.md
+*_GUIDE.md
+PHASE_*.md
+PROJECT_*.md
+RESEARCH*.md
+DEVELOPMENT.md
+IMPLEMENTATION_GUIDE.md
+QUICK_REFERENCE.md
+LAUNCH_READY.md
+INDEX.md
