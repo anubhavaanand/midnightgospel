@@ -7,7 +7,8 @@ import { useAudioAnalyzer } from '../components/landing/useAudioAnalyzer';
 
 const LandingPage: React.FC = () => {
     const [universe, setUniverse] = useState<UniverseType>(UniverseType.SURREAL);
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    // Removed state-based mouse tracking to prevent re-renders
+    const mouseEffectRef = useRef<HTMLDivElement>(null);
     const [isGlitching, setIsGlitching] = useState(false);
     const { isPlaying, toggleAudio, triggerWarp, analyzer } = useAudioAnalyzer();
 
@@ -28,13 +29,23 @@ const LandingPage: React.FC = () => {
         }, 400);
     }, [universe, triggerWarp]);
 
+    // Optimized Mouse Tracking using direct DOM manipulation
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            setMousePos({ x: e.clientX, y: e.clientY });
+            if (mouseEffectRef.current) {
+                const config = UNIVERSES[universe]; // Access current config via closure or ref if needed
+                // Note: We need the current universe color. 
+                // Since this effect runs once (or on universe change), it might be stale? 
+                // We'll update the effect dependency to [universe].
+
+                const { clientX, clientY } = e;
+                mouseEffectRef.current.style.background = `radial-gradient(600px circle at ${clientX}px ${clientY}px, ${config.primaryColor}22 0%, transparent 100%)`;
+            }
         };
+
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+    }, [universe]); // Re-bind listener when universe (colors) change - acceptable cost for correct colors
 
     const config = UNIVERSES[universe];
 
@@ -51,12 +62,11 @@ const LandingPage: React.FC = () => {
                 </div>
             )}
 
-            {/* 5D Mouse Influence Field */}
+            {/* 5D Mouse Influence Field - Optimized */}
             <div
+                ref={mouseEffectRef}
                 className="fixed pointer-events-none z-40 w-full h-full opacity-30 transition-opacity duration-1000"
-                style={{
-                    background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, ${config.primaryColor}22 0%, transparent 100%)`
-                }}
+            // Initial style will be set by first mouse move or default
             />
 
             <div className="relative z-10">
