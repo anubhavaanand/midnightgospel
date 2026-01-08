@@ -47,8 +47,8 @@ export default function ChromaticVoid({ isActive, scrollProgress = 0 }: Chromati
 
   return (
     <group ref={groupRef}>
-      {/* Dense starfield - pitch black with twinkling stars */}
-      <Starfield count={3000} radius={120} />
+      {/* Dense starfield - using global starfield instead to avoid double-rendering */}
+      {/* <Starfield count={3000} radius={120} /> */}
 
       {/* 3D Sun - medium size, positioned to the right */}
       <group position={[20, 5, -40]}>

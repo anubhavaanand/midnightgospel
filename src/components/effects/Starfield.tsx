@@ -12,7 +12,7 @@ import * as THREE from 'three';
 export default function Starfield() {
     const pointsRef = useRef<THREE.Points>(null);
 
-    const starCount = 2000;
+    const starCount = 800; // Optimized for performance
 
     const { positions, colors } = useMemo(() => {
         const pos = new Float32Array(starCount * 3);

@@ -18,10 +18,9 @@ export default function PostProcessingEffects() {
   return (
     <EffectComposer>
       <Bloom
-        luminanceThreshold={0.2}
+        luminanceThreshold={0.3}
         luminanceSmoothing={0.9}
-        intensity={1.5}
-        mipmapBlur
+        intensity={1.2}
       />
 
       <Noise
