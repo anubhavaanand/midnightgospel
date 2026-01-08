@@ -16,7 +16,7 @@ export default function PostProcessingEffects() {
   const aberrationOffset = useMemo(() => new THREE.Vector2(0.002, 0.002), []);
 
   return (
-    <EffectComposer disableNormalPass>
+    <EffectComposer>
       <Bloom
         luminanceThreshold={0.2}
         luminanceSmoothing={0.9}

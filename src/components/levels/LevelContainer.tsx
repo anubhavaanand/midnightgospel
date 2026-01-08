@@ -80,7 +80,9 @@ export default function LevelContainer({ scrollProgress: _prop }: { scrollProgre
 
   // Get level position
   const levelConfig = LEVEL_RANGES.find(l => l.level === activeLevel);
-  const position = levelConfig?.position || [0, 0, 0];
+  const position: [number, number, number] = levelConfig?.position
+    ? [levelConfig.position.x, levelConfig.position.y, levelConfig.position.z]
+    : [0, 0, 0];
 
   // Debug log every render
   // console.log('[LevelContainer] Render. Progress:', scrollProgress.toFixed(3), 'Level:', activeLevel);

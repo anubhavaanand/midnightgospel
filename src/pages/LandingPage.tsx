@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import LandingScene from '../components/landing/LandingScene';
 import { Navigation, Hero, EpisodeSection, CharactersSection, AboutSection } from '../components/landing/UI';
 import { UniverseType } from '../components/landing/types';

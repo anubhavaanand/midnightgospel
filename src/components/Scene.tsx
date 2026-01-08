@@ -15,6 +15,7 @@ import ParticleTrail from './effects/ParticleTrail';
 import ScreenShake from '@hooks/useScreenShake';
 import PostProcessingEffects from './effects/PostProcessingEffects';
 import Starfield from './effects/Starfield';
+import DebugLogger from '@components/utils/DebugLogger';
 
 /**
  * Pitch Black Space Background
@@ -116,6 +117,7 @@ function SceneContent({ scrollControlsRef }: any) {
 
   return (
     <Suspense fallback={null}>
+      <DebugLogger />
       <Physics gravity={[0, -5, 0]}>
         <CameraRig />
         <PerformanceMonitor />
