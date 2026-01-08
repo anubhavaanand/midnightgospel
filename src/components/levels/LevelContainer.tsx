@@ -78,6 +78,10 @@ export default function LevelContainer({ scrollProgress: _prop }: { scrollProgre
   const ActiveLevelData = LEVEL_COMPONENTS[activeLevel] || LEVEL_COMPONENTS[0];
   const ActiveLevelComponent = ActiveLevelData?.Component;
 
+  // Get level position
+  const levelConfig = LEVEL_RANGES.find(l => l.level === activeLevel);
+  const position = levelConfig?.position || [0, 0, 0];
+
   // Debug log every render
   // console.log('[LevelContainer] Render. Progress:', scrollProgress.toFixed(3), 'Level:', activeLevel);
 
@@ -96,15 +100,17 @@ export default function LevelContainer({ scrollProgress: _prop }: { scrollProgre
         />
       ))}
 
-      {/* Only render the active level */}
+      {/* Only render the active level positioned correctly in world space */}
       <Suspense fallback={null}>
         {ActiveLevelComponent && (
-          // @ts-ignore - Dynamic component props
-          <ActiveLevelComponent
-            key={`level-${activeLevel}`}
-            isActive={true}
-            scrollProgress={scrollProgress}
-          />
+          <group position={position}>
+            {/* @ts-ignore - Dynamic component props */}
+            <ActiveLevelComponent
+              key={`level-${activeLevel}`}
+              isActive={true}
+              scrollProgress={scrollProgress}
+            />
+          </group>
         )}
       </Suspense>
     </group>

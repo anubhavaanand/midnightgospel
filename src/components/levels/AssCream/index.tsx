@@ -1,7 +1,5 @@
 import FishBowl from './FishBowl';
 import SpaceCatCrowd from './SpaceCatCrowd';
-import FloatingQuote from '@components/ui/FloatingQuote';
-import { LEVEL_QUOTES } from '@utils/quotes';
 import * as THREE from 'three';
 
 /**
@@ -11,6 +9,7 @@ import * as THREE from 'three';
 
 interface AssCreamProps {
   isActive: boolean;
+  scrollProgress?: number;
 }
 
 export default function AssCream({ isActive }: AssCreamProps) {
@@ -64,15 +63,6 @@ export default function AssCream({ isActive }: AssCreamProps) {
           side={THREE.BackSide}
         />
       </mesh>
-
-      {/* Floating Quotes */}
-      {LEVEL_QUOTES.filter(q => q.level === 3).map((quote, i) => (
-        <FloatingQuote
-          key={i}
-          {...quote}
-          isActive={isActive}
-        />
-      ))}
     </group>
   );
 }

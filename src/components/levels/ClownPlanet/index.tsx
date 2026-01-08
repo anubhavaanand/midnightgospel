@@ -33,6 +33,7 @@ import ClownCrowd from './ClownCrowd';
 
 interface ClownPlanetProps {
   isActive: boolean;
+  scrollProgress?: number;
 }
 
 /**
@@ -130,7 +131,7 @@ function ClownAtmosphere() {
   );
 }
 
-export default function ClownPlanet({ isActive }: ClownPlanetProps) {
+export default function ClownPlanet({ isActive, scrollProgress }: ClownPlanetProps) {
   if (!isActive) return null;
 
   return (

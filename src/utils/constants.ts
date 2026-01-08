@@ -49,11 +49,11 @@ export const CAMERA_CONFIG = {
 };
 
 export const LEVEL_RANGES = [
-  { level: 0, name: 'Chromatic Void', scrollStart: 0, scrollEnd: 0.12 },
-  { level: 1, name: 'Zombie Apocalypse', scrollStart: 0.12, scrollEnd: 0.28 },
-  { level: 2, name: 'Clown Planet', scrollStart: 0.28, scrollEnd: 0.44 },
-  { level: 3, name: 'Ass Cream', scrollStart: 0.44, scrollEnd: 0.60 },
-  { level: 4, name: 'Blinded by My End', scrollStart: 0.60, scrollEnd: 0.76 },
-  { level: 5, name: 'Soul Prison Moon', scrollStart: 0.76, scrollEnd: 0.90 },
-  { level: 6, name: 'The Exit', scrollStart: 0.90, scrollEnd: 1.0 },
+  { level: 0, name: 'Chromatic Void', scrollStart: 0, scrollEnd: 0.12, position: new THREE.Vector3(0, 0, 0) },
+  { level: 1, name: 'Zombie Apocalypse', scrollStart: 0.12, scrollEnd: 0.28, position: new THREE.Vector3(0, -6, 0) },
+  { level: 2, name: 'Clown Planet', scrollStart: 0.28, scrollEnd: 0.44, position: new THREE.Vector3(0, -14, 0) },
+  { level: 3, name: 'Ass Cream', scrollStart: 0.44, scrollEnd: 0.60, position: new THREE.Vector3(0, -20, 0) },
+  { level: 4, name: 'Blinded by My End', scrollStart: 0.60, scrollEnd: 0.76, position: new THREE.Vector3(0, -26, 0) },
+  { level: 5, name: 'Soul Prison Moon', scrollStart: 0.76, scrollEnd: 0.90, position: new THREE.Vector3(0, -32, 0) },
+  { level: 6, name: 'The Exit', scrollStart: 0.90, scrollEnd: 1.0, position: new THREE.Vector3(0, -38, 0) },
 ];
