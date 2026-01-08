@@ -63,37 +63,74 @@ export const Hero: React.FC<{ config: UniverseConfig }> = ({ config }) => {
 
     return (
         <section className="relative h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-20">
+            {/* Animated background glow */}
+            <div
+                className="absolute inset-0 opacity-20 blur-3xl"
+                style={{
+                    background: `radial-gradient(ellipse at center, ${config.primaryColor}40 0%, transparent 70%)`
+                }}
+            />
+
             <div className="max-w-5xl z-10 space-y-6 md:space-y-8">
                 <div className="relative inline-block">
-                    <h2 className="text-7xl md:text-[14vw] font-black mb-0 tracking-tighter leading-[0.8] select-none italic mix-blend-difference">
+                    {/* Glowing text effect */}
+                    <h2
+                        className="text-7xl md:text-[14vw] font-black mb-0 tracking-tighter leading-[0.8] select-none italic"
+                        style={{
+                            background: `linear-gradient(135deg, ${config.primaryColor}, ${config.accentColor}, white)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            textShadow: `0 0 80px ${config.primaryColor}50`
+                        }}
+                    >
                         CLANCY
                     </h2>
-                    <div className="absolute -top-4 -right-2 md:-right-4 bg-white text-black text-[8px] md:text-[10px] px-2 py-1 font-bold uppercase tracking-widest rotate-12">
+                    <div
+                        className="absolute -top-4 -right-2 md:-right-4 text-black text-[8px] md:text-[10px] px-3 py-1.5 font-bold uppercase tracking-widest rotate-12 rounded-lg shadow-lg"
+                        style={{
+                            background: `linear-gradient(135deg, ${config.accentColor}, white)`,
+                            boxShadow: `0 0 20px ${config.accentColor}50`
+                        }}
+                    >
                         Multiverse ID: 001
                     </div>
                 </div>
 
-                <p className="text-base md:text-3xl text-white/60 max-w-3xl mx-auto font-medium leading-tight px-4">
-                    Navigating the <span className="text-white italic font-bold" style={{ color: config.primaryColor }}>Chromatic Ribbon</span> to interview simulated beings across dying worlds.
+                <p className="text-base md:text-3xl text-white/70 max-w-3xl mx-auto font-medium leading-relaxed px-4">
+                    Navigating the <span className="font-bold" style={{ color: config.primaryColor }}>Chromatic Ribbon</span> to interview simulated beings across <span className="italic" style={{ color: config.accentColor }}>dying worlds</span>.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center pt-4 md:pt-8">
                     <button
                         onClick={handleEnterSimulation}
-                        className="relative group px-8 py-4 md:px-10 md:py-5 rounded-full overflow-hidden bg-white text-black font-black uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 text-xs md:text-base"
+                        className="relative group px-8 py-4 md:px-12 md:py-5 rounded-full overflow-hidden font-black uppercase tracking-widest transition-all duration-500 hover:scale-105 active:scale-95 text-xs md:text-base"
+                        style={{
+                            background: `linear-gradient(135deg, ${config.primaryColor}, ${config.accentColor})`,
+                            color: 'black',
+                            boxShadow: `0 0 40px ${config.primaryColor}60`
+                        }}
                     >
-                        <span className="relative z-10">ENTER_SIMULATION</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                        <span className="relative z-10 flex items-center gap-2">
+                            <span className="w-2 h-2 bg-black rounded-full animate-pulse" />
+                            ENTER_SIMULATION
+                        </span>
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
                     </button>
-                    <button className="glass px-8 py-4 md:px-10 md:py-5 rounded-full text-white font-black uppercase tracking-widest hover:bg-white/10 transition-colors border border-white/10 text-xs md:text-base">
-                        VIEW_LOGS
+                    <button
+                        className="glass px-8 py-4 md:px-10 md:py-5 rounded-full font-black uppercase tracking-widest transition-all duration-300 hover:bg-white/10 border text-xs md:text-base"
+                        style={{ borderColor: `${config.primaryColor}40` }}
+                    >
+                        <span className="opacity-70">VIEW_LOGS</span>
                     </button>
                 </div>
             </div>
 
             <div className="absolute bottom-10 md:bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-                <div className="w-[1px] h-12 md:h-24 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
-                <span className="text-[7px] md:text-[8px] uppercase tracking-[0.5em] md:tracking-[0.8em] font-bold opacity-30">DESCENT_INITIATED</span>
+                <div
+                    className="w-[2px] h-12 md:h-24 animate-pulse rounded-full"
+                    style={{ background: `linear-gradient(to bottom, ${config.primaryColor}, transparent)` }}
+                />
+                <span className="text-[7px] md:text-[8px] uppercase tracking-[0.5em] md:tracking-[0.8em] font-bold opacity-40">DESCENT_INITIATED</span>
             </div>
         </section>
     );
