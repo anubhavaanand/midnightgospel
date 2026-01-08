@@ -1,53 +1,16 @@
-# Vercel Deployment Configuration
-# Learn more: https://vercel.com/docs/concepts/projects/project-configuration
-
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite",
-  "env": [
-    {
-      "key": "VITE_GOOGLE_API_KEY",
-      "value": "your_google_gemini_api_key",
-      "type": "sensitive"
-    },
-    {
-      "key": "VITE_GA_ID",
-      "value": "G-XXXXXXXXXX"
-    },
-    {
-      "key": "VITE_ENV",
-      "value": "production"
-    }
-  ],
-  "regions": [
-    "iad1",
-    "sfo1",
-    "lhr1",
-    "syd1"
-  ],
-  "buildCache": {
-    "node_modules": true,
-    ".next": true
-  },
-  "functions": {
-    "api/health.ts": {
-      "memory": 128,
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    }
-  ],
-  "redirects": [
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
     {
-      "source": "/old-page",
-      "destination": "/",
-      "permanent": true
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
