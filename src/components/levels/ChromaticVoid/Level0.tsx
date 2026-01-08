@@ -50,27 +50,27 @@ export default function ChromaticVoid({ isActive, scrollProgress = 0 }: Chromati
       {/* Dense starfield - pitch black with twinkling stars */}
       <Starfield count={3000} radius={120} />
 
-      {/* 3D Sun - medium size, positioned to the right
-          We move the sun slightly less than the stars for depth perception (farther away) */}
+      {/* 3D Sun - medium size, positioned to the right */}
       <group position={[20, 5, -40]}>
         <Sun position={[0, 0, 0]} size={5} />
       </group>
 
-      {/* Very subtle ambient light - just enough to see objects */}
-      <ambientLight intensity={0.05} color="#ffffff" />
+      {/* Stronger ambient light so objects are actually visible */}
+      <ambientLight intensity={0.3} color="#ffffff" />
 
-      {/* Simulator Pod - the main interactive element 
-          This remains relatively static or moves with camera rig logic separately 
-          actually, we want this to be the anchor, so maybe we don't move it with the group parallax?
-          No, if the whole group moves, the pod moves. 
-          Usually in scrolling sites, the camera moves. 
-          But here we want "infinite scroll" feel.
-      */}
-      <SimulatorPod />
+      {/* Additional directional light for depth */}
+      <directionalLight position={[10, 10, 5]} intensity={0.5} color="#00ffff" />
+      <pointLight position={[0, 0, 10]} intensity={1.0} color="#ff007f" distance={50} />
 
-      {/* Floating Tapes - reduced and darker */}
-      <FloatingTape position={[-8, 3, -15]} rotation={[0.3, 0.5, 0.1]} scale={0.7} />
-      <FloatingTape position={[6, -2, -18]} rotation={[-0.2, -0.3, 0.2]} scale={0.6} />
+      {/* Simulator Pod - made larger and more visible */}
+      <group scale={1.5}>
+        <SimulatorPod />
+      </group>
+
+      {/* Floating Tapes - larger and more visible */}
+      <FloatingTape position={[-8, 3, -15]} rotation={[0.3, 0.5, 0.1]} scale={1.2} />
+      <FloatingTape position={[6, -2, -18]} rotation={[-0.2, -0.3, 0.2]} scale={1.0} />
+      <FloatingTape position={[0, 5, -12]} rotation={[0.1, -0.4, 0.3]} scale={0.9} />
     </group>
   );
 }
