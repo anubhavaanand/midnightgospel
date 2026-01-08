@@ -55,12 +55,8 @@ export default function ChromaticVoid({ isActive, scrollProgress = 0 }: Chromati
         <Sun position={[0, 0, 0]} size={5} />
       </group>
 
-      {/* Stronger ambient light so objects are actually visible */}
-      <ambientLight intensity={0.3} color="#ffffff" />
-
-      {/* Additional directional light for depth */}
-      <directionalLight position={[10, 10, 5]} intensity={0.5} color="#00ffff" />
-      <pointLight position={[0, 0, 10]} intensity={1.0} color="#ff007f" distance={50} />
+      {/* Ambient light - balanced for visibility */}
+      <ambientLight intensity={0.12} color="#ffffff" />
 
       {/* Simulator Pod - made larger and more visible */}
       <group scale={1.5}>

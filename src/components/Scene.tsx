@@ -133,8 +133,8 @@ function SceneContent({ scrollControlsRef }: any) {
         {/* E4: Screen Shake - camera shake on level transitions */}
         <ScreenShake intensity={0.3} decay={0.9} />
 
-        {/* Visual Effects - Midnight Gospel Aesthetic */}
-        <PostProcessingEffects />
+        {/* Visual Effects - DISABLED due to severe performance impact (17fps) */}
+        {/* <PostProcessingEffects /> */}
       </Physics>
       {/* Minimal ambient light - just enough to see */}
       <ambientLight intensity={0.05} />
