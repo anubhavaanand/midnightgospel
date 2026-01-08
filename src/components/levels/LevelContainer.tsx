@@ -4,6 +4,7 @@ import { getQuotesForLevel } from '@utils/quotes';
 import { useSceneStore } from '@store/sceneStore';
 import { LEVEL_RANGES } from '@utils/constants';
 
+// Lazy load level components
 const ChromaticVoid = lazy(() => import('./ChromaticVoid/Level0'));
 const ZombieApocalypse = lazy(() => import('./ZombieApocalypse'));
 const ClownPlanet = lazy(() => import('./ClownPlanet'));
@@ -17,10 +18,6 @@ const TheExit = lazy(() => import('./TheExit'));
  * Only renders the currently active level for performance and correct isolation
  */
 
-interface LevelContainerProps {
-  scrollProgress: number;
-}
-
 // Map level index to component
 const LEVEL_COMPONENTS = [
   { Component: ChromaticVoid, name: 'ChromaticVoid' },
@@ -32,19 +29,22 @@ const LEVEL_COMPONENTS = [
   { Component: TheExit, name: 'TheExit' },
 ];
 
-export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
+export default function LevelContainer({ scrollProgress: _prop }: { scrollProgress?: number }) {
   const prevLevelRef = useRef<number>(0);
   const setActiveLevel = useSceneStore((state) => state.setActiveLevel);
   const setIsTransitioning = useSceneStore((state) => state.setIsTransitioning);
+  // Read scroll progress from store to trigger re-renders
+  const scrollProgress = useSceneStore((state) => state.scrollProgress);
 
   // Determine active level from scroll progress using constants
   const getActiveLevel = (progress: number): number => {
-    // Find the level where progress is within [start, end)
+    // Range check
     const level = LEVEL_RANGES.find(
       (l) => progress >= l.scrollStart && progress < l.scrollEnd
     );
-    // If exact 1.0 or somehow missed, return last level
-    if (!level && progress >= 0.9) return LEVEL_RANGES[LEVEL_RANGES.length - 1].level;
+    // Boundary case
+    if (!level && progress >= 0.9) return 6; // The Exit
+    if (!level && progress <= 0.01) return 0; // Start
     return level ? level.level : 0;
   };
 
@@ -53,6 +53,7 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   // Detect level transitions
   useEffect(() => {
     if (prevLevelRef.current !== activeLevel) {
+      console.log(`[LevelContainer] TRANSITION DETECTED: ${prevLevelRef.current} -> ${activeLevel}`);
       setIsTransitioning(true);
       setActiveLevel(activeLevel);
 
@@ -74,8 +75,11 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   const levelQuotes = getQuotesForLevel(activeLevel);
 
   // Get the active level component
-  const ActiveLevelData = LEVEL_COMPONENTS[activeLevel];
+  const ActiveLevelData = LEVEL_COMPONENTS[activeLevel] || LEVEL_COMPONENTS[0];
   const ActiveLevelComponent = ActiveLevelData?.Component;
+
+  // Debug log every render
+  // console.log('[LevelContainer] Render. Progress:', scrollProgress.toFixed(3), 'Level:', activeLevel);
 
   return (
     <group>
@@ -106,4 +110,3 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
     </group>
   );
 }
-

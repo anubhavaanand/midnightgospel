@@ -61,6 +61,13 @@ export const Hero: React.FC<{ config: UniverseConfig }> = ({ config }) => {
         navigate('/simulator');
     };
 
+    const handleViewLogs = () => {
+        const episodesSection = document.getElementById('episodes');
+        if (episodesSection) {
+            episodesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <section className="relative h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-20">
             {/* Animated background glow */}
@@ -117,7 +124,8 @@ export const Hero: React.FC<{ config: UniverseConfig }> = ({ config }) => {
                         <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
                     </button>
                     <button
-                        className="glass px-8 py-4 md:px-10 md:py-5 rounded-full font-black uppercase tracking-widest transition-all duration-300 hover:bg-white/10 border text-xs md:text-base"
+                        onClick={handleViewLogs}
+                        className="glass px-8 py-4 md:px-10 md:py-5 rounded-full font-black uppercase tracking-widest transition-all duration-300 hover:bg-white/10 border text-xs md:text-base cursor-pointer"
                         style={{ borderColor: `${config.primaryColor}40` }}
                     >
                         <span className="opacity-70">VIEW_LOGS</span>
@@ -137,8 +145,10 @@ export const Hero: React.FC<{ config: UniverseConfig }> = ({ config }) => {
 };
 
 export const EpisodeSection: React.FC<UIProps> = ({ currentUniverse, setUniverse }) => {
+    const navigate = useNavigate();
+
     return (
-        <section className="relative px-6 max-w-7xl mx-auto z-10">
+        <section id="episodes" className="relative px-6 max-w-7xl mx-auto z-10">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 gap-6 md:gap-8">
                 <div className="max-w-2xl">
                     <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[1em] block mb-2 md:mb-4" style={{ color: UNIVERSES[currentUniverse].accentColor }}>AVAILABLE_REALITIES</span>
@@ -168,12 +178,26 @@ export const EpisodeSection: React.FC<UIProps> = ({ currentUniverse, setUniverse
                             {ep.guest}
                         </span>
 
-                        <p className="text-[10px] md:text-xs text-white/50 mb-6 md:mb-8 leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">{ep.description}</p>
+                        <p className={`text-[10px] md:text-xs text-white/50 mb-6 md:mb-8 leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all ${currentUniverse === UniverseType.GLITCH ? 'font-mono' : ''
+                            }`}>
+                            {ep.description}
+                        </p>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-between">
                             <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[8px] md:text-[9px] font-black tracking-widest uppercase">
                                 {ep.topic}
                             </div>
+
+                            {/* Enter Button for Episode */}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate('/simulator');
+                                }}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold uppercase hover:text-white text-white/50"
+                            >
+                                ENTER &gt;
+                            </button>
                         </div>
 
                         {currentUniverse === ep.universe && (

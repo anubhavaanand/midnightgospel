@@ -28,6 +28,7 @@ import ZombieCrowd from './ZombieCrowd';
 
 interface ZombieApocalypseProps {
   isActive: boolean;
+  scrollProgress?: number;
 }
 
 /**
@@ -105,7 +106,7 @@ function ApocalypseAtmosphere() {
   );
 }
 
-export default function ZombieApocalypse({ isActive }: ZombieApocalypseProps) {
+export default function ZombieApocalypse({ isActive, scrollProgress }: ZombieApocalypseProps) {
   if (!isActive) return null;
 
   return (
