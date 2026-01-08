@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export const useAudioAnalyzer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -105,6 +105,21 @@ export const useAudioAnalyzer = () => {
             setIsPlaying(false);
         }
     }, [isPlaying, initContext]);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (sourceRef.current) {
+                try { sourceRef.current.stop(); } catch (e) { }
+            }
+            if (lfoRef.current) {
+                try { lfoRef.current.stop(); } catch (e) { }
+            }
+            if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+                audioContextRef.current.close();
+            }
+        };
+    }, []);
 
     return {
         isPlaying,
