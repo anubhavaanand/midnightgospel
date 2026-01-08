@@ -60,8 +60,18 @@ export const useAudioAnalyzer = () => {
         const context = initContext();
 
         if (isPlaying) {
-            if (sourceRef.current) sourceRef.current.stop();
-            if (lfoRef.current) lfoRef.current.stop();
+            try {
+                if (sourceRef.current) sourceRef.current.stop();
+            } catch (e) {
+                console.warn('Error stopping source:', e);
+            }
+
+            try {
+                if (lfoRef.current) lfoRef.current.stop();
+            } catch (e) {
+                console.warn('Error stopping LFO:', e);
+            }
+
             sourceRef.current = null;
             lfoRef.current = null;
             setIsPlaying(false);
