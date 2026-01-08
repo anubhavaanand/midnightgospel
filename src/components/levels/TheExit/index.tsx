@@ -47,7 +47,7 @@ import EgoFormations from './EgoFormations';
  * - Series climax: Acceptance of impermanence
  */
 
-export default function TheExit({ isActive }: { isActive: boolean }) {
+export default function TheExit({ isActive, scrollProgress }: { isActive: boolean; scrollProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
 

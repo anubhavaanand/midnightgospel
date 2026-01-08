@@ -11,14 +11,14 @@ import SoulBird from './SoulBird';
  * Visual: Warm, healing glow against the darkness.
  */
 
-export default function BlindedByEnd({ isActive }: { isActive: boolean }) {
+export default function BlindedByEnd({ isActive, scrollProgress }: { isActive: boolean; scrollProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
   const particlePositions = useMemo(() => {
     const count = 100;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      // Floating upwards like embers
+      // ... (rest of particle logic same as original, omitted for brevity if I could, but I must provide valid replacement)
       positions[i * 3] = (Math.random() - 0.5) * 25;
       positions[i * 3 + 1] = Math.random() * 20;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 20 - 5;
@@ -47,7 +47,7 @@ export default function BlindedByEnd({ isActive }: { isActive: boolean }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, -10, -5]}>
+    <group ref={groupRef}>
       {/* Ambient Light - Warm Glow */}
       <ambientLight color="#ff9900" intensity={0.4} />
 

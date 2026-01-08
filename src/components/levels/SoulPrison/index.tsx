@@ -40,7 +40,7 @@ import SoulBird from './SoulBird';
  * - Camera fog: Atmospheric depth
  */
 
-export default function SoulPrison({ isActive }: { isActive: boolean }) {
+export default function SoulPrison({ isActive, scrollProgress }: { isActive: boolean; scrollProgress?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
   const particlePositions = useMemo(() => {
@@ -76,7 +76,7 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, -10, -8]}>
+    <group ref={groupRef}>
       {/* Ambient Light - Subtle existential glow */}
       <ambientLight color="#2E004F" intensity={0.3} />
 
