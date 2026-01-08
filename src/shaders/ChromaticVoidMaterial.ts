@@ -52,16 +52,12 @@ export const ChromaticVoidMaterial = shaderMaterial(
       return mix(nx0, nx1, f.y);
     }
 
-    // Fractal Brownian Motion
+    // Optimized Fractal Brownian Motion (3 octaves)
     float fbm(vec2 p) {
       float value = 0.0;
-      float amplitude = 0.5;
-      float frequency = 1.0;
-      for (int i = 0; i < 5; i++) {
-        value += amplitude * noise(p * frequency);
-        frequency *= 2.0;
-        amplitude *= 0.5;
-      }
+      value += 0.5 * noise(p);
+      value += 0.25 * noise(p * 2.0);
+      value += 0.125 * noise(p * 4.0);
       return value;
     }
 
