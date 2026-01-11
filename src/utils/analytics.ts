@@ -1,7 +1,6 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
 // @ts-check
-// @ts-ignore
 
 /**
  * Midnight Gospel 3D - Global Analytics Configuration

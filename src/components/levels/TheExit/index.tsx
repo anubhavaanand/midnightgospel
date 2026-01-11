@@ -1,150 +1,342 @@
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useEffect, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import ParticleExplosion from './ParticleExplosion';
 import EgoFormations from './EgoFormations';
 
 /**
- * The Exit - Level 5 (Final)
+ * The Exit - Level 6 (Final Transcendence)
  * 
- * Location: 0.90-1.00 of scroll journey (climactic finale)
- * Episode Theme: "Annihilation of Joy" finale + series conclusion
- * 
- * Visual Philosophy:
- * - Transcendence through ego death
- * - Consciousness expansion into void
- * - Third eye opening (Hindu spiritual metaphor)
- * - Return to cosmic origin
- * - Celebration of impermanence and acceptance
- * 
- * Design Elements:
- * 1. ParticleExplosion: Massive consciousness burst (1200+ particles)
- * 2. EgoFormations: Geometric ego structures dissolving (100 rotating polyhedrons)
- * 3. Lighting: Chaos → order transition (overwhelm → peace)
- * 4. Atmosphere: Void fade (becoming one with infinite consciousness)
- * 5. Camera Moment: Final ascent (reaching third eye)
- * 
- * Color Palette (Strict Enforcement):
- * - Hot Pink: #FF007F (60% - explosive energy)
- * - Cyan Energy: #00FFFF (30% - divine consciousness)
- * - Deep Purple: #2E004F (10% - grounding base)
- * - White Highlights: #F0F0F0 (essence/pure consciousness)
- * - Black Void: #0A0E27 (background/infinity)
- * 
- * Performance Target: 10-15ms GPU time (60 FPS achievable)
- * Key Optimization: Instanced rendering for ego formations + single points draw call for particles
- * 
- * Animation Techniques:
- * - Particle spawning: Crescendo effect (acceleration of emission rate)
- * - Ego formations: Chaotic rotation (increasing speed over time)
- * - Lighting: Pulsing intensity (builds toward climax)
- * - Camera: Potential for Theatre.js final reveal (optional for Phase 3)
- * 
- * Narrative Function:
- * - Represents consciousness leaving the body
- * - Ego structures shattering into primordial energy
- * - Return to the infinite
- * - Series climax: Acceptance of impermanence
+ * Theme: Ego Death, Rebirth, Cosmic Unity
+ * Visual: Spectacular particle explosion with consciousness expansion
+ * Enhanced with interactive third eye portal and transcendent effects
  */
 
-export default function TheExit({ isActive, scrollProgress }: { isActive: boolean; scrollProgress?: number }) {
+// Interactive Third Eye Portal - The center of transcendence
+function ThirdEyePortal() {
+  const portalRef = useRef<THREE.Group>(null);
+  const innerRef = useRef<THREE.Mesh>(null);
+  const outerRef = useRef<THREE.Mesh>(null);
+  const [activated, setActivated] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  useFrame((state) => {
+    if (!portalRef.current) return;
+    const time = state.clock.elapsedTime;
+
+    // Rotation
+    portalRef.current.rotation.z = time * 0.3;
+
+    if (innerRef.current) {
+      innerRef.current.rotation.z = -time * 0.5;
+      const scale = activated ? 1.5 : 1 + Math.sin(time * 2) * 0.1;
+      innerRef.current.scale.setScalar(scale);
+
+      const mat = innerRef.current.material as THREE.MeshStandardMaterial;
+      mat.emissiveIntensity = activated ? 2 : 0.8 + Math.sin(time * 4) * 0.4;
+    }
+
+    if (outerRef.current) {
+      const pulse = 1 + Math.sin(time * 1.5) * 0.15;
+      outerRef.current.scale.setScalar(activated ? 2 : pulse);
+    }
+  });
+
+  return (
+    <group ref={portalRef} position={[0, 5, -8]}>
+      {/* Inner eye - The consciousness core */}
+      <mesh
+        ref={innerRef}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+        onClick={() => setActivated(!activated)}
+      >
+        <circleGeometry args={[1.5, 32]} />
+        <meshStandardMaterial
+          color={activated ? "#ffffff" : "#00FFFF"}
+          emissive={activated ? "#00FFFF" : "#FF007F"}
+          emissiveIntensity={0.8}
+          side={THREE.DoubleSide}
+          transparent
+          opacity={0.95}
+        />
+      </mesh>
+
+      {/* Iris rings */}
+      {[1, 2, 3].map((i) => (
+        <mesh key={i} scale={[i * 0.6, i * 0.6, 1]}>
+          <torusGeometry args={[1.5, 0.08, 8, 64]} />
+          <meshBasicMaterial
+            color={i % 2 === 0 ? "#FF007F" : "#00FFFF"}
+            transparent
+            opacity={0.6 - i * 0.15}
+          />
+        </mesh>
+      ))}
+
+      {/* Outer aura */}
+      <mesh ref={outerRef}>
+        <ringGeometry args={[2, 3.5, 64]} />
+        <meshBasicMaterial
+          color="#FF007F"
+          transparent
+          opacity={hovered ? 0.5 : 0.25}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Radiant light when activated */}
+      <pointLight
+        color={activated ? "#00FFFF" : "#FF007F"}
+        intensity={activated ? 5 : 2}
+        distance={50}
+        decay={2}
+      />
+
+      {/* Spiral energy lines */}
+      {activated && [0, 1, 2, 3, 4, 5].map((i) => {
+        const angle = (i / 6) * Math.PI * 2;
+        return (
+          <mesh
+            key={`spiral-${i}`}
+            position={[Math.cos(angle) * 4, Math.sin(angle) * 4, 0]}
+            rotation={[0, 0, angle]}
+          >
+            <boxGeometry args={[0.1, 3, 0.1]} />
+            <meshBasicMaterial
+              color="#00FFFF"
+              transparent
+              opacity={0.6}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
+// Consciousness Waves - Rippling outward from center
+function ConsciousnessWaves() {
+  const waveRefs = useRef<THREE.Mesh[]>([]);
+
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+    waveRefs.current.forEach((wave, i) => {
+      if (!wave) return;
+      const phase = (time * 0.5 + i * 0.3) % 3;
+      wave.scale.setScalar(1 + phase * 3);
+      (wave.material as THREE.MeshBasicMaterial).opacity = 0.3 * (1 - phase / 3);
+    });
+  });
+
+  return (
+    <group position={[0, 5, -8]}>
+      {[0, 1, 2].map((i) => (
+        <mesh
+          key={i}
+          ref={(ref) => { if (ref) waveRefs.current[i] = ref; }}
+          rotation={[Math.PI / 2, 0, 0]}
+        >
+          <torusGeometry args={[2, 0.3, 8, 64]} />
+          <meshBasicMaterial
+            color="#00FFFF"
+            transparent
+            opacity={0.3}
+            side={THREE.DoubleSide}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Floating Consciousness Fragments - Interactive geometric shapes
+function ConsciousnessFragments() {
+  const fragmentsRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!fragmentsRef.current) return;
+    fragmentsRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+  });
+
+  const fragments = Array.from({ length: 20 }, (_, i) => {
+    const angle = (i / 20) * Math.PI * 2;
+    const radius = 12 + Math.random() * 8;
+    const height = (Math.random() - 0.5) * 15;
+    return {
+      position: [
+        Math.cos(angle) * radius,
+        height,
+        Math.sin(angle) * radius - 5
+      ] as [number, number, number],
+      scale: 0.3 + Math.random() * 0.5,
+      color: i % 3 === 0 ? "#FF007F" : i % 3 === 1 ? "#00FFFF" : "#F0F0F0"
+    };
+  });
+
+  return (
+    <group ref={fragmentsRef}>
+      {fragments.map((frag, i) => (
+        <mesh key={i} position={frag.position} scale={frag.scale}>
+          <octahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial
+            color={frag.color}
+            emissive={frag.color}
+            emissiveIntensity={0.6}
+            transparent
+            opacity={0.7}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Cosmic Dust - Gentle ambient particles
+function CosmicDust({ count = 300 }: { count?: number }) {
+  const pointsRef = useRef<THREE.Points>(null);
+
+  const positions = Array.from({ length: count * 3 }, () => (Math.random() - 0.5) * 80);
+  const positionsArray = new Float32Array(positions);
+
+  useFrame((state) => {
+    if (!pointsRef.current) return;
+    pointsRef.current.rotation.y = state.clock.elapsedTime * 0.02;
+    pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.1;
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positionsArray}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.1}
+        color="#ffffff"
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+export default function TheExit({ isActive }: { isActive: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
+  const { scene } = useThree();
 
-  useFrame((state: any) => {
+  useEffect(() => {
+    if (isActive) {
+      // Deep cosmic void fog
+      scene.fog = new THREE.Fog(0x0a0e27, 15, 80);
+    }
+  }, [isActive, scene]);
+
+  useFrame((_state, delta) => {
     if (groupRef.current && isActive) {
-      timeRef.current += state.delta;
+      timeRef.current += delta;
 
-      // Update camera fog for void effect
-      state.camera.fog = new THREE.Fog(0x0a0e27, 20, 100);
+      // Lighting crescendo - builds toward transcendence
+      const crescendo = Math.min(timeRef.current / 5.0, 1.0);
+      const lightChildren = groupRef.current.children.filter(
+        (c) => c instanceof THREE.PointLight || c instanceof THREE.AmbientLight
+      );
 
-      // Lighting crescendo - builds toward climax
-      const crescendo = Math.min(timeRef.current / 3.0, 1.0); // Ramp up over 3 seconds
-      const intensity = 0.3 + crescendo * 0.7; // 0.3 → 1.0
-
-      // Update all lights
-      const lights = groupRef.current.children.filter((c) => c instanceof THREE.Light);
-      lights.forEach((light) => {
+      lightChildren.forEach((light) => {
         if (light instanceof THREE.Light) {
-          light.intensity = intensity;
+          light.intensity = 0.3 + crescendo * 0.7;
         }
       });
     }
   });
 
+  if (!isActive) return null;
+
   return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Ambient Light - Builds from darkness */}
-      <ambientLight color="#00FFFF" intensity={0.3} />
+    <group ref={groupRef}>
+      {/* == LIGHTING SETUP == */}
 
-      {/* Main Cyan Light - Consciousness activation */}
-      <pointLight position={[0, 10, 0]} color="#00FFFF" intensity={0.6} distance={50} />
+      {/* Ambient - Cosmic glow */}
+      <ambientLight color="#2E004F" intensity={0.4} />
 
-      {/* Pink Explosion Light - Ego dissolution energy */}
-      <pointLight position={[15, 5, 5]} color="#FF007F" intensity={0.5} distance={40} />
+      {/* Main consciousness light */}
+      <pointLight position={[0, 10, 0]} color="#00FFFF" intensity={1.5} distance={60} />
 
-      {/* Purple Base Light - Grounding anchor */}
-      <pointLight position={[-15, 5, -5]} color="#2E004F" intensity={0.4} distance={35} />
+      {/* Pink energy - Ego dissolution */}
+      <pointLight position={[15, 5, 5]} color="#FF007F" intensity={1.2} distance={50} />
 
-      {/* Particle Explosion - Consciousness burst */}
+      {/* Purple grounding */}
+      <pointLight position={[-15, 5, -5]} color="#9900ff" intensity={0.8} distance={45} />
+
+      {/* White transcendence */}
+      <pointLight position={[0, 20, -5]} color="#ffffff" intensity={0.6} distance={40} />
+
+      {/* == INTERACTIVE ELEMENTS == */}
+
+      {/* Third Eye Portal - Main interactive element */}
+      <ThirdEyePortal />
+
+      {/* == PARTICLE SYSTEMS == */}
+
+      {/* Main particle explosion */}
       <ParticleExplosion />
 
-      {/* Ego Formations - Geometric dissolution */}
+      {/* Consciousness waves rippling outward */}
+      <ConsciousnessWaves />
+
+      {/* Floating geometric fragments */}
+      <ConsciousnessFragments />
+
+      {/* Ambient cosmic dust */}
+      <CosmicDust count={400} />
+
+      {/* == GEOMETRIC ELEMENTS == */}
+
+      {/* Ego Formations - Dissolving structures */}
       <EgoFormations />
 
-      {/* Upper void plane - Represents infinite space */}
-      <mesh position={[0, 20, 0]} scale={[100, 50, 100]}>
-        <planeGeometry args={[1, 1]} />
-        <meshStandardMaterial
-          color="#0A0E27"
-          emissive="#00FFFF"
-          emissiveIntensity={0.1}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      {/* == ENVIRONMENT == */}
 
-      {/* Lower grounding plane - Earth/origin */}
-      <mesh position={[0, -10, -8]} rotation={[-Math.PI / 2, 0, 0]} scale={[100, 100, 1]}>
-        <planeGeometry args={[1, 1]} />
+      {/* Void sphere - Infinite backdrop */}
+      <mesh position={[0, 0, 0]} scale={[200, 200, 200]}>
+        <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial
-          color="#2E004F"
-          emissive="#FF007F"
-          emissiveIntensity={0.15}
-        />
-      </mesh>
-
-      {/* Atmosphere sphere - Void surrounding consciousness */}
-      <mesh position={[0, 0, 0]} scale={[150, 150, 150]}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial
-          color="#0A0E27"
+          color="#050510"
           emissive="#2E004F"
-          emissiveIntensity={0.08}
+          emissiveIntensity={0.05}
           side={THREE.BackSide}
         />
       </mesh>
 
-      {/* Center void - Pure consciousness emptiness */}
-      <mesh position={[0, 5, -8]}>
-        <sphereGeometry args={[0.5, 8, 8]} />
-        <meshStandardMaterial
-          color="#F0F0F0"
-          emissive="#00FFFF"
-          emissiveIntensity={0.9}
-          roughness={0.2}
-          metalness={0.8}
+      {/* Upper light plane */}
+      <mesh position={[0, 25, -10]} rotation={[-0.3, 0, 0]} scale={[80, 40, 1]}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial
+          color="#00FFFF"
+          transparent
+          opacity={0.08}
+          blending={THREE.AdditiveBlending}
+          side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Rim light energy - Cosmic consciousness glow */}
-      <mesh position={[0, 15, 10]} rotation={[-0.3, 0, 0]} scale={[80, 60, 1]}>
-        <planeGeometry args={[1, 1]} />
+      {/* Lower grounding plane */}
+      <mesh position={[0, -10, -8]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[100, 100]} />
         <meshStandardMaterial
-          color="#00FFFF"
-          transparent
-          opacity={0.12}
+          color="#0A0E27"
           emissive="#FF007F"
-          emissiveIntensity={0.4}
+          emissiveIntensity={0.1}
         />
       </mesh>
     </group>

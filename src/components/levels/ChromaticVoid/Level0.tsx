@@ -5,7 +5,7 @@
  * - Pitch black space background
  * - Dense twinkling starfield
  * - 3D Sun with corona and glow
- * - Minimal floating elements
+ * - Dramatic cosmic lighting
  */
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -30,9 +30,6 @@ export default function ChromaticVoid({ isActive, scrollProgress = 0 }: Chromati
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.02;
 
       // Parallax scroll: Move the cosmos backwards and slightly up as user scrolls
-      // This creates a feeling of flying "into" the void
-      // The scrollProgress for Level 0 goes from 0 to 0.12 (approx)
-      // We amplify this small range to create noticeable movement
       const scrollOffset = scrollProgress * 100;
 
       // Move stars against the camera to simulate forward motion
@@ -47,16 +44,31 @@ export default function ChromaticVoid({ isActive, scrollProgress = 0 }: Chromati
 
   return (
     <group ref={groupRef}>
-      {/* Dense starfield - using global starfield instead to avoid double-rendering */}
-      {/* <Starfield count={3000} radius={120} /> */}
+      {/* Dense twinkling starfield - THE COSMIC BACKDROP */}
+      <Starfield count={3000} radius={120} />
 
       {/* 3D Sun - medium size, positioned to the right */}
       <group position={[20, 5, -40]}>
         <Sun position={[0, 0, 0]} size={5} />
       </group>
 
-      {/* Ambient light - balanced for visibility */}
-      <ambientLight intensity={0.12} color="#ffffff" />
+      {/* Enhanced ambient light for visibility */}
+      <ambientLight intensity={0.25} color="#b8c4ff" />
+
+      {/* Directional light for depth */}
+      <directionalLight
+        position={[10, 10, 5]}
+        intensity={0.5}
+        color="#00ffff"
+      />
+
+      {/* Rim light for dramatic effect */}
+      <pointLight
+        position={[-15, 5, -10]}
+        intensity={1.5}
+        color="#ff007f"
+        distance={50}
+      />
 
       {/* Simulator Pod - made larger and more visible */}
       <group scale={1.5}>

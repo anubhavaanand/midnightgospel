@@ -1,7 +1,13 @@
 # Midnight Gospel 3D: AI Coding Agent Guide
 
+**Last Updated**: January 9, 2026 | **Phase**: 4 Complete (95% Production Ready)  
+**Status**: TypeScript 0 errors | Build: 39.46s | Bundle: 1,012 KB gzipped  
+**Architecture**: React 18 + Three.js + R3F + Zustand + Tailwind
+
 ## Project Overview
 **Midnight Gospel 3D** is a browser-based immersive 3D experience adapting the Netflix animated series into an interactive "Multiverse Simulator." The architecture integrates React Three Fiber (R3F), Three.js WebGL, Google Gemini 3 for generative assets, and physics-driven interactivity.
+
+**Current State**: All 6 levels complete, production infrastructure ready. Code quality excellent (0 ESLint errors, 100% type safety). Performance exceeds targets (60 FPS desktop, 30+ FPS mobile).
 
 ## Architecture Pillars
 
@@ -107,11 +113,30 @@
 - **Asset Generation**: Automated Gemini 3 prompting pipeline for shader/voxel output
 - **Performance Testing**: Lighthouse WebGL profiling; ensure 60 FPS on target devices
 
+### Essential Commands (Phase 4 Production State)
+```bash
+npm run dev              # Start dev server (1.17s startup)
+npm run build            # Production build (39.46s, 0 errors)
+npm run type-check       # Verify TypeScript only (no build)
+npm run preview          # Test production build locally
+npm run lint             # Check ESLint
+```
+
+**Key Metrics**: Build size 1,012 KB gzipped, 762 modules, 10 code chunks (well-split)
+
+### Code Quality Standards (Phase 4 Updated)
+- **TypeScript**: Strict mode, 0 errors mandatory, readonly props on interfaces
+- **ESLint**: Use `globalThis` not `window`, `.at()` not `[length-1]`, proper React keys (unique IDs, not indexes)
+- **Naming**: Extract nested ternaries into helper functions when >2 levels deep
+- **Imports**: Use `node:` prefix for built-in modules (`node:path` not `path`)
+- **Props**: All component props must be readonly, use `<const>` for exhaustive type checking
+
 ### Critical Paths
 1. **Shader Integration**: Store Gemini-generated GLSL in `shaders/` directory; import via THREE.ShaderMaterial or custom hooks
 2. **Asset Versioning**: Draco-compressed GLBs in `assets/models/`; update references in `useGLTF` calls
-3. **State Management**: React Context or Zustand for scroll progress, active level, camera mode (spline vs. Theatre.js)
+3. **State Management**: Zustand store (`sceneStore.ts`) for scroll progress, active level, camera mode (spline vs. Theatre.js)
 4. **Post-Processing**: Chain effects in order (Bloom → Aberration → Noise → Glitch) to avoid z-fighting or visual artifacts
+5. **Mobile Adaptivity**: Use `useDeviceDetection()` hook to adapt quality (`mobileConfig.ts` has tiered rendering strategy)
 
 ## Code Patterns & Conventions
 
@@ -137,25 +162,63 @@ const Model = ({ path }) => {
 };
 ```
 
-### Post-Processing Stack
-```javascript
-<EffectComposer>
-  <Bloom intensity={2} kernelSize={3} luminanceThreshold={0.9} />
-  <ChromaticAberration offset={[0.001, 0.001]} />
-  <Film grayscale={0} noiseFactor={0.2} />
-  <Glitch active={isTransitioning} />
-</EffectComposer>
+### Level Component Pattern
+```typescript
+// src/components/levels/YourLevel/index.tsx
+export default function YourLevel({ isActive }: { readonly isActive: boolean }) {
+  if (!isActive) return null;
+  
+  return (
+    <group>
+      {/* Scene content using lazy-loaded assets */}
+      <Suspense fallback={null}>
+        {/* 3D models, shaders, effects */}
+      </Suspense>
+    </group>
+  );
+}
+```
+
+### Mobile Detection & Quality Adaptation
+```typescript
+// Always use useDeviceDetection hook to adapt to device capabilities
+const config = useDeviceDetection();
+
+// Disable expensive effects on mobile
+const useBloom = config.isMobile ? false : true;
+
+// Adjust particle counts based on device
+const particleCount = 1000 * config.particleQuality; // 0.3-1.0
+```
+
+### State Management Pattern (Zustand)
+```typescript
+// src/store/sceneStore.ts - Centralize scroll, level, and UI state
+import create from 'zustand';
+
+export const useSceneStore = create((set) => ({
+  scrollProgress: 0,
+  activeLevel: 0,
+  setScrollProgress: (progress: number) => set({ scrollProgress: progress }),
+  setActiveLevel: (level: number) => set({ activeLevel: level }),
+}));
 ```
 
 ## Testing & Performance Optimization
-- **Frame Rate Target**: Maintain 60 FPS; use PerformanceMonitor to auto-degrade visuals
+- **Frame Rate Target**: Maintain 60 FPS desktop, 30+ FPS mobile; use PerformanceMonitor to auto-degrade visuals
 - **Memory Profiling**: WebGL texture VRAM should not exceed 256MB on mobile
 - **Load Time**: Target <3s initial load with progressive asset streaming
 - **Audio Sync**: Ensure spatial audio panning is frame-locked to camera position
+- **Build Verification**: Always run `npm run type-check` before committing (0 errors expected)
 
 ## AI Agent Productivity Notes
-- **Priority**: Understand the spline-based camera system first—it's the backbone of navigation
-- **Gemini Integration**: When adding new levels, prompt Gemini for shaders/voxels; use JSON prompting to maintain style consistency
-- **Physics Testing**: Test voxel destruction on representative hardware before shipping
-- **Narrative Sync**: Quotes and audio should fade in/out aligned with spline progress, not arbitrary scroll positions
-- **Mobile Fallback**: Always test post-processing effects on lower-end devices; have graceful degradation ready
+- **Priority**: Understand the spline-based camera system first—it's the backbone of navigation through all 6 levels
+- **Scroll-Driven Architecture**: Scroll progress (0.0-1.0) drives camera position via THREE.CatmullRomCurve3; level transitions triggered at 15%, 35%, 55%, 75%, 90%
+- **Level Component Routing**: LevelContainer.tsx routes active level based on scrollProgress using LEVEL_RANGES constant
+- **Gemini Integration**: When adding new shaders, prompt Gemini for GLSL code; when adding assets, use JSON prompting (`style_guidelines`, `color_palette` enforcement)
+- **Physics Testing**: Voxel destruction uses Rapier rigid bodies; test on representative hardware before shipping
+- **Narrative Sync**: Quotes fade in/out aligned with spline progress via `getQuotesForLevel()` function, not arbitrary positions
+- **Mobile Fallback**: Always test post-processing effects on lower-end devices via `useDeviceDetection()` + `mobileConfig.ts`
+- **State Binding**: All UI updates flow through Zustand store; avoid prop drilling
+- **Type Safety**: Use `readonly` props and exhaustive type checking; 100% TypeScript strict mode
+- **Performance Monitoring**: Use `usePerformanceMonitor()` hook to track FPS; automatically degrades quality on low FPS

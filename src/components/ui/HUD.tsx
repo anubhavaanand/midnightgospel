@@ -4,16 +4,23 @@ import { LEVEL_RANGES } from '@utils/constants';
 import NavigationPanel from './NavigationPanel';
 import DebugPanel from './DebugPanel';
 import { QuickHelpButton } from './TouchTutorial';
-import AudioControls from './AudioControls';
-import ScreenshotButton from './ScreenshotButton';
-import KeyboardShortcuts, { KeyboardShortcutsButton } from './KeyboardShortcuts';
-import MiniMap from './MiniMap';
-import QuoteJournal, { QuoteJournalButton } from './QuoteJournal';
 
 /**
  * HUD overlay with level info and interactive elements.
  * Enhanced with episode data from Midnight Gospel research and theme-specific styling.
  */
+
+const getLevelDimensionName = (level: number): string => {
+  const names = [
+    'CHROMATIC RIBBON',
+    'EARTH 4-169',
+    'CLOWN WORLD',
+    'ASS CREAM',
+    'MOON R3T8',
+    'THE VOID'
+  ];
+  return names[level] ?? 'THE VOID';
+};
 
 // Episode metadata with thematic colors from Midnight Gospel visual language
 const EPISODE_DATA = [
@@ -92,11 +99,10 @@ export default function HUD() {
       {/* Back to Landing Button */}
       <button
         onClick={handleBackToLanding}
-        className="absolute top-8 left-8 glass-panel px-3 py-2 pointer-events-auto hover:bg-white/10 transition-colors group mb-2"
-        style={{ transform: 'translateY(-50px)' }}
+        className="absolute top-8 left-8 glass-panel px-4 py-3 pointer-events-auto hover:bg-white/20 transition-all duration-300 group z-50 border border-white/20 hover:border-cyan-400/50"
       >
-        <span className="text-white/60 text-xs group-hover:text-white transition-colors flex items-center gap-2">
-          <span className="text-midnight-cyan">←</span> EXIT_SIMULATOR
+        <span className="text-white/80 text-sm group-hover:text-white transition-colors flex items-center gap-2 font-medium">
+          <span className="text-midnight-cyan text-lg">←</span> EXIT_SIMULATOR
         </span>
       </button>
 
@@ -171,11 +177,7 @@ export default function HUD() {
       >
         <div className="text-[8px] text-white/30 tracking-[0.5em] mb-1">DIMENSION</div>
         <div className="text-midnight-cyan text-sm font-mono">
-          {activeLevel === 0 ? 'CHROMATIC RIBBON' :
-            activeLevel === 1 ? 'EARTH 4-169' :
-              activeLevel === 2 ? 'CLOWN WORLD' :
-                activeLevel === 3 ? 'ASS CREAM' :
-                  activeLevel === 4 ? 'MOON R3T8' : 'THE VOID'}
+          {getLevelDimensionName(activeLevel)}
         </div>
         <div className="text-[9px] text-white/40 mt-1 font-mono">
           COORD: {(scrollProgress * 999).toFixed(0)}.{Math.floor(scrollProgress * 100 % 10)}.{activeLevel}
@@ -214,13 +216,13 @@ export default function HUD() {
       {scrollProgress > 0 && (
         <div className="absolute bottom-8 right-8 glass-panel p-2 pointer-events-auto">
           <div className="flex gap-1">
-            {LEVEL_RANGES.map((_, i) => (
+            {LEVEL_RANGES.map((level) => (
               <div
-                key={i}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeLevel ? 'scale-125' : 'scale-100 opacity-40'
+                key={`level-${level.level}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${level.level === activeLevel ? 'scale-125' : 'scale-100 opacity-40'
                   }`}
                 style={{
-                  backgroundColor: i === activeLevel ? episodeData.color : '#ffffff'
+                  backgroundColor: level.level === activeLevel ? episodeData.color : '#ffffff'
                 }}
               />
             ))}
@@ -230,30 +232,7 @@ export default function HUD() {
 
       {/* Quick Help Button */}
       <QuickHelpButton />
-
-      {/* U1: Audio Controls */}
-      <AudioControls />
-
-      {/* U4: Mini-Map */}
-      <MiniMap />
-
-      {/* Bottom Right Tool Buttons */}
-      <div className="fixed bottom-8 right-24 flex gap-2 pointer-events-auto z-50">
-        {/* U2: Screenshot Button */}
-        <ScreenshotButton />
-
-        {/* U3: Keyboard Shortcuts Button */}
-        <KeyboardShortcutsButton />
-
-        {/* U5: Quote Journal Button */}
-        <QuoteJournalButton />
-      </div>
-
-      {/* U3: Keyboard Shortcuts Panel (modal) */}
-      <KeyboardShortcuts />
-
-      {/* U5: Quote Journal Panel (modal) */}
-      <QuoteJournal />
     </div>
   );
 }
+

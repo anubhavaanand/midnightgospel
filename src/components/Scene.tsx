@@ -11,11 +11,6 @@ import { useDeviceDetection } from '@hooks/useMobileResponsive';
 import CameraRig from './CameraRig';
 import LevelContainer from './levels/LevelContainer';
 import PerformanceMonitor from '@components/utils/PerformanceMonitor';
-import ParticleTrail from './effects/ParticleTrail';
-import ScreenShake from '@hooks/useScreenShake';
-import PostProcessingEffects from './effects/PostProcessingEffects';
-import Starfield from './effects/Starfield';
-import DebugLogger from '@components/utils/DebugLogger';
 
 /**
  * Pitch Black Space Background
@@ -104,40 +99,27 @@ function SceneContent({ scrollControlsRef }: any) {
       touchStartRef.current = null;
     };
 
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    globalThis.addEventListener('touchstart', handleTouchStart, { passive: true });
+    globalThis.addEventListener('touchmove', handleTouchMove, { passive: true });
+    globalThis.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      globalThis.removeEventListener('touchstart', handleTouchStart);
+      globalThis.removeEventListener('touchmove', handleTouchMove);
+      globalThis.removeEventListener('touchend', handleTouchEnd);
     };
   }, [config.isMobile, scrollControlsRef]);
 
   return (
     <Suspense fallback={null}>
-      <DebugLogger />
       <Physics gravity={[0, -5, 0]}>
         <CameraRig />
         <PerformanceMonitor />
         <SynthesizerDrone />
         <LevelContainer scrollProgress={scrollProgress} />
-
-        {/* Global Atmosphere - Breathtaking Starfield */}
-        <Starfield />
-
-        {/* E2: Particle Trail - cursor following particles */}
-        <ParticleTrail />
-
-        {/* E4: Screen Shake - camera shake on level transitions */}
-        <ScreenShake intensity={0.3} decay={0.9} />
-
-        {/* Visual Effects - DISABLED due to severe performance impact (17fps) */}
-        {/* <PostProcessingEffects /> */}
       </Physics>
-      {/* Minimal ambient light - just enough to see */}
-      <ambientLight intensity={0.05} />
+      {/* Global ambient light - enough to see the scene */}
+      <ambientLight intensity={0.15} color="#8888ff" />
     </Suspense>
   );
 }

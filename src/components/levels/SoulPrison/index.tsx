@@ -40,7 +40,7 @@ import SoulBird from './SoulBird';
  * - Camera fog: Atmospheric depth
  */
 
-export default function SoulPrison({ isActive, scrollProgress }: { isActive: boolean; scrollProgress?: number }) {
+export default function SoulPrison({ isActive }: { isActive: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
   const particlePositions = useMemo(() => {

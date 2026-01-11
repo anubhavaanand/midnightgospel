@@ -84,13 +84,14 @@ export default function NavigationPanel() {
   }, [activeLevel, handleLevelSelect]);
 
   return (
-    <div className="fixed top-8 right-8 z-20">
+    <div className="fixed top-24 right-8 z-30 pointer-events-auto">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="glass-button text-midnight-pink font-bold tracking-wider flex items-center gap-2"
+        className="glass-panel px-5 py-3 text-midnight-pink font-bold tracking-wider flex items-center gap-3 hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-midnight-cyan/50"
       >
-        <span className="text-midnight-cyan">☰</span> LEVELS
-        <span className="text-[8px] text-white/30 hidden md:inline">[L]</span>
+        <span className="text-midnight-cyan text-lg">☰</span>
+        <span className="text-white/90">LEVELS</span>
+        <span className="text-[9px] text-white/40 hidden md:inline ml-1">[L]</span>
       </button>
 
       {isOpen && (
