@@ -32,52 +32,48 @@ export const useAdaptivePostProcessing = (
   });
 
   const fpsBufferRef = useRef<number[]>([]);
+  const lastCheckTimeRef = useRef(0);
+  const currentQualityRef = useRef<PostProcessingQuality['quality']>('high');
 
-  useFrame(() => {
+  useFrame((_state) => {
     const currentTime = performance.now();
-    fpsBufferRef.current = [...fpsBufferRef.current, currentTime];
 
-    // Keep last 60 frame timestamps
-    if (fpsBufferRef.current.length > 60) {
-      fpsBufferRef.current.shift();
-    }
+    // Calculate FPS
+    fpsBufferRef.current.push(currentTime);
+    if (fpsBufferRef.current.length > 60) fpsBufferRef.current.shift();
 
-    // Calculate average frame time over last 60 frames
+    // Throttle checks to once every 1000ms
+    if (currentTime - lastCheckTimeRef.current < 1000) return;
+    lastCheckTimeRef.current = currentTime;
+
     if (fpsBufferRef.current.length >= 30) {
       const frameTimes: number[] = [];
       for (let i = 1; i < fpsBufferRef.current.length; i++) {
         frameTimes.push(fpsBufferRef.current[i] - fpsBufferRef.current[i - 1]);
       }
 
-      const avgFrameTime =
-        frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
+      const avgFrameTime = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
       const currentFPS = 1000 / avgFrameTime;
 
-      // Adapt quality based on FPS
+      let newQuality: PostProcessingQuality['quality'] = 'high';
+
       if (currentFPS < lowFPSThreshold) {
-        setQuality({
-          bloom: false,
-          chromatic: false,
-          noise: false,
-          glitch: false,
-          quality: 'low',
-        });
+        newQuality = 'low';
       } else if (currentFPS < targetFPS * 0.8) {
-        setQuality({
-          bloom: false,
-          chromatic: false,
-          noise: true,
-          glitch: false,
-          quality: 'medium',
-        });
-      } else {
-        setQuality({
-          bloom: true,
-          chromatic: true,
-          noise: true,
-          glitch: true,
-          quality: 'high',
-        });
+        newQuality = 'medium';
+      }
+
+      // Only update state if quality tier changes
+      if (newQuality !== currentQualityRef.current) {
+        currentQualityRef.current = newQuality;
+
+        if (newQuality === 'low') {
+          setQuality({ bloom: false, chromatic: false, noise: false, glitch: false, quality: 'low' });
+        } else if (newQuality === 'medium') {
+          setQuality({ bloom: true, chromatic: false, noise: true, glitch: false, quality: 'medium' }); // Keep bloom on medium
+        } else {
+          setQuality({ bloom: true, chromatic: true, noise: true, glitch: true, quality: 'high' });
+        }
       }
     }
   });

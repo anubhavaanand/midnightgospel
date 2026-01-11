@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useSoundEffects } from '@hooks/useSoundEffects';
 import SkeletalLandscape from './SkeletalLandscape';
 import SoulBird from './SoulBird';
 
@@ -130,6 +131,7 @@ function HealingOrb({ position }: { position: [number, number, number] }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const { playHover, playClick, playActivate } = useSoundEffects();
 
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -147,18 +149,30 @@ function HealingOrb({ position }: { position: [number, number, number] }) {
     mat.emissiveIntensity = hovered ? 1.5 : 0.8 + Math.sin(time * 3) * 0.3;
   });
 
-  const handleClick = () => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
     setClicked(!clicked);
-    // Could trigger audio or other effects here
+    playClick();
+    if (!clicked) {
+      playActivate();
+    }
   };
 
   return (
     <group position={position}>
       <mesh
         ref={meshRef}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        onPointerOver={() => {
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+          playHover();
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
         onClick={handleClick}
+        visible={true}
       >
         <icosahedronGeometry args={[0.8, 1]} />
         <meshStandardMaterial

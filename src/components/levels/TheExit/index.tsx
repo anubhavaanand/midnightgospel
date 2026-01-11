@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
+import { useSoundEffects } from '@hooks/useSoundEffects';
 import * as THREE from 'three';
 import ParticleExplosion from './ParticleExplosion';
 import EgoFormations from './EgoFormations';
@@ -19,6 +20,7 @@ function ThirdEyePortal() {
   const outerRef = useRef<THREE.Mesh>(null);
   const [activated, setActivated] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const { playHover, playActivate, playDeactivate, playPulse } = useSoundEffects();
 
   useFrame((state) => {
     if (!portalRef.current) return;
@@ -42,14 +44,33 @@ function ThirdEyePortal() {
     }
   });
 
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    setActivated(!activated);
+    if (!activated) {
+      playActivate();
+      // Add a delayed pulse sound
+      setTimeout(() => playPulse(), 500);
+    } else {
+      playDeactivate();
+    }
+  };
+
   return (
     <group ref={portalRef} position={[0, 5, -8]}>
       {/* Inner eye - The consciousness core */}
       <mesh
         ref={innerRef}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-        onClick={() => setActivated(!activated)}
+        onPointerOver={() => {
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+          playHover();
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
+        onClick={handleClick}
       >
         <circleGeometry args={[1.5, 32]} />
         <meshStandardMaterial

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useSoundEffects } from '@hooks/useSoundEffects';
 import GrindingMechanism from './GrindingMechanism';
 import ClownCrowd from './ClownCrowd';
 
@@ -23,6 +24,7 @@ function CarnivalBalloon({ position, color }: { position: [number, number, numbe
   const stringRef = useRef<THREE.Mesh>(null);
   const [popped, setPopped] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const { playClick, playChime } = useSoundEffects();
 
   useFrame((state) => {
     if (!meshRef.current || popped) return;
@@ -47,6 +49,8 @@ function CarnivalBalloon({ position, color }: { position: [number, number, numbe
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     setPopped(true);
+    playClick();
+    setTimeout(() => playChime(), 100);
     setTimeout(() => setPopped(false), 3000);
   };
 
