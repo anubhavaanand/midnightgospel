@@ -10,7 +10,7 @@
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 18+ and npm 8+
 
 ### Installation
 
@@ -56,7 +56,7 @@ VITE_GOOGLE_API_KEY=your_google_ai_api_key_here
 - **Zustand** for state management
 - **Tailwind CSS** for UI styling
 - **Framer Motion** + **GSAP** for animations
-- **@react-three/rapier** for physics simulation
+- **@react-three/rapier** (v1.5.x) for physics simulation - locked to 1.x for React 18 compatibility
 - **Google Gemini AI** for generative assets and shaders
 
 ## Project Structure
