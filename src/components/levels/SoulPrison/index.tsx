@@ -3,6 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import SkeletalLandscape from './SkeletalLandscape';
 import SoulBird from './SoulBird';
+// TEMPORARILY DISABLED: 29MB model causing WebGL crash
+// import FallenAngel from '@components/models/FallenAngel';
 
 /**
  * Soul Prison Level - Level 4
@@ -94,6 +96,10 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
 
       {/* Soul Bird - Mystical escape entity */}
       <SoulBird />
+
+      {/* Fallen Angel - TEMPORARILY DISABLED (29MB model causing WebGL crash)
+      <FallenAngel position={[-8, 0, -12]} rotation={[0, 0.5, 0]} scale={0.015} />
+      */}
 
       {/* Atmosphere Plane - Fog effect layer */}
       <mesh position={[0, 8, 0]} scale={[40, 1, 40]}>
