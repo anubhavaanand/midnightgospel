@@ -3,7 +3,7 @@
  * Interactive hub for navigating between levels/worlds
  * Each planet represents a different episode/level
  */
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
@@ -88,6 +88,8 @@ interface SolarSystemHubProps {
 export default function SolarSystemHub({ onSelectPlanet, currentLevel = -1 }: SolarSystemHubProps) {
     return (
         <group>
+            <ScrollNavigator onNavigate={onSelectPlanet} currentId={currentLevel === -1 ? 0 : currentLevel} />
+
             {/* Central sun */}
             <CentralSun />
             <ambientLight intensity={0.2} color="#4A004A" />
@@ -108,6 +110,43 @@ export default function SolarSystemHub({ onSelectPlanet, currentLevel = -1 }: So
             ))}
         </group>
     );
+}
+
+/**
+ * Handles mouse wheel scroll to cycle through planets
+ */
+function ScrollNavigator({ onNavigate, currentId }: { onNavigate: (id: number) => void, currentId: number }) {
+    const lastScrollTime = useRef(0);
+
+    useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            // Ignore if interactions are not on the canvas (e.g. scrolling UI)
+            if ((e.target as HTMLElement).tagName !== 'CANVAS') return;
+
+            const now = Date.now();
+            // Debounce scroll to prevent rapid jumping (500ms)
+            if (now - lastScrollTime.current < 500) return;
+
+            if (Math.abs(e.deltaY) > 30) {
+                lastScrollTime.current = now;
+
+                // Determine direction
+                const direction = e.deltaY > 0 ? 1 : -1;
+
+                // Calculate new index
+                let newIndex = currentId + direction;
+                if (newIndex >= PLANETS.length) newIndex = 0;
+                if (newIndex < 0) newIndex = PLANETS.length - 1;
+
+                onNavigate(newIndex);
+            }
+        };
+
+        window.addEventListener('wheel', handleWheel);
+        return () => window.removeEventListener('wheel', handleWheel);
+    }, [currentId, onNavigate]);
+
+    return null;
 }
 
 /**
