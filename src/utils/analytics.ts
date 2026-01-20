@@ -20,7 +20,7 @@ declare global {
 
 export function initializeAnalytics(): void {
   const gaId = import.meta.env.VITE_GA_ID;
-  
+
   if (!gaId) {
     console.warn('⚠️ Google Analytics ID not configured');
     return;
@@ -30,7 +30,9 @@ export function initializeAnalytics(): void {
   window.dataLayer = window.dataLayer || [];
 
   // gtag function
+  // eslint-disable-next-line
   function gtag(..._args: any[]) {
+    // eslint-disable-next-line prefer-rest-params
     window.dataLayer.push(arguments);
   }
 
@@ -75,7 +77,7 @@ export function trackEvent(
 
 export async function initializeSentry(): Promise<void> {
   const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
-  
+
   if (!sentryDsn) {
     console.warn('⚠️ Sentry DSN not configured');
     return;
@@ -85,7 +87,7 @@ export async function initializeSentry(): Promise<void> {
     // Sentry integration deferred to optional dependency
     // Install with: npm install @sentry/react @sentry/tracing
     // Then uncomment initialization below
-    
+
     // const Sentry = await import('@sentry/react');
     // Sentry.init({ ... });
 
@@ -103,24 +105,24 @@ export const analyticsEvents = {
   // App lifecycle
   APP_LOADED: 'app_loaded',
   APP_ERROR: 'app_error',
-  
+
   // Navigation
   LEVEL_STARTED: 'level_started',
   LEVEL_COMPLETED: 'level_completed',
   LEVEL_FAILED: 'level_failed',
-  
+
   // Performance
   PERFORMANCE_METRIC: 'performance_metric',
   FPS_DROP: 'fps_drop',
-  
+
   // Audio
   AUDIO_ENABLED: 'audio_enabled',
   AUDIO_DISABLED: 'audio_disabled',
-  
+
   // Device
   DEVICE_DETECTED: 'device_detected',
   QUALITY_ADJUSTED: 'quality_adjusted',
-  
+
   // Engagement
   USER_INTERACTION: 'user_interaction',
   SHARE_CLICKED: 'share_clicked',
@@ -140,13 +142,13 @@ export function trackPerformanceMetrics(): void {
             name: entry.name,
             rating: (entry as any).rating,
           };
-          
+
           if ('duration' in entry) {
             entryData.value = (entry as any).duration;
           } else if ('startTime' in entry) {
             entryData.value = (entry as any).startTime;
           }
-          
+
           trackEvent('core_web_vital', entryData);
         }
       });

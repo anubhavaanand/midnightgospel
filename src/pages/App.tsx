@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense, useEffect, useState, useCallback } from 'react';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import Scene from '@components/Scene';
 import PostProcessingEffects from '@components/effects/PostProcessingEffects';
 import Loading from '@components/ui/Loading';
@@ -116,6 +116,7 @@ export default function SimulatorApp() {
           powerPreference: mobileConfig.isLowEnd ? 'low-power' : 'default',
           pixelRatio: mobileConfig.dpr,
         }}
+        shadows
       >
         <Suspense fallback={null}>
           {/* Controls for Hub Mode */}
@@ -128,6 +129,19 @@ export default function SimulatorApp() {
               maxPolarAngle={Math.PI / 2}
               autoRotate={true}
               autoRotateSpeed={0.5}
+            />
+          )}
+
+          {/* Controls for Levels - User Feedback Zoom/Scroll */}
+          {!showHub && !isInTransition && (
+            <OrbitControls
+              enablePan={false}
+              enableZoom={true}
+              minDistance={5}
+              maxDistance={30}
+              maxPolarAngle={Math.PI / 1.5}
+              enableDamping={true}
+              dampingFactor={0.05}
             />
           )}
 
@@ -196,3 +210,9 @@ export default function SimulatorApp() {
   );
 }
 
+// Preload critical 3D assets for smooth transitions
+useGLTF.preload('/models/sci-fi-alien-city/source/alien_city.glb');
+// FBX preloading if supported, otherwise rely on caching
+useGLTF.preload('/models/black-hole/source/black_hole.fbx'); // Note: useFBX doesn't have a direct preload on the hook easily accessible, but often useGLTF's loader manager handles it or we can just let it load on demand with Suspense.
+// Actually, useFBX uses FBXLoader. We can use useLoader.preload(FBXLoader, url).
+// But for now, let's stick to simple GLTF preload and let FBX load with Suspense fallback.
