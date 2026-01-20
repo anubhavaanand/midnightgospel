@@ -51,12 +51,12 @@ export const useMouseRaycaster = () => {
  */
 export const useMouseImpulse = () => {
   const raycasterState = useMouseRaycaster();
+  const { camera } = useThree();
 
   const applyImpulse = (rigidbody: any, force: number = 10) => {
     if (!rigidbody || !raycasterState.raycaster) return;
 
     const { raycaster, mouse } = raycasterState;
-    const camera = useThree().camera;
 
     // Calculate impulse direction from raycaster
     raycaster.setFromCamera(mouse, camera);

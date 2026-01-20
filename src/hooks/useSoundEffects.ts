@@ -97,7 +97,7 @@ const playSoundEffect = (effect: SoundEffect, volume: number = 1): void => {
                 createLayeredSound(ctx, [523, 659, 784], 'sine', 0.3, baseVolume * 0.6);
                 break;
 
-            case 'levelChange':
+            case 'levelChange': {
                 // Whoosh with frequency sweep
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
@@ -111,6 +111,7 @@ const playSoundEffect = (effect: SoundEffect, volume: number = 1): void => {
                 osc.start();
                 osc.stop(ctx.currentTime + 0.3);
                 break;
+            }
 
             case 'activate':
                 // Rising tone - activation
@@ -122,7 +123,7 @@ const playSoundEffect = (effect: SoundEffect, volume: number = 1): void => {
                 createLayeredSound(ctx, [600, 450, 300], 'sine', 0.3, baseVolume * 0.4);
                 break;
 
-            case 'whoosh':
+            case 'whoosh': {
                 // Noise-based whoosh
                 const bufferSize = ctx.sampleRate * 0.2;
                 const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -138,6 +139,7 @@ const playSoundEffect = (effect: SoundEffect, volume: number = 1): void => {
                 noiseGain.connect(ctx.destination);
                 noise.start();
                 break;
+            }
 
             case 'chime':
                 // Bell-like chime
