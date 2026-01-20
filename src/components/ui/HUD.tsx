@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useSceneStore } from '@store/sceneStore';
+import { useGameStore } from '@store/gameStore';
 import { LEVEL_RANGES } from '@utils/constants';
 import NavigationPanel from './NavigationPanel';
 import DebugPanel from './DebugPanel';
-import { QuickHelpButton } from './TouchTutorial';
 
 /**
  * HUD overlay with level info and interactive elements.
@@ -167,7 +167,6 @@ export default function HUD() {
         </div>
       </div>
 
-      {/* Top-right: Cosmic Coordinates - Enhanced Glassmorphism */}
       <div
         className="absolute top-8 right-8 glass-panel p-3 pointer-events-auto text-right backdrop-blur-xl border border-white/20 shadow-2xl"
         style={{
@@ -175,6 +174,14 @@ export default function HUD() {
           boxShadow: `0 0 30px ${episodeData.color}33`
         }}
       >
+        <div className="flex flex-col items-end gap-1 mb-2 border-b border-white/10 pb-2">
+          <div className="text-[8px] text-white/30 tracking-[0.5em]">STARDUST</div>
+          <div className="text-cyan-400 text-xl font-bold font-mono flex items-center gap-2">
+            <span>💎</span>
+            {useGameStore((state) => state.score)}
+          </div>
+        </div>
+
         <div className="text-[8px] text-white/30 tracking-[0.5em] mb-1">DIMENSION</div>
         <div className="text-midnight-cyan text-sm font-mono">
           {getLevelDimensionName(activeLevel)}
@@ -230,8 +237,7 @@ export default function HUD() {
         </div>
       )}
 
-      {/* Quick Help Button */}
-      <QuickHelpButton />
+      {/* End of HUD */}
     </div>
   );
 }
