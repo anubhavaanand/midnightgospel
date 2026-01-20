@@ -10,6 +10,25 @@ export interface SavedQuote {
   savedAt: number;
 }
 
+// Achievement type
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlockedAt: number;
+}
+
+// Achievement definitions
+export const ACHIEVEMENTS = {
+  FIRST_EGG: { id: 'first-egg', name: 'Egg Hunter', description: 'Collect your first easter egg', icon: '🥚' },
+  ALL_EGGS: { id: 'all-eggs', name: 'Completionist', description: 'Collect all easter eggs', icon: '🏆' },
+  QUOTE_COLLECTOR: { id: 'quote-collector', name: 'Philosopher', description: 'Save 10 quotes', icon: '📜' },
+  ALL_LEVELS: { id: 'all-levels', name: 'Explorer', description: 'Visit all 6 levels', icon: '🌌' },
+  SHARE_MOMENT: { id: 'share-moment', name: 'Social', description: 'Share a moment', icon: '📤' },
+  DEEP_DIVE: { id: 'deep-dive', name: 'Deep Diver', description: 'Reach 100% scroll', icon: '🔮' },
+} as const;
+
 // Audio settings
 export interface AudioSettings {
   masterVolume: number;
@@ -33,10 +52,23 @@ interface SceneStore {
   // U5: Quote collection
   savedQuotes: SavedQuote[];
 
+  // Easter eggs and achievements
+  collectedEggs: string[];
+  achievements: Achievement[];
+  levelsVisited: number[];
+  maxScrollProgress: number;
+
   // UI visibility states
   showKeyboardShortcuts: boolean;
   showMiniMap: boolean;
   showQuoteJournal: boolean;
+  showAchievements: boolean;
+  showSharePanel: boolean;
+
+  // Hub navigation state
+  showHub: boolean;
+  isInTransition: boolean;
+  introCompleted: boolean;
 
   // Existing setters
   setScrollProgress: (progress: number) => void;
@@ -57,10 +89,25 @@ interface SceneStore {
   removeQuote: (savedAt: number) => void;
   clearAllQuotes: () => void;
 
+  // Easter egg and achievement actions
+  collectEgg: (eggId: string) => void;
+  unlockAchievement: (achievementId: string, name: string, description: string, icon: string) => void;
+  visitLevel: (level: number) => void;
+  updateMaxScroll: (progress: number) => void;
+
   // UI visibility toggles
   toggleKeyboardShortcuts: () => void;
   toggleMiniMap: () => void;
   toggleQuoteJournal: () => void;
+  toggleAchievements: () => void;
+  toggleSharePanel: () => void;
+
+  // Hub navigation actions
+  setShowHub: (show: boolean) => void;
+  setIsInTransition: (transitioning: boolean) => void;
+  setIntroCompleted: (completed: boolean) => void;
+  navigateToLevel: (level: number) => void;
+  returnToHub: () => void;
 }
 
 export const useSceneStore = create<SceneStore>()(
@@ -85,10 +132,23 @@ export const useSceneStore = create<SceneStore>()(
       // U5: Quote collection initial state
       savedQuotes: [],
 
+      // Easter eggs and achievements initial state
+      collectedEggs: [],
+      achievements: [],
+      levelsVisited: [],
+      maxScrollProgress: 0,
+
       // UI visibility initial states
       showKeyboardShortcuts: false,
       showMiniMap: true,
       showQuoteJournal: false,
+      showAchievements: false,
+      showSharePanel: false,
+
+      // Hub navigation initial state
+      showHub: true,
+      isInTransition: false,
+      introCompleted: false,
 
       // Existing setters
       setScrollProgress: (progress) => set({ scrollProgress: progress }),
@@ -121,12 +181,53 @@ export const useSceneStore = create<SceneStore>()(
       })),
       clearAllQuotes: () => set({ savedQuotes: [] }),
 
+      // Easter egg and achievement actions
+      collectEgg: (eggId) => set((state) => {
+        if (state.collectedEggs.includes(eggId)) return state;
+        return { collectedEggs: [...state.collectedEggs, eggId] };
+      }),
+      unlockAchievement: (achievementId, name, description, icon) => set((state) => {
+        if (state.achievements.some(a => a.id === achievementId)) return state;
+        return {
+          achievements: [...state.achievements, {
+            id: achievementId,
+            name,
+            description,
+            icon,
+            unlockedAt: Date.now()
+          }]
+        };
+      }),
+      visitLevel: (level) => set((state) => {
+        if (state.levelsVisited.includes(level)) return state;
+        return { levelsVisited: [...state.levelsVisited, level] };
+      }),
+      updateMaxScroll: (progress) => set((state) => ({
+        maxScrollProgress: Math.max(state.maxScrollProgress, progress)
+      })),
+
       // UI visibility toggles
       toggleKeyboardShortcuts: () => set((state) => ({
         showKeyboardShortcuts: !state.showKeyboardShortcuts
       })),
       toggleMiniMap: () => set((state) => ({ showMiniMap: !state.showMiniMap })),
       toggleQuoteJournal: () => set((state) => ({ showQuoteJournal: !state.showQuoteJournal })),
+      toggleAchievements: () => set((state) => ({ showAchievements: !state.showAchievements })),
+      toggleSharePanel: () => set((state) => ({ showSharePanel: !state.showSharePanel })),
+
+      // Hub navigation actions
+      setShowHub: (show) => set({ showHub: show }),
+      setIsInTransition: (transitioning) => set({ isInTransition: transitioning }),
+      setIntroCompleted: (completed) => set({ introCompleted: completed }),
+      navigateToLevel: (level) => set({
+        activeLevel: level,
+        showHub: false,
+        isInTransition: true,
+      }),
+      returnToHub: () => set({
+        showHub: true,
+        isInTransition: false,
+      }),
     }),
     {
       name: 'midnight-gospel-storage',
@@ -134,6 +235,10 @@ export const useSceneStore = create<SceneStore>()(
         audioSettings: state.audioSettings,
         savedQuotes: state.savedQuotes,
         showMiniMap: state.showMiniMap,
+        collectedEggs: state.collectedEggs,
+        achievements: state.achievements,
+        levelsVisited: state.levelsVisited,
+        maxScrollProgress: state.maxScrollProgress,
       }),
     }
   )

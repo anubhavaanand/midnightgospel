@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import DistortedBuilding from './DistortedBuilding';
 import ZombieCrowd from './ZombieCrowd';
+import VoxelArtifact from '../../interactive/VoxelArtifact';
 
 /**
  * Level 1: Zombie Apocalypse (Taste of the King)
@@ -277,6 +278,13 @@ export default function ZombieApocalypse({ isActive }: ZombieApocalypseProps) {
       <DrugCapsule position={[5, 3, -4]} color="#00FFFF" />
       <DrugCapsule position={[0, 4, -6]} color="#9900ff" />
       <DrugCapsule position={[-6, 1.5, -3]} color="#DAA520" />
+
+      {/* Voxel Artifacts */}
+      {/* Mega Pill: Neon Capsule Artifact (Updated) */}
+      <VoxelArtifact position={[-2, 3, -5]} scale={0.10} type="capsule" />
+
+      {/* Mutated Flesh Block: Zombie Artifact */}
+      <VoxelArtifact position={[6, 0, 3]} scale={0.08} type="flesh" />
 
       {/* Warning Signs */}
       <WarningSign position={[-8, 2, -1]} />

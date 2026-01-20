@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
+import { OrbitControls } from '@react-three/drei';
 import Scene from '@components/Scene';
 import PostProcessingEffects from '@components/effects/PostProcessingEffects';
 import Loading from '@components/ui/Loading';
@@ -16,6 +17,16 @@ import {
 } from '@utils/analytics';
 import { initializeSEO, injectStructuredData } from '@utils/seo';
 
+// Phase 6 Components
+import SpaceBackground from '@components/environment/SpaceBackground';
+import SolarSystemHub from '@components/levels/SolarSystemHub';
+import SpaceTravelTransition from '@components/effects/SpaceTravelTransition';
+import CinematicIntro, { CinematicIntroOverlay, useIntroState } from '@components/intro/CinematicIntro';
+import MiniMap3D from '@components/ui/MiniMap3D';
+
+// Store
+import { useSceneStore } from '@store/sceneStore';
+
 /**
  * SimulatorApp - The 3D scroll-driven multiverse simulator
  * This is the main 3D experience component, accessed via /simulator route
@@ -24,30 +35,77 @@ export default function SimulatorApp() {
   const mobileConfig = useDeviceDetection();
   const viewportConfig = getMobileViewportConfig(mobileConfig);
 
+  // Phase 6: Hub navigation state
+  const showHub = useSceneStore((state) => state.showHub);
+  const isInTransition = useSceneStore((state) => state.isInTransition);
+  const introCompleted = useSceneStore((state) => state.introCompleted);
+  const setIntroCompleted = useSceneStore((state) => state.setIntroCompleted);
+  const setIsInTransition = useSceneStore((state) => state.setIsInTransition);
+  const setIsLoading = useSceneStore((state) => state.setIsLoading);
+  const navigateToLevel = useSceneStore((state) => state.navigateToLevel);
+  const activeLevel = useSceneStore((state) => state.activeLevel);
+
+  // Intro state from localStorage
+  const { hasSeenIntro, markIntroSeen } = useIntroState();
+  const [showIntro, setShowIntro] = useState(!hasSeenIntro);
+  const [introProgress] = useState(0);
+
   // Initialize analytics and monitoring on app mount
   useEffect(() => {
-    // Analytics initialization
     initializeAnalytics();
     initializeSEO();
     injectStructuredData();
     setupErrorTracking();
     trackPerformanceMetrics();
 
-    // Track app load
     trackEvent(analyticsEvents.APP_LOADED, {
       environment: import.meta.env.VITE_ENV,
       timestamp: new Date().toISOString(),
     });
 
+    // Mark intro completed if already seen
+    if (hasSeenIntro) {
+      setShowIntro(false);
+      setIntroCompleted(true);
+    }
+
+    // Clear loading state after a brief delay for canvas to initialize
+    setTimeout(() => setIsLoading(false), 1000);
+
     console.log('✅ Simulator initialized');
-  }, []);
+  }, [hasSeenIntro, setIntroCompleted, setIsLoading]);
+
+  // Handle intro completion
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
+    markIntroSeen();
+    setIntroCompleted(true);
+  }, [markIntroSeen, setIntroCompleted]);
+
+  // Handle planet selection from hub
+  const handleSelectPlanet = useCallback((levelId: number) => {
+    navigateToLevel(levelId);
+    // Transition will complete after duration
+    setTimeout(() => {
+      setIsInTransition(false);
+    }, 2500);
+  }, [navigateToLevel, setIsInTransition]);
+
+  // Handle transition complete
+  const handleTransitionComplete = useCallback(() => {
+    setIsInTransition(false);
+  }, [setIsInTransition]);
+
+  // Determine camera position based on mode
+  const cameraPosition = showHub ? [0, 20, 60] : [0, 0, viewportConfig.cameraDistance];
+  const fov = showHub ? 45 : viewportConfig.fov;
 
   return (
     <div className="w-full h-screen bg-midnight-dark relative overflow-hidden">
       <Canvas
         camera={{
-          position: [0, 0, viewportConfig.cameraDistance],
-          fov: viewportConfig.fov
+          position: cameraPosition,
+          fov: fov
         }}
         gl={{
           antialias: !mobileConfig.isLowEnd,
@@ -58,13 +116,75 @@ export default function SimulatorApp() {
         }}
       >
         <Suspense fallback={null}>
-          <Scene />
-          <PostProcessingEffects />
+          {/* Controls for Hub Mode */}
+          {showHub && introCompleted && !isInTransition && (
+            <OrbitControls
+              enablePan={false}
+              enableZoom={true}
+              minDistance={20}
+              maxDistance={100}
+              maxPolarAngle={Math.PI / 2}
+              autoRotate={true}
+              autoRotateSpeed={0.5}
+            />
+          )}
+
+          {/* Phase 6: Cosmic background always visible */}
+          <SpaceBackground particleCount={mobileConfig.isLowEnd ? 2000 : 5000} />
+
+          {/* Cinematic intro camera animation */}
+          {showIntro && !introCompleted && (
+            <CinematicIntro onComplete={handleIntroComplete} />
+          )}
+
+          {/* Solar System Hub mode */}
+          {showHub && introCompleted && !isInTransition && (
+            <SolarSystemHub
+              onSelectPlanet={handleSelectPlanet}
+              currentLevel={activeLevel}
+            />
+          )}
+
+          {/* Space travel transition effect */}
+          <SpaceTravelTransition
+            isActive={isInTransition}
+            onComplete={handleTransitionComplete}
+          />
+
+          {/* Main level experience */}
+          {!showHub && !isInTransition && (
+            <>
+              <Scene />
+              <PostProcessingEffects />
+            </>
+          )}
         </Suspense>
       </Canvas>
-      <HUD />
-      <MobileUI />
+
+      {/* Intro overlay */}
+      {showIntro && (
+        <CinematicIntroOverlay
+          isVisible={showIntro}
+          progress={introProgress}
+          onSkip={handleIntroComplete}
+        />
+      )}
+
+      {/* UI Components - only show when not in intro or hub */}
+      {introCompleted && !showHub && !isInTransition && (
+        <>
+          <HUD />
+          <MobileUI />
+        </>
+      )}
+
+      {/* 3D Mini-Map - show when in levels */}
+      {introCompleted && !showHub && !isInTransition && (
+        <MiniMap3D onQuickTravel={handleSelectPlanet} />
+      )}
+
       <Loading />
     </div>
   );
 }
+

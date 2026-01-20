@@ -117,6 +117,9 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
         />
       </mesh>
 
+      {/* Prison Bars - Vertical light beams representing confinement */}
+      <PrisonBars />
+
       {/* Soul Particles - Distressed energy */}
       <points geometry={particleGeometry} position={[0, 0, 0]}>
         <pointsMaterial
@@ -149,6 +152,45 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
           emissiveIntensity={0.3}
         />
       </mesh>
+    </group>
+  );
+}
+
+// Interactive Prison Bars
+function PrisonBars() {
+  const barsRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!barsRef.current) return;
+    // Subtle breathing motion of the cage
+    const scale = 1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
+    barsRef.current.scale.set(scale, 1, scale);
+  });
+
+  return (
+    <group ref={barsRef} position={[0, 0, 0]}>
+      {/* Circle of light bars */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        const radius = 15;
+        return (
+          <mesh
+            key={i}
+            position={[Math.cos(angle) * radius, 10, Math.sin(angle) * radius]}
+            rotation={[0, -angle, 0]}
+          >
+            <cylinderGeometry args={[0.2, 0.2, 40, 8]} />
+            <meshStandardMaterial
+              color="#00FFFF"
+              emissive="#00FFFF"
+              emissiveIntensity={2}
+              transparent
+              opacity={0.3}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        );
+      })}
     </group>
   );
 }
