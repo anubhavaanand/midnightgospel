@@ -16,6 +16,7 @@ import {
   analyticsEvents
 } from '@utils/analytics';
 import { initializeSEO, injectStructuredData } from '@utils/seo';
+import ReloadPrompt from '@components/ui/ReloadPrompt';
 
 // Phase 6 Components
 import SpaceBackground from '@components/environment/SpaceBackground';
@@ -97,11 +98,12 @@ export default function SimulatorApp() {
   }, [setIsInTransition]);
 
   // Determine camera position based on mode
-  const cameraPosition = showHub ? [0, 20, 60] : [0, 0, viewportConfig.cameraDistance];
+  const cameraPosition = (showHub ? [0, 20, 60] : [0, 0, viewportConfig.cameraDistance]) as [number, number, number];
   const fov = showHub ? 45 : viewportConfig.fov;
 
   return (
-    <div className="w-full h-screen bg-midnight-dark relative overflow-hidden">
+    <div className="w-full h-screen bg-black relative overflow-hidden">
+      <ReloadPrompt />
       <Canvas
         camera={{
           position: cameraPosition,
@@ -159,32 +161,38 @@ export default function SimulatorApp() {
             </>
           )}
         </Suspense>
-      </Canvas>
+      </Canvas >
 
       {/* Intro overlay */}
-      {showIntro && (
-        <CinematicIntroOverlay
-          isVisible={showIntro}
-          progress={introProgress}
-          onSkip={handleIntroComplete}
-        />
-      )}
+      {
+        showIntro && (
+          <CinematicIntroOverlay
+            isVisible={showIntro}
+            progress={introProgress}
+            onSkip={handleIntroComplete}
+          />
+        )
+      }
 
       {/* UI Components - only show when not in intro or hub */}
-      {introCompleted && !showHub && !isInTransition && (
-        <>
-          <HUD />
-          <MobileUI />
-        </>
-      )}
+      {
+        introCompleted && !showHub && !isInTransition && (
+          <>
+            <HUD />
+            <MobileUI />
+          </>
+        )
+      }
 
       {/* 3D Mini-Map - show when in levels */}
-      {introCompleted && !showHub && !isInTransition && (
-        <MiniMap3D onQuickTravel={handleSelectPlanet} />
-      )}
+      {
+        introCompleted && !showHub && !isInTransition && (
+          <MiniMap3D onQuickTravel={handleSelectPlanet} />
+        )
+      }
 
       <Loading />
-    </div>
+    </div >
   );
 }
 

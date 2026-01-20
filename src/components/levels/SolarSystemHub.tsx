@@ -7,6 +7,8 @@ import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
+import LODWrapper from '@components/optimization/LODWrapper';
+import AtmosphereGlow from '@components/effects/AtmosphereGlow';
 
 // Planet configurations matching levels
 const PLANETS = [
@@ -88,6 +90,7 @@ export default function SolarSystemHub({ onSelectPlanet, currentLevel = -1 }: So
         <group>
             {/* Central sun */}
             <CentralSun />
+            <ambientLight intensity={0.2} color="#4A004A" />
 
             {/* Orbital paths */}
             {PLANETS.map((planet) => (
@@ -213,22 +216,60 @@ function Planet({ config, isActive, onClick }: PlanetProps) {
     return (
         <group ref={groupRef}>
             <Float speed={2} rotationIntensity={0.1} floatIntensity={0.5}>
-                {/* Planet sphere */}
-                <mesh
-                    ref={meshRef}
-                    onClick={onClick}
-                    onPointerEnter={() => setHovered(true)}
-                    onPointerLeave={() => setHovered(false)}
-                >
-                    <sphereGeometry args={[config.size, 32, 32]} />
-                    <meshStandardMaterial
-                        color={config.color}
-                        emissive={config.emissive}
-                        emissiveIntensity={isActive ? 1.5 : hovered ? 1 : 0.3}
-                        roughness={0.4}
-                        metalness={0.2}
-                    />
-                </mesh>
+                {/* Planet sphere with LOD */}
+                <LODWrapper
+                    thresholds={{ high: 15, medium: 30 }}
+                    high={
+                        <group>
+                            <mesh
+                                ref={meshRef}
+                                onClick={onClick}
+                                onPointerEnter={() => setHovered(true)}
+                                onPointerLeave={() => setHovered(false)}
+                            >
+                                <sphereGeometry args={[config.size, 64, 64]} />
+                                <meshStandardMaterial
+                                    color={config.color}
+                                    emissive={config.emissive}
+                                    emissiveIntensity={isActive ? 1.5 : hovered ? 0.8 : 0.2}
+                                    roughness={0.7}
+                                    metalness={0.1}
+                                />
+                            </mesh>
+                            <AtmosphereGlow
+                                color={config.emissive}
+                                radius={config.size}
+                                intensity={0.5}
+                                fade={1.8}
+                            />
+                        </group>
+                    }
+                    medium={
+                        <mesh
+                            ref={meshRef}
+                            onClick={onClick}
+                            onPointerEnter={() => setHovered(true)}
+                            onPointerLeave={() => setHovered(false)}
+                        >
+                            <sphereGeometry args={[config.size, 16, 16]} />
+                            <meshStandardMaterial
+                                color={config.color}
+                                emissive={config.emissive}
+                                emissiveIntensity={isActive ? 1 : 0.2}
+                                roughness={0.6}
+                            />
+                        </mesh>
+                    }
+                    low={
+                        <mesh
+                            ref={meshRef}
+                            onClick={onClick}
+                        >
+                            <sphereGeometry args={[config.size, 8, 8]} />
+                            <meshBasicMaterial color={config.color} />
+                        </mesh>
+                    }
+                />
 
                 {/* Optional rings */}
                 {config.rings && (
