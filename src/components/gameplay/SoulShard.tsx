@@ -26,7 +26,7 @@ export default function SoulShard({ id, position, color = '#00ffff', value = 100
         return null;
     }
 
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
         if (meshRef.current && !collected) {
             meshRef.current.rotation.y += delta * 1;
             meshRef.current.rotation.z += delta * 0.5;

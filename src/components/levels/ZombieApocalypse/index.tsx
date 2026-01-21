@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import DistortedBuilding from './DistortedBuilding';
 import ZombieCrowd from './ZombieCrowd';
 import VoxelArtifact from '../../interactive/VoxelArtifact';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * Level 1: Zombie Apocalypse (Taste of the King)
@@ -289,6 +290,11 @@ export default function ZombieApocalypse({ isActive }: ZombieApocalypseProps) {
       {/* Warning Signs */}
       <WarningSign position={[-8, 2, -1]} />
       <WarningSign position={[8, 2.5, -2]} />
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="zombie-shard-1" position={[-3, 1.5, 2]} value={100} color="#ff3366" />
+      <SoulShard id="zombie-shard-2" position={[4, 2.5, -1]} value={150} color="#ff00ff" />
+      <SoulShard id="zombie-shard-3" position={[0, 3.5, -8]} value={200} color="#9900ff" />
 
       {/* == PARTICLE SYSTEMS == */}
       <DecayParticles />

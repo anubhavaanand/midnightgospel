@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import ParticleExplosion from './ParticleExplosion';
 import EgoFormations from './EgoFormations';
 import FallenAngel from '@components/models/FallenAngel';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * The Exit - Level 6 (Final Transcendence)
@@ -355,6 +356,11 @@ export default function TheExit({ isActive }: { isActive: boolean }) {
 
       {/* Fallen Angel - Final Gatekeeper (only in this level to save memory) */}
       <FallenAngel position={[12, 2, -15]} rotation={[0, -0.8, 0]} scale={0.02} />
+
+      {/* Soul Shards - Final Collectibles */}
+      <SoulShard id="exit-shard-1" position={[-8, 4, 3]} value={200} color="#00ffff" />
+      <SoulShard id="exit-shard-2" position={[10, 6, -5]} value={250} color="#ff007f" />
+      <SoulShard id="exit-shard-3" position={[0, 15, -20]} value={500} color="#ffd700" />
 
       {/* == ENVIRONMENT == */}
 

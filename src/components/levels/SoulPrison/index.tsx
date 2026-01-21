@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import SkeletalLandscape from './SkeletalLandscape';
 import SoulBird from './SoulBird';
+import SoulShard from '@components/gameplay/SoulShard';
 // TEMPORARILY DISABLED: 29MB model causing WebGL crash
 // import FallenAngel from '@components/models/FallenAngel';
 
@@ -100,6 +101,11 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
       {/* Fallen Angel - TEMPORARILY DISABLED (29MB model causing WebGL crash)
       <FallenAngel position={[-8, 0, -12]} rotation={[0, 0.5, 0]} scale={0.015} />
       */}
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="prison-shard-1" position={[-6, 3, 2]} value={100} color="#f0f0f0" />
+      <SoulShard id="prison-shard-2" position={[7, 5, -3]} value={150} color="#00ffff" />
+      <SoulShard id="prison-shard-3" position={[0, 8, -15]} value={200} color="#2e004f" />
 
       {/* Atmosphere Plane - Fog effect layer */}
       <mesh position={[0, 8, 0]} scale={[40, 1, 40]}>

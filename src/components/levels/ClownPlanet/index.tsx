@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { useSoundEffects } from '@hooks/useSoundEffects';
 import GrindingMechanism from './GrindingMechanism';
 import ClownCrowd from './ClownCrowd';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * Level 2: Clown Planet (Officers & Wolves)
@@ -346,6 +347,11 @@ export default function ClownPlanet({ isActive }: ClownPlanetProps) {
       {/* Spinning Prize Wheel */}
       <SpinningWheel position={[-10, 3, -3]} />
       <SpinningWheel position={[10, 3, -3]} />
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="clown-shard-1" position={[-5, 2, 1]} value={100} color="#ff007f" />
+      <SoulShard id="clown-shard-2" position={[6, 4, -2]} value={150} color="#ffd700" />
+      <SoulShard id="clown-shard-3" position={[0, 6, -7]} value={200} color="#00ffff" />
 
       {/* == PARTICLE SYSTEMS == */}
       <GrindingParticles count={400} />

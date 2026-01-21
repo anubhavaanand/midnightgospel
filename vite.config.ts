@@ -28,7 +28,9 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,glb,gltf}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Exclude large 3D models from service worker cache - they load on demand
+        globIgnores: ['**/models/**/*.{glb,gltf,fbx}'],
         maximumFileSizeToCacheInBytes: 5000000
       }
     })
