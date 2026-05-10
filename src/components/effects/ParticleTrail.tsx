@@ -48,11 +48,6 @@ export default function ParticleTrail() {
     const { camera } = useThree();
     const config = useDeviceDetection();
 
-    // Disable particle trail on very low-end devices
-    if (config.isLowEnd) {
-        return null;
-    }
-
     // Adjust particle count based on device
     const PARTICLE_COUNT = useMemo(() => {
         if (config.isMobile) return Math.floor(BASE_PARTICLE_COUNT * 0.4); // 40% for mobile
@@ -257,6 +252,10 @@ export default function ParticleTrail() {
         posAttr.needsUpdate = true;
         sizeAttr.needsUpdate = true;
     });
+
+    if (config.isLowEnd) {
+        return null;
+    }
 
     return (
         <points ref={particlesRef}>
