@@ -3,6 +3,8 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import DistortedBuilding from './DistortedBuilding';
 import ZombieCrowd from './ZombieCrowd';
+import VoxelArtifact from '../../interactive/VoxelArtifact';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * Level 1: Zombie Apocalypse (Taste of the King)
@@ -278,9 +280,21 @@ export default function ZombieApocalypse({ isActive }: ZombieApocalypseProps) {
       <DrugCapsule position={[0, 4, -6]} color="#9900ff" />
       <DrugCapsule position={[-6, 1.5, -3]} color="#DAA520" />
 
+      {/* Voxel Artifacts */}
+      {/* Mega Pill: Neon Capsule Artifact (Updated) */}
+      <VoxelArtifact position={[-2, 3, -5]} scale={0.10} type="capsule" />
+
+      {/* Mutated Flesh Block: Zombie Artifact */}
+      <VoxelArtifact position={[6, 0, 3]} scale={0.08} type="flesh" />
+
       {/* Warning Signs */}
       <WarningSign position={[-8, 2, -1]} />
       <WarningSign position={[8, 2.5, -2]} />
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="zombie-shard-1" position={[-3, 1.5, 2]} value={100} color="#ff3366" />
+      <SoulShard id="zombie-shard-2" position={[4, 2.5, -1]} value={150} color="#ff00ff" />
+      <SoulShard id="zombie-shard-3" position={[0, 3.5, -8]} value={200} color="#9900ff" />
 
       {/* == PARTICLE SYSTEMS == */}
       <DecayParticles />

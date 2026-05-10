@@ -1,9 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
 import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
+import { useFBX } from '@react-three/drei';
 import { useSoundEffects } from '@hooks/useSoundEffects';
 import * as THREE from 'three';
 import ParticleExplosion from './ParticleExplosion';
 import EgoFormations from './EgoFormations';
+import FallenAngel from '@components/models/FallenAngel';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * The Exit - Level 6 (Final Transcendence)
@@ -251,6 +254,28 @@ function CosmicDust({ count = 300 }: { count?: number }) {
   );
 }
 
+// Black Hole Model - Massive singularity
+function BlackHoleModel() {
+  const fbx = useFBX('/models/black-hole/source/black_hole.fbx');
+
+  useFrame((state) => {
+    // Slow rotation of the accretion disk
+    fbx.rotation.y = state.clock.elapsedTime * 0.05;
+  });
+
+  return (
+    <group position={[0, 0, -40]}>
+      <primitive
+        object={fbx}
+        scale={0.05}
+        rotation={[0.5, 0, 0]}
+      />
+      {/* Additional glow for the event horizon */}
+      <pointLight color="#8B00FF" intensity={2} distance={100} decay={2} />
+    </group>
+  );
+}
+
 export default function TheExit({ isActive }: { isActive: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
@@ -302,6 +327,9 @@ export default function TheExit({ isActive }: { isActive: boolean }) {
       {/* White transcendence */}
       <pointLight position={[0, 20, -5]} color="#ffffff" intensity={0.6} distance={40} />
 
+      {/* == NEW ASSETS == */}
+      <BlackHoleModel />
+
       {/* == INTERACTIVE ELEMENTS == */}
 
       {/* Third Eye Portal - Main interactive element */}
@@ -325,6 +353,14 @@ export default function TheExit({ isActive }: { isActive: boolean }) {
 
       {/* Ego Formations - Dissolving structures */}
       <EgoFormations />
+
+      {/* Fallen Angel - Final Gatekeeper (only in this level to save memory) */}
+      <FallenAngel position={[12, 2, -15]} rotation={[0, -0.8, 0]} scale={0.02} />
+
+      {/* Soul Shards - Final Collectibles */}
+      <SoulShard id="exit-shard-1" position={[-8, 4, 3]} value={200} color="#00ffff" />
+      <SoulShard id="exit-shard-2" position={[10, 6, -5]} value={250} color="#ff007f" />
+      <SoulShard id="exit-shard-3" position={[0, 15, -20]} value={500} color="#ffd700" />
 
       {/* == ENVIRONMENT == */}
 

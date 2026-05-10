@@ -1,9 +1,13 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame, useThree, ThreeEvent } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useSoundEffects } from '@hooks/useSoundEffects';
 import SkeletalLandscape from './SkeletalLandscape';
 import SoulBird from './SoulBird';
+import SoulShard from '@components/gameplay/SoulShard';
+// TEMPORARILY DISABLED: 29MB model causing WebGL crash
+// import FallenAngel from '@components/models/FallenAngel';
 
 /**
  * Blinded by My End - Level 4 (Episode 4)
@@ -273,6 +277,20 @@ function WarmGround() {
   );
 }
 
+// Alien City Model - High fidelity environment
+function AlienCityModel() {
+  const { scene } = useGLTF('/models/sci-fi-alien-city/source/alien_city.glb');
+
+  return (
+    <primitive
+      object={scene}
+      scale={2}
+      position={[0, -10, -30]}
+      rotation={[0, Math.PI / 4, 0]}
+    />
+  );
+}
+
 export default function BlindedByEnd({ isActive }: { isActive: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
@@ -328,6 +346,9 @@ export default function BlindedByEnd({ isActive }: { isActive: boolean }) {
 
       {/* == ENVIRONMENT == */}
 
+      {/* New Alien City Model */}
+      <AlienCityModel />
+
       {/* Skeletal Landscape - transformed by warm lighting */}
       <SkeletalLandscape />
 
@@ -343,6 +364,15 @@ export default function BlindedByEnd({ isActive }: { isActive: boolean }) {
       <HealingOrb position={[-6, 3, -3]} />
       <HealingOrb position={[7, 4, -6]} />
       <HealingOrb position={[0, 6, -12]} />
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="shard-1-start" position={[0, 2, -5]} value={100} color="#ff00ff" />
+      <SoulShard id="shard-2-hidden" position={[15, 3, -15]} value={200} color="#00ffff" />
+      <SoulShard id="shard-3-high" position={[0, 10, 0]} value={300} color="#ffcc00" />
+
+      {/* Fallen Angel - TEMPORARILY DISABLED (29MB model causing WebGL crash)
+      <FallenAngel position={[0, 5, -25]} rotation={[0, Math.PI, 0]} scale={0.025} />
+      */}
 
       {/* == PARTICLE SYSTEMS == */}
 

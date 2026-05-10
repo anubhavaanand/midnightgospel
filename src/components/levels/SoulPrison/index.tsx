@@ -3,6 +3,9 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import SkeletalLandscape from './SkeletalLandscape';
 import SoulBird from './SoulBird';
+import SoulShard from '@components/gameplay/SoulShard';
+// TEMPORARILY DISABLED: 29MB model causing WebGL crash
+// import FallenAngel from '@components/models/FallenAngel';
 
 /**
  * Soul Prison Level - Level 4
@@ -95,6 +98,15 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
       {/* Soul Bird - Mystical escape entity */}
       <SoulBird />
 
+      {/* Fallen Angel - TEMPORARILY DISABLED (29MB model causing WebGL crash)
+      <FallenAngel position={[-8, 0, -12]} rotation={[0, 0.5, 0]} scale={0.015} />
+      */}
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="prison-shard-1" position={[-6, 3, 2]} value={100} color="#f0f0f0" />
+      <SoulShard id="prison-shard-2" position={[7, 5, -3]} value={150} color="#00ffff" />
+      <SoulShard id="prison-shard-3" position={[0, 8, -15]} value={200} color="#2e004f" />
+
       {/* Atmosphere Plane - Fog effect layer */}
       <mesh position={[0, 8, 0]} scale={[40, 1, 40]}>
         <planeGeometry args={[1, 1]} />
@@ -116,6 +128,9 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
           emissiveIntensity={0.1}
         />
       </mesh>
+
+      {/* Prison Bars - Vertical light beams representing confinement */}
+      <PrisonBars />
 
       {/* Soul Particles - Distressed energy */}
       <points geometry={particleGeometry} position={[0, 0, 0]}>
@@ -149,6 +164,45 @@ export default function SoulPrison({ isActive }: { isActive: boolean }) {
           emissiveIntensity={0.3}
         />
       </mesh>
+    </group>
+  );
+}
+
+// Interactive Prison Bars
+function PrisonBars() {
+  const barsRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!barsRef.current) return;
+    // Subtle breathing motion of the cage
+    const scale = 1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
+    barsRef.current.scale.set(scale, 1, scale);
+  });
+
+  return (
+    <group ref={barsRef} position={[0, 0, 0]}>
+      {/* Circle of light bars */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        const radius = 15;
+        return (
+          <mesh
+            key={i}
+            position={[Math.cos(angle) * radius, 10, Math.sin(angle) * radius]}
+            rotation={[0, -angle, 0]}
+          >
+            <cylinderGeometry args={[0.2, 0.2, 40, 8]} />
+            <meshStandardMaterial
+              color="#00FFFF"
+              emissive="#00FFFF"
+              emissiveIntensity={2}
+              transparent
+              opacity={0.3}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        );
+      })}
     </group>
   );
 }

@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import FishBowl from './FishBowl';
 import SpaceCatCrowd from './SpaceCatCrowd';
+import SoulShard from '@components/gameplay/SoulShard';
 
 /**
  * Level 3: Ass Cream (Hunters Without Home)
@@ -312,6 +313,11 @@ export default function AssCream({ isActive }: AssCreamProps) {
       {/* Mystic Crystals */}
       <MysticCrystal position={[-8, 4, -6]} />
       <MysticCrystal position={[7, 6, -8]} />
+
+      {/* Soul Shards - Collectibles */}
+      <SoulShard id="ass-shard-1" position={[-4, 4, 2]} value={100} color="#00ffff" />
+      <SoulShard id="ass-shard-2" position={[5, 6, -4]} value={150} color="#9900ff" />
+      <SoulShard id="ass-shard-3" position={[0, 10, -10]} value={200} color="#ff007f" />
 
       {/* == PARTICLE SYSTEMS == */}
       <RisingBubbles count={150} />

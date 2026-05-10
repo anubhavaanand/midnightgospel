@@ -3,7 +3,7 @@
  * Enhanced for cinematic, cosmic feel with level-specific adjustments.
  * Features: Bloom, Chromatic Aberration, Glitch, and theme-aware effects
  */
-import { EffectComposer, Bloom, Glitch, Noise } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Glitch, Noise, DepthOfField } from '@react-three/postprocessing';
 import { useSceneStore } from '@store/sceneStore';
 import { useAdaptivePostProcessing } from '@hooks/useAdaptivePostProcessing';
 
@@ -31,6 +31,17 @@ export default function PostProcessingEffects() {
   return (
     <EffectComposer>
       {[
+        // Depth of Field - Cinematic focus (blur background/foreground)
+        quality.bloom && (
+          <DepthOfField
+            key="dof"
+            focusDistance={0.02} /* Focus on near objects/planets */
+            focalLength={0.5}   /* Camera focal length */
+            bokehScale={3}      /* Blur intensity */
+            height={480}        /* Resolution */
+          />
+        ),
+
         // Bloom - neon glow for psychedelic aesthetic
         quality.bloom && (
           <Bloom

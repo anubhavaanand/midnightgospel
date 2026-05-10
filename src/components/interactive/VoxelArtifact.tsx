@@ -1,20 +1,35 @@
 import { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RigidBody } from '@react-three/rapier';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { NEON_CAPSULE_DATA } from '../../data/neonCapsule';
+import { FLESH_BLOCK_DATA } from '../../data/fleshBlock';
 
-interface VoxelProps {
+// Artifact metadata for tooltips
+const ARTIFACT_INFO = {
+    capsule: {
+        name: 'Neon Capsule',
+        description: 'A crystallized fragment of simulation energy',
+        quote: 'The universe is not only queerer than we suppose, but queerer than we can suppose.',
+        author: 'J.B.S. Haldane',
+    },
+    flesh: {
+        name: 'Flesh Block',
+        description: 'Organic matter from a dying simulation world',
+        quote: 'We are not human beings having a spiritual experience. We are spiritual beings having a human experience.',
+        author: 'Pierre Teilhard de Chardin',
+    },
+};
+
+interface VoxelArtifactProps {
     position: [number, number, number];
-    color: string;
-    isDynamic: boolean;
+    scale?: number;
+    type?: 'capsule' | 'flesh';
+    interactive?: boolean;
 }
 
-function SingleVoxel({ position, color, isDynamic }: VoxelProps) {
-    // If dynamic, it falls/reacts. If not, it stays in place (kinematic/fixed until triggered).
-    // For this effect, we want them to be rigid bodies that are 'sleeping' or fixed until the explosion.
-    // But Rapier makes switching body types a bit tricky dynamically.
-    // Strategy: Use dynamic bodies but with gravity scale 0 initially, or just rely on the "glitch" explosion to wake them.
-
+function SingleVoxel({ position, color, isDynamic }: { position: [number, number, number]; color: string; isDynamic: boolean }) {
     return (
         <RigidBody
             position={position}
@@ -24,73 +39,81 @@ function SingleVoxel({ position, color, isDynamic }: VoxelProps) {
             friction={0.8}
         >
             <mesh castShadow receiveShadow>
-                <boxGeometry args={[0.95, 0.95, 0.95]} /> {/* Slightly smaller to see gaps */}
+                <boxGeometry args={[0.95, 0.95, 0.95]} />
                 <meshStandardMaterial
                     color={color}
                     roughness={0.2}
-                    metalness={0.8}
+                    metalness={0.1}
                     emissive={color}
-                    emissiveIntensity={0.2}
+                    emissiveIntensity={0.4}
                 />
             </mesh>
         </RigidBody>
     );
 }
 
-interface GlitchArtifactProps {
-    position: [number, number, number];
-    scale?: number;
-}
-
-export default function VoxelArtifact({ position, scale = 1 }: GlitchArtifactProps) {
+export default function VoxelArtifact({ position, scale = 0.2, type = 'capsule', interactive = true }: VoxelArtifactProps) {
     const [isExploded, setIsExploded] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const groupRef = useRef<THREE.Group>(null);
 
-    // Generate voxel grid
+    const info = ARTIFACT_INFO[type];
+
     const voxels = useMemo(() => {
-        const v = [];
-        const size = 3; // 3x3x3 grid
-        const colors = ['#FF007F', '#00FFFF', '#2E004F', '#F0F0F0'];
+        const rawData = type === 'flesh' ? FLESH_BLOCK_DATA : NEON_CAPSULE_DATA;
 
-        for (let x = 0; x < size; x++) {
-            for (let y = 0; y < size; y++) {
-                for (let z = 0; z < size; z++) {
-                    // Skip center for hollow feel? No, solid is better for explosion.
-                    v.push({
-                        id: `vox-${x}-${y}-${z}`,
-                        pos: [
-                            (x - size / 2) * 1.1,
-                            (y - size / 2) * 1.1,
-                            (z - size / 2) * 1.1
-                        ] as [number, number, number],
-                        color: colors[Math.floor(Math.random() * colors.length)]
-                    });
-                }
+        // Calculate center to offset positions
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity;
+
+        rawData.forEach(v => {
+            minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x);
+            minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
+            minZ = Math.min(minZ, v.z); maxZ = Math.max(maxZ, v.z);
+        });
+
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+        const centerZ = (minZ + maxZ) / 2;
+
+        return rawData.map((v) => ({
+            ...v,
+            pos: [
+                (v.x - centerX) * 1.0,
+                (v.y - centerY) * 1.0,
+                (v.z - centerZ) * 1.0
+            ] as [number, number, number]
+        }));
+    }, [type]);
+
+    const handleClick = (e: { stopPropagation: () => void }) => {
+        e.stopPropagation();
+        if (interactive) {
+            if (showInfo) {
+                // Second click explodes
+                setShowInfo(false);
+                setIsExploded(true);
+            } else {
+                // First click shows info
+                setShowInfo(true);
             }
-        }
-        return v;
-    }, []);
-
-    const handlePointerOver = () => {
-        if (!isExploded) {
-            document.body.style.cursor = 'pointer';
+        } else {
+            setIsExploded(true);
         }
     };
 
-    const handlePointerOut = () => {
-        document.body.style.cursor = 'auto';
-    };
-
-    const handleClick = () => {
-        setIsExploded(true);
-        // Add logic to apply impulse if possible, but switching to dynamic usually causes gravity to take over which is satisfying enough.
-    };
-
-    useFrame((_state) => {
+    useFrame((state) => {
         if (!isExploded && groupRef.current) {
-            // Rotate entire artifact when whole
-            groupRef.current.rotation.x += 0.005;
-            groupRef.current.rotation.y += 0.01;
+            groupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+            groupRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.2;
+
+            // Pulsing scale on hover
+            if (isHovered) {
+                const pulse = 1 + Math.sin(state.clock.elapsedTime * 4) * 0.05;
+                groupRef.current.scale.setScalar(pulse);
+            } else {
+                groupRef.current.scale.setScalar(1);
+            }
         }
     });
 
@@ -98,43 +121,56 @@ export default function VoxelArtifact({ position, scale = 1 }: GlitchArtifactPro
         <group
             position={position}
             scale={[scale, scale, scale]}
-            onPointerOver={handlePointerOver}
-            onPointerOut={handlePointerOut}
             onClick={handleClick}
+            onPointerEnter={() => setIsHovered(true)}
+            onPointerLeave={() => setIsHovered(false)}
         >
             {isExploded ? (
-                // Exploded state: Individual physics bodies
                 <group>
-                    {voxels.map((vox) => (
-                        <SingleVoxel
-                            key={vox.id}
-                            position={vox.pos}
-                            color={vox.color}
-                            isDynamic={true}
-                        />
+                    {voxels.map((v) => (
+                        <SingleVoxel key={v.id} position={v.pos} color={v.c} isDynamic={true} />
                     ))}
                 </group>
             ) : (
-                // Whole state: Single mesh or group of meshes for better performance moving together
-                // effectively a "kinematic" group manually rotated
                 <group ref={groupRef}>
-                    {voxels.map((vox) => (
-                        <mesh key={vox.id} position={vox.pos} castShadow>
+                    {voxels.map((v) => (
+                        <mesh key={v.id} position={v.pos} castShadow>
                             <boxGeometry args={[1, 1, 1]} />
                             <meshStandardMaterial
-                                color={vox.color}
+                                color={v.c}
                                 roughness={0.2}
-                                metalness={0.8}
-                                emissive={vox.color}
-                                emissiveIntensity={0.2}
+                                metalness={type === 'capsule' ? 0.7 : 0.1}
+                                emissive={v.c}
+                                emissiveIntensity={isHovered ? 0.8 : (type === 'capsule' ? 0.6 : 0.2)}
                             />
                         </mesh>
                     ))}
-                    {/* Invisible hitbox for easier clicking */}
-                    <mesh visible={false}>
-                        <boxGeometry args={[4, 4, 4]} />
-                    </mesh>
                 </group>
+            )}
+
+            {/* Hover tooltip */}
+            {isHovered && !showInfo && !isExploded && interactive && (
+                <Html center distanceFactor={15}>
+                    <div className="px-3 py-2 bg-black/80 backdrop-blur-sm rounded-lg border border-white/20 text-center whitespace-nowrap">
+                        <div className="text-white font-bold text-sm">{info.name}</div>
+                        <div className="text-cyan-400 text-xs mt-1">Click to reveal</div>
+                    </div>
+                </Html>
+            )}
+
+            {/* Info panel after first click */}
+            {showInfo && !isExploded && (
+                <Html center distanceFactor={12}>
+                    <div className="px-4 py-3 bg-gradient-to-br from-purple-900/90 to-black/90 backdrop-blur-xl 
+                                    rounded-xl border border-pink-500/30 shadow-2xl max-w-[250px] text-center
+                                    animate-in zoom-in duration-300">
+                        <div className="text-pink-400 font-bold text-lg mb-2">{info.name}</div>
+                        <div className="text-white/70 text-sm mb-3">{info.description}</div>
+                        <div className="text-white/90 text-sm italic mb-1">"{info.quote}"</div>
+                        <div className="text-white/50 text-xs">— {info.author}</div>
+                        <div className="text-cyan-400 text-xs mt-3 animate-pulse">Click again to interact</div>
+                    </div>
+                </Html>
             )}
         </group>
     );
