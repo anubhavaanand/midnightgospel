@@ -114,7 +114,7 @@ export default function ParticleTrail() {
     }, [activeLevel]);
 
     useFrame((state) => {
-        if (!particlesRef.current || particleStates.current.length === 0) return;
+        if (config.isLowEnd || !particlesRef.current || particleStates.current.length === 0) return;
 
         const delta = Math.min(state.clock.getDelta(), 0.05); // Cap delta to prevent jumps
         globalTime.current += delta;
