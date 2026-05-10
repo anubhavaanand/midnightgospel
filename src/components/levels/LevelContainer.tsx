@@ -21,6 +21,11 @@ interface LevelContainerProps {
   readonly scrollProgress: number;
 }
 
+const createQuoteId = (level: number, text: string) => {
+  const slug = text.slice(0, 30).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return `quote-${level}-${slug}`;
+};
+
 export default function LevelContainer({ scrollProgress }: LevelContainerProps) {
   const prevLevelRef = useRef<number>(0);
   const setActiveLevel = useSceneStore((state) => state.setActiveLevel);
@@ -57,7 +62,7 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   // Update store with active level on mount
   useEffect(() => {
     setActiveLevel(activeLevel);
-  }, []);
+  }, [activeLevel, setActiveLevel]);
 
   // Get quotes for current level
   const levelQuotes = getQuotesForLevel(activeLevel);
@@ -65,9 +70,9 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   return (
     <group>
       {/* Floating Quotes */}
-      {levelQuotes.map((quote, index) => (
+      {levelQuotes.map((quote) => (
         <FloatingQuote
-          key={`quote-${activeLevel}-${index}`}
+          key={createQuoteId(activeLevel, quote.text)}
           text={quote.text}
           author={quote.author}
           position={quote.position}

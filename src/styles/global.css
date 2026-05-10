@@ -165,3 +165,17 @@ a:hover {
   color: #00ffff;
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
+
+/* Accessibility: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after,
+  .glitch-text,
+  .animate-glitch,
+  .animate-pulse,
+  .chromatic-text {
+    animation: none !important;
+    transition: none !important;
+  }
+}

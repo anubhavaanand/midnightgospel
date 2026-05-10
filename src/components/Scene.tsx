@@ -1,4 +1,4 @@
-import { ScrollControls } from '@react-three/drei';
+import { ScrollControls as ScrollControlsImpl, ScrollControlsState } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
@@ -33,27 +33,31 @@ function PitchBlackSpace() {
 
 // MinimalStarfield component removed - unused
 
+interface CustomScrollControlsState extends ScrollControlsState {
+  scroll: React.MutableRefObject<number>;
+}
+
 /**
  * Main scene wrapper with ScrollControls and spline camera integration.
  * Supports both scroll (desktop) and touch (mobile) input.
  */
 export default function Scene() {
-  const scrollControlsRef = useRef<any>(null);
+  const scrollControlsRef = useRef<CustomScrollControlsState>(null);
   const config = useDeviceDetection();
 
   return (
-    <ScrollControls
+    <ScrollControlsImpl
       pages={8}
       damping={config.isMobile ? 0.15 : 0.25}
     >
       <PitchBlackSpace />
       {/* <MinimalStarfield /> - Commented out to verify black background */}
       <SceneContent scrollControlsRef={scrollControlsRef} />
-    </ScrollControls>
+    </ScrollControlsImpl>
   );
 }
 
-function SceneContent({ scrollControlsRef }: any) {
+function SceneContent({ scrollControlsRef }: { scrollControlsRef: React.RefObject<CustomScrollControlsState> }) {
   const scrollProgress = useScrollProgress();
   const config = useDeviceDetection();
   const touchStartRef = useRef<{ y: number } | null>(null);

@@ -12,6 +12,15 @@ const LandingPage: React.FC = () => {
     const [isGlitching, setIsGlitching] = useState(false);
     const { isPlaying, toggleAudio, triggerWarp, analyzer } = useAudioAnalyzer();
 
+    const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+
+    useEffect(() => {
+        const timeouts = timeoutsRef.current;
+        return () => {
+            timeouts.forEach(clearTimeout);
+        };
+    }, []);
+
     const handleUniverseChange = useCallback((type: UniverseType) => {
         if (type === universe) return;
 
@@ -20,13 +29,15 @@ const LandingPage: React.FC = () => {
         setIsGlitching(true);
 
         document.body.style.overflow = 'hidden';
-        setTimeout(() => {
+        const timer1 = setTimeout(() => {
             setUniverse(type);
-            setTimeout(() => {
+            const timer2 = setTimeout(() => {
                 setIsGlitching(false);
                 document.body.style.overflow = 'auto';
             }, 600);
+            timeoutsRef.current.push(timer2);
         }, 400);
+        timeoutsRef.current.push(timer1);
     }, [universe, triggerWarp]);
 
     // Optimized Mouse Tracking using direct DOM manipulation
@@ -108,7 +119,7 @@ const LandingPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-screen" />
+            <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-[100] bg-[url('/noise.svg')] mix-blend-screen" />
         </div>
     );
 };
