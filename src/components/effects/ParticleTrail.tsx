@@ -48,17 +48,13 @@ export default function ParticleTrail() {
     const { camera } = useThree();
     const config = useDeviceDetection();
 
-    // Disable particle trail on very low-end devices
-    if (config.isLowEnd) {
-        return null;
-    }
-
     // Adjust particle count based on device
     const PARTICLE_COUNT = useMemo(() => {
+        if (config.isLowEnd) return 0;
         if (config.isMobile) return Math.floor(BASE_PARTICLE_COUNT * 0.4); // 40% for mobile
         if (config.isTablet) return Math.floor(BASE_PARTICLE_COUNT * 0.6); // 60% for tablet
         return BASE_PARTICLE_COUNT; // Full for desktop
-    }, [config.isMobile, config.isTablet]);
+    }, [config.isLowEnd, config.isMobile, config.isTablet]);
 
     // Mouse tracking with smoothing
     const mousePosition = useRef(new THREE.Vector3());
@@ -78,6 +74,10 @@ export default function ParticleTrail() {
 
     // Initialize particle states
     useEffect(() => {
+        if (config.isLowEnd || PARTICLE_COUNT === 0) {
+            particleStates.current = [];
+            return;
+        }
         particleStates.current = Array(PARTICLE_COUNT).fill(null).map((_, i) => ({
             position: new THREE.Vector3(),
             velocity: new THREE.Vector3(),
@@ -88,7 +88,7 @@ export default function ParticleTrail() {
             size: 0.04,
             targetSize: 0.04,
         }));
-    }, []);
+    }, [PARTICLE_COUNT, config.isLowEnd]);
 
     // Generate buffer arrays
     const [positions, colors, sizes] = useMemo(() => {
@@ -96,13 +96,14 @@ export default function ParticleTrail() {
         const col = new Float32Array(PARTICLE_COUNT * 3);
         const siz = new Float32Array(PARTICLE_COUNT);
         return [pos, col, siz];
-    }, []);
+    }, [PARTICLE_COUNT]);
 
     // Update colors on level change
     useEffect(() => {
-        if (!particlesRef.current) return;
+        if (config.isLowEnd || PARTICLE_COUNT === 0 || !particlesRef.current) return;
         const color = new THREE.Color(LEVEL_TRAIL_COLORS[activeLevel] || '#ffffff');
         const colorAttr = particlesRef.current.geometry.getAttribute('color') as THREE.BufferAttribute;
+        if (!colorAttr) return;
 
         for (let i = 0; i < PARTICLE_COUNT; i++) {
             // Slight color variation per particle
@@ -116,10 +117,17 @@ export default function ParticleTrail() {
             colorAttr.setXYZ(i, variedColor.r, variedColor.g, variedColor.b);
         }
         colorAttr.needsUpdate = true;
-    }, [activeLevel]);
+    }, [activeLevel, PARTICLE_COUNT, config.isLowEnd]);
 
     useFrame((state) => {
-        if (!particlesRef.current || particleStates.current.length === 0) return;
+        if (
+            config.isLowEnd ||
+            PARTICLE_COUNT === 0 ||
+            !particlesRef.current ||
+            particleStates.current.length < PARTICLE_COUNT
+        ) {
+            return;
+        }
 
         const delta = Math.min(state.clock.getDelta(), 0.05); // Cap delta to prevent jumps
         globalTime.current += delta;
@@ -257,6 +265,11 @@ export default function ParticleTrail() {
         posAttr.needsUpdate = true;
         sizeAttr.needsUpdate = true;
     });
+
+    // Disable particle trail on very low-end devices
+    if (config.isLowEnd) {
+        return null;
+    }
 
     return (
         <points ref={particlesRef}>
