@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@google-ai/generativelanguage": "^0.1.0",
+    "@google-ai/generativelanguage": "^3.5.0",
     "@google/generative-ai": "^0.11.0",
     "@react-three/drei": "^9.88.0",
     "@react-three/fiber": "^8.15.0",
