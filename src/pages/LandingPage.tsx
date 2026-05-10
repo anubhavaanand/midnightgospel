@@ -12,6 +12,18 @@ const LandingPage: React.FC = () => {
     const [isGlitching, setIsGlitching] = useState(false);
     const { isPlaying, toggleAudio, triggerWarp, analyzer } = useAudioAnalyzer();
 
+    // Refs for timeout IDs to prevent state updates on unmounted components
+    const glitchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const glitchInnerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // Cleanup timers on unmount
+    useEffect(() => {
+        return () => {
+            if (glitchTimerRef.current !== null) clearTimeout(glitchTimerRef.current);
+            if (glitchInnerTimerRef.current !== null) clearTimeout(glitchInnerTimerRef.current);
+        };
+    }, []);
+
     const handleUniverseChange = useCallback((type: UniverseType) => {
         if (type === universe) return;
 
@@ -20,9 +32,14 @@ const LandingPage: React.FC = () => {
         setIsGlitching(true);
 
         document.body.style.overflow = 'hidden';
-        setTimeout(() => {
+
+        // Clear any pending timers before starting new ones
+        if (glitchTimerRef.current !== null) clearTimeout(glitchTimerRef.current);
+        if (glitchInnerTimerRef.current !== null) clearTimeout(glitchInnerTimerRef.current);
+
+        glitchTimerRef.current = setTimeout(() => {
             setUniverse(type);
-            setTimeout(() => {
+            glitchInnerTimerRef.current = setTimeout(() => {
                 setIsGlitching(false);
                 document.body.style.overflow = 'auto';
             }, 600);
@@ -108,7 +125,7 @@ const LandingPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-screen" />
+            <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-[100] bg-[url('/noise.svg')] mix-blend-screen" />
         </div>
     );
 };
