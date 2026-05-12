@@ -1,6 +1,7 @@
-import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect, useState, useCallback } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
+import { Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { OrbitControls, useGLTF } from '@react-three/drei';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import Scene from '@components/Scene';
 import PostProcessingEffects from '@components/effects/PostProcessingEffects';
 import Loading from '@components/ui/Loading';
@@ -51,6 +52,9 @@ export default function SimulatorApp() {
   const [showIntro, setShowIntro] = useState(!hasSeenIntro);
   const [introProgress] = useState(0);
 
+  // Ref for cleanup of transition timer
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Initialize analytics and monitoring on app mount
   useEffect(() => {
     initializeAnalytics();
@@ -71,9 +75,11 @@ export default function SimulatorApp() {
     }
 
     // Clear loading state after a brief delay for canvas to initialize
-    setTimeout(() => setIsLoading(false), 1000);
+    const loadingTimer = setTimeout(() => setIsLoading(false), 1000);
 
     console.log('✅ Simulator initialized');
+
+    return () => clearTimeout(loadingTimer);
   }, [hasSeenIntro, setIntroCompleted, setIsLoading]);
 
   // Handle intro completion
@@ -86,11 +92,20 @@ export default function SimulatorApp() {
   // Handle planet selection from hub
   const handleSelectPlanet = useCallback((levelId: number) => {
     navigateToLevel(levelId);
+    // Clear any pending transition timer before starting a new one
+    if (transitionTimerRef.current !== null) clearTimeout(transitionTimerRef.current);
     // Transition will complete after duration
-    setTimeout(() => {
+    transitionTimerRef.current = setTimeout(() => {
       setIsInTransition(false);
     }, 2500);
   }, [navigateToLevel, setIsInTransition]);
+
+  // Cleanup transition timer on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current !== null) clearTimeout(transitionTimerRef.current);
+    };
+  }, []);
 
   // Handle transition complete
   const handleTransitionComplete = useCallback(() => {
@@ -112,7 +127,7 @@ export default function SimulatorApp() {
         gl={{
           antialias: !mobileConfig.isLowEnd,
           alpha: false,
-          preserveDrawingBuffer: true,
+          preserveDrawingBuffer: false, // enable only when a screenshot is requested
           powerPreference: mobileConfig.isLowEnd ? 'low-power' : 'default',
           pixelRatio: mobileConfig.dpr,
         }}
@@ -212,7 +227,5 @@ export default function SimulatorApp() {
 
 // Preload critical 3D assets for smooth transitions
 useGLTF.preload('/models/sci-fi-alien-city/source/alien_city.glb');
-// FBX preloading if supported, otherwise rely on caching
-useGLTF.preload('/models/black-hole/source/black_hole.fbx'); // Note: useFBX doesn't have a direct preload on the hook easily accessible, but often useGLTF's loader manager handles it or we can just let it load on demand with Suspense.
-// Actually, useFBX uses FBXLoader. We can use useLoader.preload(FBXLoader, url).
-// But for now, let's stick to simple GLTF preload and let FBX load with Suspense fallback.
+// Preload black hole FBX using the correct FBXLoader
+useLoader.preload(FBXLoader, '/models/black-hole/source/black_hole.fbx');

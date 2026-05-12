@@ -13,6 +13,15 @@ const SoulPrison = lazy(() => import('./SoulPrison'));
 const TheExit = lazy(() => import('./TheExit'));
 
 /**
+ * Generates a stable id for a FloatingQuote from the level number and quote text.
+ * Uses the first 30 characters of the text slugified, prefixed with the level number.
+ */
+function createQuoteId(level: number, text: string): string {
+  const slug = text.slice(0, 30).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return `${level}-${slug}`;
+}
+
+/**
  * Level Container - Routes active level based on scroll progress
  * Redesigned for pitch black space with floating colorful elements
  */
@@ -65,9 +74,9 @@ export default function LevelContainer({ scrollProgress }: LevelContainerProps) 
   return (
     <group>
       {/* Floating Quotes */}
-      {levelQuotes.map((quote, index) => (
+      {levelQuotes.map((quote) => (
         <FloatingQuote
-          key={`quote-${activeLevel}-${index}`}
+          key={createQuoteId(activeLevel, quote.text)}
           text={quote.text}
           author={quote.author}
           position={quote.position}
