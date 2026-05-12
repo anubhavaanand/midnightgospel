@@ -1,4 +1,4 @@
-import { ScrollControls, ScrollControlsState } from '@react-three/drei';
+import { ScrollControls, type ScrollControlsState } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import type React from 'react';
 import { useThree } from '@react-three/fiber';
@@ -13,13 +13,12 @@ import CameraRig from './CameraRig';
 import LevelContainer from './levels/LevelContainer';
 import PerformanceMonitor from '@components/utils/PerformanceMonitor';
 
-/** Internal ScrollControls state augmented with the mutable scroll ref. */
-interface ScrollControlsApi extends ScrollControlsState {
+type ScrollControlsImpl = ScrollControlsState & {
   readonly scroll: React.MutableRefObject<number>;
-}
+};
 
 interface SceneContentProps {
-  readonly scrollControlsRef: React.RefObject<ScrollControlsApi>;
+  readonly scrollControlsRef: React.RefObject<ScrollControlsImpl>;
 }
 
 /**
@@ -48,7 +47,7 @@ function PitchBlackSpace() {
  * Supports both scroll (desktop) and touch (mobile) input.
  */
 export default function Scene() {
-  const scrollControlsRef = useRef<ScrollControlsApi>(null);
+  const scrollControlsRef = useRef<ScrollControlsImpl>(null);
   const config = useDeviceDetection();
 
   return (
