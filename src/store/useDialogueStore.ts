@@ -2,21 +2,36 @@ import { create } from 'zustand';
 import { DIALOGUE_TREES, type AIMood } from '../data/dialogues';
 import type { LevelId } from '../data/levels';
 
+export type NarrativePhase = 'CHAOS_INTRO' | 'DEBATE' | 'ACCEPTANCE_TURN' | 'ZOMBIE_MUSICAL';
+
 interface DialogueState {
   progressMap: Record<LevelId, string>;
   activeText: string | null;
+  activeSpeaker: string | null;
   currentMood: AIMood;
   isOpen: boolean;
+  narrativePhase: NarrativePhase;
+  audioMetrics: {
+    bass: number;
+    mid: number;
+    treble: number;
+    rms: number;
+  };
   openDialogue: (levelId: LevelId) => void;
   advanceNode: (levelId: LevelId) => void;
   closeDialogue: () => void;
+  setNarrativePhase: (phase: NarrativePhase) => void;
+  updateAudioMetrics: (metrics: Partial<DialogueState['audioMetrics']>) => void;
 }
 
 export const useDialogueStore = create<DialogueState>((set, get) => ({
   progressMap: {} as Record<LevelId, string>,
   activeText: null,
+  activeSpeaker: null,
   currentMood: { intensity: 0, colorTarget: '#000000', speed: 1.0 },
   isOpen: false,
+  narrativePhase: 'CHAOS_INTRO',
+  audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
 
   openDialogue: (levelId: LevelId) => {
     const tree = DIALOGUE_TREES[levelId];
@@ -32,6 +47,7 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
       set((state) => ({
         isOpen: true,
         activeText: node.text,
+        activeSpeaker: node.speaker,
         currentMood: node.mood,
         progressMap: { ...state.progressMap, [levelId]: nodeId }
       }));
@@ -58,6 +74,7 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
     if (nextNode) {
       set((state) => ({
         activeText: nextNode.text,
+        activeSpeaker: nextNode.speaker,
         currentMood: nextNode.mood,
         progressMap: { ...state.progressMap, [levelId]: nextId }
       }));
@@ -67,6 +84,12 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
   },
 
   closeDialogue: () => {
-    set({ isOpen: false });
-  }
+    set({ isOpen: false, activeText: null, activeSpeaker: null });
+  },
+
+  setNarrativePhase: (phase: NarrativePhase) => set({ narrativePhase: phase }),
+  
+  updateAudioMetrics: (metrics) => set((state) => ({ 
+    audioMetrics: { ...state.audioMetrics, ...metrics } 
+  }))
 }));
