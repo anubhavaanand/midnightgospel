@@ -1,15 +1,44 @@
-# Midnight Gospel 3D
+<div align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/en/2/23/Midnight_Gospel_Logo.png" alt="Midnight Gospel" width="400"/>
+  <h1>Midnight Gospel 3D Simulator</h1>
+  
+  <p><strong>An immersive, WebGL-powered interactive multiverse experience built with React Three Fiber.</strong></p>
 
-🌌 **Visit the Simulator:** [https://midnightgospel.vercel.app/](https://midnightgospel.vercel.app/)
+  <p>
+    <a href="https://midnightgospel.vercel.app"><img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel" alt="Vercel Deployed" /></a>
+    <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=threedotjs&logoColor=white" alt="Three.js" />
+    <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+  </p>
 
-## Overview
+  <p>
+    <a href="#overview">Overview</a> •
+    <a href="#features">Features</a> •
+    <a href="#quick-start">Quick Start</a> •
+    <a href="#architecture">Architecture</a> •
+    <a href="#contributing">Contributing</a>
+  </p>
+</div>
 
-**Midnight Gospel 3D** is a browser-based immersive 3D experience adapting the Netflix animated series into an interactive "Multiverse Simulator." Built with React Three Fiber (R3F), Three.js WebGL, and Google Gemini AI for generative assets.
+---
 
-## Quick Start
+## 🌌 Overview
+
+The **Midnight Gospel 3D Simulator** is a browser-based, high-performance WebGL application that adapts the thematic elements of the animated series into an interactive "Multiverse Simulator". 
+
+Players navigate a central "Hub" (The Chromatic Ribbon) and dive into diegetic portals that seamlessly load into distinct, mathematically driven 3D environments.
+
+## ✨ Features
+
+- **Seamless Scene Graph Routing**: Enter and exit 9 different 3D worlds without ever unmounting the WebGL context, ensuring zero memory leaks and 60FPS performance.
+- **Dynamic GLSL Shaders**: Every episode features custom vertex and fragment shaders that react procedurally to time (`uTime`) and user interaction.
+- **MoodSync Architecture**: A robust Zustand state engine that maps static dialogue trees to real-time shader uniform mutations (`uIntensity`, `uSpeed`, `uColorBloom`).
+- **Accessible Cinematic Overlay**: Fully ARIA-compliant dialogue systems utilizing `framer-motion` for smooth cinematic reveals.
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Node.js 18+ and npm 8+
 
 ### Installation
@@ -26,64 +55,25 @@ npm install
 npm run dev
 ```
 
-### Environment Setup
+The simulator will be running locally at `http://localhost:5173`.
 
-Create a `.env` file based on `.env.example`:
+## 🏗️ Architecture & Technology Stack
 
-```bash
-cp .env.example .env
-```
+We practice rigorous **Spec-Driven Development (SDD)** to ensure maximum scalability and type-safety.
 
-Add your Google AI API key to `.env`:
+- **Core**: React 18, TypeScript (Strict Mode)
+- **3D Engine**: Three.js, React Three Fiber (R3F), `@react-three/drei`
+- **State Management**: Zustand
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Testing & QA**: Vitest (Unit hooks), Playwright (E2E Routing)
 
-```
-VITE_GOOGLE_API_KEY=your_google_ai_api_key_here
-```
+## 🤝 Contributing
 
-## Available Scripts
+We welcome contributions! If you're looking to help out, please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production (TypeScript + Vite)
-- `npm run preview` - Preview production build locally
-- `npm run type-check` - Run TypeScript type checking
-- `npm run lint` - Run ESLint
+If you encounter a bug or have a feature request, please [open an issue](https://github.com/anubhavaanand/midnightgospel/issues).
 
-## Architecture
+## 📄 License
 
-- **React 18** + **TypeScript** for component structure
-- **React Three Fiber** for declarative 3D scene graph
-- **Three.js** for WebGL rendering
-- **Zustand** for state management
-- **Tailwind CSS** for UI styling
-- **Framer Motion** + **GSAP** for animations
-- **@react-three/rapier** (v1.5.x) for physics simulation - locked to 1.x for React 18 compatibility
-- **Google Gemini AI** for generative assets and shaders
-
-## Project Structure
-
-```
-src/
-├── components/        # React components
-│   ├── levels/       # 6 scrollable level segments
-│   ├── effects/      # Visual effects (particles, transitions)
-│   ├── ui/           # User interface components
-│   └── physics/      # Physics-based interactions
-├── hooks/            # Custom React hooks
-├── utils/            # Utility functions
-└── App.tsx           # Main application entry
-```
-
-## Performance
-
-- **Desktop**: 60 FPS target
-- **Mobile**: 30+ FPS with adaptive quality
-- **Build Size**: ~1 MB gzipped
-- **TypeScript**: 0 errors (strict mode)
-
-## Development
-
-See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detailed architecture documentation and development guidelines.
-
-## License
-
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

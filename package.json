@@ -1,6 +1,13 @@
 {
   "name": "midnight-gospel-3d",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "An immersive WebGL 3D simulator and interactive narrative engine built with React Three Fiber.",
+  "author": "Anubhav Anand",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anubhavaanand/midnightgospel.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
