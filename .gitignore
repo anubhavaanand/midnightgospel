@@ -3,3 +3,9 @@ dist/
 build/
 *.log
 .env*
+
+# Clutter / Local Debug Assets
+/*.png
+/*.mjs
+/*.py
+.DS_Store
