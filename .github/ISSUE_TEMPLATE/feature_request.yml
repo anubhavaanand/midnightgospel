@@ -1,0 +1,23 @@
+name: ✨ Feature Request
+description: Suggest an enhancement or new feature
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We love new ideas! Tell us what you'd like to see added to the Multiverse.
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: What is the feature? Why is it needed?
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered any alternative solutions or workarounds?
+    validations:
+      required: false

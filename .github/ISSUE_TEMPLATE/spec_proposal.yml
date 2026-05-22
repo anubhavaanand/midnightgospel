@@ -1,0 +1,23 @@
+name: 📐 Spec Proposal
+description: Propose a major architectural change or new episode via SpecKit
+title: "[SPEC]: "
+labels: ["architecture", "spec"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before executing code, we must define the architecture. Please provide a brief outline of the proposed SpecKit parameters.
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Proposed Architecture
+      description: What system are you proposing to build or change?
+    validations:
+      required: true
+  - type: textarea
+    id: spec-components
+    attributes:
+      label: Core Components
+      description: List the React components, Zustand stores, or GLSL shaders involved.
+    validations:
+      required: true
