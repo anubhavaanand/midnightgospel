@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import { useLevelStore } from '../../store/useLevelStore';
 import { LEVELS, LevelId } from '../../data/levels';
 
 const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, number, number] }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const billboardRef = useRef<THREE.Group>(null);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
@@ -15,9 +15,8 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
   if (!level) return null;
 
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.01;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.2;
+    if (billboardRef.current) {
+      billboardRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.2;
     }
   });
 
@@ -34,9 +33,8 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
   };
 
   return (
-    <group position={position}>
+    <Billboard ref={billboardRef} position={position} follow={true}>
       <mesh 
-        ref={meshRef} 
         onClick={handleClick}
         onPointerOver={() => document.body.style.cursor = 'pointer'}
         onPointerOut={() => document.body.style.cursor = 'auto'}
@@ -58,18 +56,25 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
       >
         {level.name}
       </Text>
-    </group>
+    </Billboard>
   );
 };
 
 export const LevelSelector: React.FC = () => {
   const episodes = [1, 2, 3, 4, 5, 6, 7, 8] as LevelId[];
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y -= delta * 0.1; // Slow continuous orbit around center
+    }
+  });
   
   return (
-    <group>
+    <group ref={groupRef}>
       {episodes.map((epId, index) => {
         const angle = (index / episodes.length) * Math.PI * 2;
-        const radius = 8;
+        const radius = 15; // Increased radius to orbit outside the large center island
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
         
