@@ -12,13 +12,15 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
   
   const level = LEVELS.find(l => l.id === levelId);
-  if (!level) return null;
 
   useFrame((state) => {
+    if (!level) return;
     if (billboardRef.current) {
       billboardRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.2;
     }
   });
+
+  if (!level) return null;
 
   const handleClick = (e: any) => {
     e.stopPropagation();

@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -66,5 +67,10 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['three', 'zustand', 'gsap'],
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache', 'tests/e2e/**'],
   },
 });
