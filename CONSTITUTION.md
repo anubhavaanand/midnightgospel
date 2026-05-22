@@ -17,6 +17,9 @@ Strict TypeScript enforcement across the entire stack. All R3F components, store
 ### V. Declarative Scene Management
 Utilize React Three Fiber (R3F) and Drei for a clean, declarative scene graph. Avoid direct Three.js imperative manipulations unless absolutely necessary for performance or complex logic.
 
+### VI. Level Design: Cognitive Dissonance (The Episode 1 Rule)
+All episode environments must strictly adhere to the "Cognitive Dissonance" rule: The audio track (dialogue) must remain calm, analytical, or therapeutic, while the WebGL environment provides extreme visual contrast (e.g., grotesque melting geometry, hyper-violent scenarios). The visual state (Vertex/Fragment Shaders) must interpolate between "Chaos" and "Acceptance" purely driven by the underlying dialogue's emotional arc.
+
 ## Technical Stack & Constraints
 
 - **Frontend:** React 18, Vite, TypeScript
