@@ -31,7 +31,7 @@ export * from './KeyboardShortcuts';
 export { default as AudioControls } from './AudioControls';
 export * from './AudioControls';
 
-export { default as LoadingScreen } from './LoadingScreen';
+export { LoadingScreen } from './LoadingScreen';
 export * from './LoadingScreen';
 
 export { default as AchievementSystem } from './AchievementSystem';
