@@ -13,7 +13,10 @@
   </p>
 
   <p align="center">
-    <a href="https://midnightgospel.vercel.app"><img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Deployed on Vercel" /></a>
+    <a href="https://midnightgospel.vercel.app"><img src="https://img.shields.io/badge/LIVE_EXPERIENCE-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Experience" /></a>
+  </p>
+
+  <p align="center">
     <img src="https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 18" />
     <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white" alt="Three.js" />
     <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
@@ -23,17 +26,27 @@
   <hr />
 </div>
 
-## 🌌 The Experience
+## 👁️ About This Project
 
-The **Midnight Gospel 3D Simulator** transcends a standard landing page. It is a fully persistent 3D WebGL ecosystem where players spawn into the **Chromatic Ribbon Hub** and traverse through diegetic portal geometries into 8 distinct dimensions (Episodes). 
+> *"You are the universe experiencing itself."*
 
-Each dimension is mathematically driven by custom fragment and vertex GLSL shaders, mapping the profound dialogue of the original podcast interviews directly into real-time environmental mutations.
+The **Midnight Gospel 3D Simulator** transcends a standard landing page—it is a fully persistent, generative WebGL ecosystem. Inspired by the Netflix animated series and the Duncan Trussell Family Hour podcast, this project reimagines existential, psychedelic interviews as highly interactive, mathematically driven 3D geometries.
+
+Players spawn into the **Chromatic Ribbon** (the multiverse hub) and dive through diegetic portals into 8 distinct dimensions. In each dimension, custom **GLSL Fragment and Vertex Shaders** listen to the active dialogue state, dynamically mutating the environment (colors, melting effects, speed, and audio-reactive auras) in real-time as the conversation unfolds.
+
+---
+
+## 🚀 Live Experience
+
+The simulation is fully deployed and optimized for both desktop and mobile browsers (targeting 60 FPS). 
+
+**Enter the Simulator:** [midnightgospel.vercel.app](https://midnightgospel.vercel.app)
 
 ---
 
 ## 🏗️ Architecture Design
 
-The application utilizes a sophisticated React tree architecture to ensure zero WebGL context loss during route transitions, guaranteeing buttery-smooth 60 FPS performance.
+The application utilizes a sophisticated React tree architecture to ensure **zero WebGL context loss** during route transitions, ensuring buttery-smooth performance.
 
 ```mermaid
 graph TD
@@ -55,8 +68,7 @@ graph TD
 ### Core Technologies
 - **Rendering**: `@react-three/fiber` declarative scene graph over `three.js`.
 - **State Engine**: `zustand` completely decoupled from React renders to feed rapid shader uniform updates without thrashing the DOM.
-- **Cinematics**: `framer-motion` for accessible, ARIA-compliant HTML overlays on top of the `<Canvas>`.
-- **Development**: Spec-Driven Development (SDD) via `speckit` pipeline.
+- **Cinematics**: `framer-motion` for accessible, ARIA-compliant HTML overlays.
 
 ---
 
@@ -76,32 +88,19 @@ graph TD
 
 ---
 
-## 🚀 Quick Start
+## 🤖 Spec-Driven Development & AI Agent Skills
 
-Ensure you have Node.js 18+ installed on your system.
+This entire architecture was engineered autonomously using a rigorous **Spec-Driven Development (SDD)** pipeline. To achieve this level of precision and aesthetic integration, the following specialized **Agent Skills** were orchestrated:
 
-```bash
-# 1. Clone the multiverse
-git clone https://github.com/anubhavaanand/midnightgospel.git
-cd midnightgospel
-
-# 2. Install the dimensional dependencies
-npm install
-
-# 3. Ignite the simulator
-npm run dev
-```
-
-Your local instance of the Chromatic Ribbon will now be accessible at `http://localhost:5173`.
+- 📐 **`/speckit-specify`**: Defined the precise feature architecture and exact constraints for the 3D Multiverse.
+- 🗺️ **`/speckit-plan`**: Designed the zero-context-loss WebGL rendering logic and Zustand state management before a single line of code was written.
+- 📋 **`/speckit-tasks`**: Generated 28 highly specific, dependency-ordered tasks to ensure foundational geometries were built before complex shaders.
+- 🔍 **`/speckit-analyze`**: Performed non-destructive, cross-artifact consistency checks between the spec, plan, and tasks.
+- ✅ **`/speckit-checklist`**: Validated requirements completeness and verified the final cinematic aesthetic.
+- ⚡ **`/speckit-implement`**: Executed the final implementation, resolving strict TypeScript and WebGL runtime exceptions autonomously.
+- 💾 **`/speckit-git-commit` & `/speckit-git-feature`**: Seamlessly managed version control and perfectly chunked commit histories.
 
 ---
-
-## 🛠️ Spec-Driven Development (SDD)
-
-This repository strictly adheres to the SpecKit SDD workflow. Before writing code, all features must traverse the pipeline:
-`Constitution -> Specify -> Clarify -> Plan -> Tasks -> Implement`
-
-All foundational specs and automated bash utility scripts are securely isolated in the `.specify` and `.gemini` directories.
 
 ## 🤝 Contributing
 
