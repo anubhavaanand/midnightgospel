@@ -9,3 +9,4 @@ build/
 /*.mjs
 /*.py
 .DS_Store
+.vercel
