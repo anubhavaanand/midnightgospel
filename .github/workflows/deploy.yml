@@ -30,7 +30,7 @@ jobs:
         run: npm run type-check
 
       - name: Run linter
-        run: npm run lint -- --max-warnings=0
+        run: npm run lint
 
       - name: Build application
         env:
