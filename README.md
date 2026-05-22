@@ -88,17 +88,12 @@ graph TD
 
 ---
 
-## 🤖 Spec-Driven Development & AI Agent Skills
+## 🛠️ Spec-Driven Development (SDD)
 
-This entire architecture was engineered autonomously using a rigorous **Spec-Driven Development (SDD)** pipeline. To achieve this level of precision and aesthetic integration, the following specialized **Agent Skills** were orchestrated:
+This repository strictly adheres to the SpecKit SDD workflow. Before writing code, all features must traverse the pipeline:
+`Constitution -> Specify -> Clarify -> Plan -> Tasks -> Implement`
 
-- 📐 **`/speckit-specify`**: Defined the precise feature architecture and exact constraints for the 3D Multiverse.
-- 🗺️ **`/speckit-plan`**: Designed the zero-context-loss WebGL rendering logic and Zustand state management before a single line of code was written.
-- 📋 **`/speckit-tasks`**: Generated 28 highly specific, dependency-ordered tasks to ensure foundational geometries were built before complex shaders.
-- 🔍 **`/speckit-analyze`**: Performed non-destructive, cross-artifact consistency checks between the spec, plan, and tasks.
-- ✅ **`/speckit-checklist`**: Validated requirements completeness and verified the final cinematic aesthetic.
-- ⚡ **`/speckit-implement`**: Executed the final implementation, resolving strict TypeScript and WebGL runtime exceptions autonomously.
-- 💾 **`/speckit-git-commit` & `/speckit-git-feature`**: Seamlessly managed version control and perfectly chunked commit histories.
+All foundational specs and automated bash utility scripts are securely isolated in the `.specify` and `.gemini` directories.
 
 ---
 
