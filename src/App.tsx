@@ -1,0 +1,55 @@
+import { useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { SimulatorRouter } from './components/scene/SimulatorRouter';
+import { TransitionWipe } from './components/ui/TransitionWipe';
+import { DialogueOverlay } from './components/ui/DialogueOverlay';
+import { MoodSync } from './components/scene/MoodSync';
+
+const WebGLFallback = () => (
+  <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
+    <div>
+      <h1 className="text-3xl font-bold mb-4 text-fuchsia-500">WebGL 2.0 Required</h1>
+      <p className="text-gray-400">Your browser or device does not support WebGL 2.0, which is required to enter the simulation.</p>
+    </div>
+  </div>
+);
+
+function App() {
+  const [hasWebGL, setHasWebGL] = useState(true);
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2');
+      if (!gl) {
+        setHasWebGL(false);
+      }
+    } catch (e) {
+      setHasWebGL(false);
+    }
+  }, []);
+
+  if (!hasWebGL) {
+    return <WebGLFallback />;
+  }
+
+  return (
+    <div className="h-screen w-screen bg-black overflow-hidden relative">
+      <TransitionWipe />
+      <DialogueOverlay />
+      
+      <Canvas
+        gl={{ antialias: true, powerPreference: "high-performance" }}
+        camera={{ position: [0, 0, 10], fov: 60 }}
+        dpr={[1, 2]} // Optimize for mobile vs desktop pixel ratios
+      >
+        <color attach="background" args={['#000000']} />
+        <ambientLight intensity={0.5} />
+        <MoodSync />
+        <SimulatorRouter />
+      </Canvas>
+    </div>
+  );
+}
+
+export default App;
