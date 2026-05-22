@@ -1,10 +1,36 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls, Environment, useGLTF, Resize, Float, Center } from '@react-three/drei';
 import * as THREE from 'three';
 import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import './ChromaticShader';
+
+const SpaceIsland = ({ position }: { position: [number, number, number] }) => {
+  const { scene } = useGLTF('/models/space_exploration.glb');
+  const clonedScene = React.useMemo(() => scene.clone(), [scene]);
+  return (
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={2} position={position}>
+      <Resize scale={4}>
+        <primitive object={clonedScene} />
+      </Resize>
+    </Float>
+  );
+};
+
+const CenterIsland = () => {
+  const { scene } = useGLTF('/models/island_in_the_space.glb');
+  
+  return (
+    <group position={[0, 0, 0]}>
+      <Resize scale={10}>
+        <Center>
+          <primitive object={scene} />
+        </Center>
+      </Resize>
+    </group>
+  );
+};
 
 
 const ChromaticRibbon: React.FC = () => {
@@ -19,16 +45,15 @@ const ChromaticRibbon: React.FC = () => {
 
   return (
     <group>
-      <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} maxDistance={20} minDistance={5} />
+      <OrbitControls makeDefault maxDistance={20} minDistance={5} />
       <Environment preset="city" />
       
-      {/* The Central Entity (Clancy placeholder) */}
-      <mesh position={[0, 0, 0]} onClick={(e) => { e.stopPropagation(); openDialogue(0); }}
+      {/* The Central Island (Click to open dialogue) */}
+      <group onClick={(e) => { e.stopPropagation(); openDialogue(0); }}
         onPointerOver={() => document.body.style.cursor = 'pointer'}
         onPointerOut={() => document.body.style.cursor = 'auto'}>
-        <octahedronGeometry args={[2, 0]} />
-        <meshStandardMaterial color="#FF00FF" wireframe />
-      </mesh>
+        <CenterIsland />
+      </group>
 
       {/* The Background Ribbon */}
       <mesh>
@@ -39,6 +64,11 @@ const ChromaticRibbon: React.FC = () => {
 
       {/* Diegetic Portals */}
       <LevelSelector />
+
+      {/* Randomly Placed Space Islands */}
+      <SpaceIsland position={[8, 5, -8]} />
+      <SpaceIsland position={[-10, -3, -12]} />
+      <SpaceIsland position={[4, -8, 10]} />
     </group>
   );
 };
