@@ -4,7 +4,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { LoadingScreen } from '../ui/LoadingScreen';
 
 const ChromaticRibbon = lazy(() => import('../../levels/Hub/ChromaticRibbon'));
-const ZombieCapitol = lazy(() => import('../../levels/Episode1/ZombieCapitol'));
+const ZombieCapitol = lazy(() => import('../episodes/episode1/ZombieCapitol').then(m => ({ default: m.ZombieCapitol })));
 const BabyClown = lazy(() => import('../../levels/Episode2/BabyClown'));
 const CreamOcean = lazy(() => import('../../levels/Episode3/CreamOcean'));
 const VengeanceKingdom = lazy(() => import('../../levels/Episode4/VengeanceKingdom'));
