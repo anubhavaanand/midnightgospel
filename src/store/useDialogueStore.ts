@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { DIALOGUE_TREES, type AIMood } from '../data/dialogues';
 import type { LevelId } from '../data/levels';
 
-export type NarrativePhase = 'CHAOS_INTRO' | 'DEBATE' | 'ACCEPTANCE_TURN' | 'ZOMBIE_MUSICAL';
+export type NarrativePhase = 'CHAOS_INTRO' | 'DEBATE' | 'ACCEPTANCE_TURN' | 'CURE_COLLAPSE' | 'ZOMBIE_MUSICAL';
 
 interface DialogueState {
   progressMap: Record<LevelId, string>;

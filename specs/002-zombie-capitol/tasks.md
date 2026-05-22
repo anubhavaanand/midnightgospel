@@ -1,7 +1,7 @@
 # Implementation Tasks: Zombie Capitol
 
 ## Phase 1: Foundational Setup (Audio & State)
-- [x] T001 [P] Create the narrative state manager in `src/store/useDialogueStore.ts` defining `CHAOS_INTRO`, `DEBATE`, `ACCEPTANCE_TURN`, `ZOMBIE_MUSICAL`.
+- [x] T001 [P] Create the narrative state manager in `src/store/useDialogueStore.ts` defining `CHAOS_INTRO`, `DEBATE`, `ACCEPTANCE_TURN`, `CURE_COLLAPSE`, `ZOMBIE_MUSICAL`.
 - [x] T002 Implement `src/components/audio/AudioAnalyzerNode.tsx` using the Web Audio API to compute `bass`, `mid`, `treble`, `rms` uniformly.
 
 ## Phase 2: Cognitive Dissonance Visuals [US1] & [US2]

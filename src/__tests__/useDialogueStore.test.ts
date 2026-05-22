@@ -10,6 +10,8 @@ describe('useDialogueStore', () => {
       activeText: null,
       currentMood: { intensity: 0, colorTarget: '#000000', speed: 1.0 },
       isOpen: false,
+      narrativePhase: 'CHAOS_INTRO',
+      audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
     });
   });
 
@@ -54,5 +56,21 @@ describe('useDialogueStore', () => {
     const firstNode = DIALOGUE_TREES[0]!.nodes['hub-1'];
     expect(state.activeText).toBe(firstNode.text);
     expect(state.progressMap[0]).toBe('hub-1');
+  });
+
+  it('should initialize and update narrativePhase', () => {
+    const store = useDialogueStore.getState();
+    expect(store.narrativePhase).toBe('CHAOS_INTRO');
+
+    useDialogueStore.getState().setNarrativePhase('DEBATE');
+    expect(useDialogueStore.getState().narrativePhase).toBe('DEBATE');
+  });
+
+  it('should initialize and update audioMetrics', () => {
+    const store = useDialogueStore.getState();
+    expect(store.audioMetrics).toEqual({ bass: 0, mid: 0, treble: 0, rms: 0 });
+
+    useDialogueStore.getState().updateAudioMetrics({ bass: 0.8, rms: 0.5 });
+    expect(useDialogueStore.getState().audioMetrics).toEqual({ bass: 0.8, mid: 0, treble: 0, rms: 0.5 });
   });
 });
