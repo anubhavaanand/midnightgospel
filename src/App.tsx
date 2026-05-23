@@ -6,6 +6,7 @@ import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { MoodSync } from './components/scene/MoodSync';
 import { TouchJoystick } from './components/ui/TouchJoystick';
 import { HubDialogueComputer } from './components/ui/HubDialogueComputer';
+import { KineticDialogue } from './components/scene/KineticDialogue';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -50,6 +51,7 @@ function App() {
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
         <MoodSync />
+        <KineticDialogue />
         <SimulatorRouter />
       </Canvas>
     </div>
