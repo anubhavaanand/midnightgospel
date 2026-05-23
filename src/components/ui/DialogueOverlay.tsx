@@ -162,6 +162,31 @@ export const DialogueOverlay: React.FC = () => {
     </svg>
   );
 
+  // Baby Clown King Avatar Component
+  const BabyClownAvatar = () => (
+    <svg className="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="clown-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FFB6C1" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#FFB6C1" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="45" fill="url(#clown-glow)" />
+      
+      {/* Baby Clown Face */}
+      <circle cx="50" cy="50" r="20" fill="#FFFACD" />
+      <circle cx="50" cy="50" r="4" fill="#FF0000" /> {/* Red nose */}
+      
+      {/* Eyes */}
+      <path d="M42 45 Q 45 42 48 45" stroke="#000" strokeWidth="2" fill="none" />
+      <path d="M52 45 Q 55 42 58 45" stroke="#000" strokeWidth="2" fill="none" />
+      
+      {/* Star paint */}
+      <path d="M45 55 L42 60 L48 60 Z" fill="#FF69B4" />
+      <path d="M55 55 L52 60 L58 60 Z" fill="#87CEEB" />
+    </svg>
+  );
+
   // Default Universe Simulator Orb Avatar Component
   const DefaultAvatar = () => (
     <div className="w-full h-full flex items-center justify-center relative">
@@ -197,6 +222,18 @@ export const DialogueOverlay: React.FC = () => {
           aria-live="polite"
           aria-modal="true"
         >
+          {/* Episode Title Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.2 }}
+            className="absolute -top-12 left-0 font-space text-white/80 text-sm tracking-widest uppercase flex items-center gap-2"
+          >
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            EPISODE {activeLevelId} // SIMULATION ACTIVE
+          </motion.div>
+
           {/* Main Neon Glassmorphic Dialogue Panel */}
           <div 
             className="relative overflow-hidden rounded-2xl border bg-[#0d071b]/80 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col md:flex-row gap-5 items-stretch cursor-pointer select-none"
@@ -235,6 +272,8 @@ export const DialogueOverlay: React.FC = () => {
                   <ClancyAvatar />
                 ) : activeSpeaker?.toLowerCase() === 'glasses man' ? (
                   <GlassesManAvatar />
+                ) : activeSpeaker?.toLowerCase() === 'baby clown king' ? (
+                  <BabyClownAvatar />
                 ) : (
                   <DefaultAvatar />
                 )}
