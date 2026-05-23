@@ -1,50 +1,60 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+### Sync Impact Report
+- Version change: Template → v1.0.0
+- List of modified principles:
+  - PRINCIPLE 1: [PRINCIPLE_1_NAME] → I. 60 FPS Performance Floor (Mobile Targets)
+  - PRINCIPLE 2: [PRINCIPLE_2_NAME] → II. State Isolation (Per-Frame Rendering Rules)
+  - PRINCIPLE 3: [PRINCIPLE_3_NAME] → III. Draco Asset Validation (GLB/GLTF Compression)
+  - PRINCIPLE 4: [PRINCIPLE_4_NAME] → IV. Decoupled Service Architecture (Google Gemini Isolation)
+  - PRINCIPLE 5: [PRINCIPLE_5_NAME] → V. Test-First Rigor (Comprehensive Vitest/JSDOM coverage)
+- Added sections:
+  - Performance & Asset Budgets
+  - Development Workflow & Quality Gates
+- Removed sections: None
+- Templates requiring updates:
+  - plan-template.md: ✅ updated
+  - spec-template.md: ✅ updated
+  - tasks-template.md: ✅ updated
+- Follow-up TODOs: None
+-->
+
+# Midnight Gospel 3D Experience Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. 60 FPS Performance Floor (Mobile Targets)
+All WebGL/R3F scenes must satisfy a strict 60 FPS minimum execution frame-rate under mobile target emulation. Development iterations must enforce lightweight custom vertex shaders, performative MSDF typography buffers, and strict garbage collection on texture/mesh unmounts to prevent catastrophic memory degradation.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. State Isolation (Per-Frame Rendering Rules)
+Enforce strict isolation between Zustand narrative stores and React per-frame rendering hooks (`useFrame`). Zero React-state updates or direct set/get interactions are allowed inside rendering loops to prevent rendering overhead, re-render cycles, and frame-rate drops.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Draco Asset Validation (GLB/GLTF Compression)
+Compulsory Draco compression for all 3D assets (`.glb` / `.gltf`) and texture compression checks. All meshes must be crunched and clean of redundant vertex parameters before mounting.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Decoupled Service Architecture (Google Gemini Isolation)
+Generative API and network-reliant communication services must be completely decoupled from React viewports. All model fetching logic resides strictly inside dedicated, pure TypeScript service layers (`src/services/`) with robust local fallbacks.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Test-First Rigor (NON-NEGOTIABLE)
+We run a rigorous, automated testing gate. Unit and integration tests must validate all store parameters, joystick controller states, and layout transitions before code is reviewed.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Performance & Asset Budgets
+To secure mobile target execution, meshes must be checked for redundant node structures and textures kept at 1024x1024 maximum sizes. Renderer frames must actively invoke `.dispose()` on all geometry and material buffers during portal warps.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow & Quality Gates
+Every new multiversal feature is subjected to the strict Speckit SDD Pipeline:
+1. Initialize core boundaries via `/speckit.constitution` in `.specify/memory/constitution.md`.
+2. Generate user specifications in `specs/01-multiverse/spec.md`.
+3. Interrogate technical requirements and gaps via `/speckit.clarify`.
+4. Validate compliance checklists under `checklists/requirements.md`.
+5. Map architectural state flows in `specs/01-multiverse/plan.md`.
+6. Convert roadmap blueprints into tasks in `specs/01-multiverse/tasks.md`.
+7. Execute automated cross-checking checks via `/speckit.analyze`.
+8. Implement code via automated tasks under `/speckit.implement`.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This Constitution supersedes all standard repository practices. Amendments require a semantic version increment:
+- **MAJOR:** Principle removal or backward-incompatible structural redefinition.
+- **MINOR:** New principle or performance constraint addition.
+- **PATCH:** Formatting, clarifications, or non-semantic wording updates.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-05-24 | **Last Amended**: 2026-05-24
