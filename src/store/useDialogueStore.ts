@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DIALOGUE_TREES, type AIMood } from '../data/dialogues';
+import { DIALOGUE_TREES, type AIMood, type ActiveQuest } from '../data/dialogues';
 import type { LevelId } from '../data/levels';
 
 export type NarrativePhase = 'CHAOS_INTRO' | 'DEBATE' | 'ACCEPTANCE_TURN' | 'CURE_COLLAPSE' | 'ZOMBIE_MUSICAL';
@@ -17,11 +17,13 @@ interface DialogueState {
     treble: number;
     rms: number;
   };
+  activeQuest: ActiveQuest | null;
   openDialogue: (levelId: LevelId) => void;
   advanceNode: (levelId: LevelId) => void;
   closeDialogue: () => void;
   setNarrativePhase: (phase: NarrativePhase) => void;
   updateAudioMetrics: (metrics: Partial<DialogueState['audioMetrics']>) => void;
+  setActiveQuest: (quest: ActiveQuest | null) => void;
 }
 
 export const useDialogueStore = create<DialogueState>((set, get) => ({
@@ -32,6 +34,7 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
   isOpen: false,
   narrativePhase: 'CHAOS_INTRO',
   audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
+  activeQuest: null,
 
   openDialogue: (levelId: LevelId) => {
     const tree = DIALOGUE_TREES[levelId];
@@ -91,5 +94,7 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
   
   updateAudioMetrics: (metrics) => set((state) => ({ 
     audioMetrics: { ...state.audioMetrics, ...metrics } 
-  }))
+  })),
+
+  setActiveQuest: (quest) => set({ activeQuest: quest })
 }));

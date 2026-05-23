@@ -12,6 +12,7 @@ describe('useDialogueStore', () => {
       isOpen: false,
       narrativePhase: 'CHAOS_INTRO',
       audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
+      activeQuest: null,
     });
   });
 
@@ -72,5 +73,22 @@ describe('useDialogueStore', () => {
 
     useDialogueStore.getState().updateAudioMetrics({ bass: 0.8, rms: 0.5 });
     expect(useDialogueStore.getState().audioMetrics).toEqual({ bass: 0.8, mid: 0, treble: 0, rms: 0.5 });
+  });
+
+  it('should initialize and update activeQuest', () => {
+    const store = useDialogueStore.getState();
+    expect(store.activeQuest).toBe(null);
+
+    const testQuest = {
+      recommendedLevel: 3,
+      recommendedNPC: 'Fish Mage',
+      userContext: 'Clancy wants to learn consciousness alchemy',
+    };
+
+    useDialogueStore.getState().setActiveQuest(testQuest);
+    expect(useDialogueStore.getState().activeQuest).toEqual(testQuest);
+
+    useDialogueStore.getState().setActiveQuest(null);
+    expect(useDialogueStore.getState().activeQuest).toBe(null);
   });
 });

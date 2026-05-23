@@ -6,6 +6,12 @@ export interface AIMood {
   speed: number;
 }
 
+export interface ActiveQuest {
+  recommendedLevel: number;
+  recommendedNPC: string;
+  userContext: string;
+}
+
 export interface DialogueNode {
   id: string;
   speaker: string;
@@ -48,21 +54,21 @@ export const DIALOGUE_TREES: Partial<Record<LevelId, DialogueTree>> = {
       'ep1-1': {
         id: 'ep1-1',
         speaker: 'Glasses Man',
-        text: "There's no such thing as a bad drug. It's the circumstances and the user.",
+        text: "I hate this idea of 'good' drugs and 'bad' drugs... it's the relationship that humans have with the substance that is the issue.",
         mood: { intensity: 0.8, colorTarget: '#8B0000', speed: 2.0 },
         nextNodeId: 'ep1-2'
       },
       'ep1-2': {
         id: 'ep1-2',
         speaker: 'Clancy',
-        text: "So you're saying even the zombies outside aren't inherently bad?",
+        text: "So you're saying health isn't about avoidance, but about our relationship with reality?",
         mood: { intensity: 0.5, colorTarget: '#14C832', speed: 1.2 },
         nextNodeId: 'ep1-3'
       },
       'ep1-3': {
         id: 'ep1-3',
         speaker: 'Glasses Man',
-        text: "Exactly. The zombies are just navigating the only reality they know. Resistance is what causes suffering.",
+        text: "Exactly. Health is about accepting and perceiving and dealing with reality on reality's terms.",
         mood: { intensity: 0.9, colorTarget: '#8B0000', speed: 2.5 },
         nextNodeId: null
       }

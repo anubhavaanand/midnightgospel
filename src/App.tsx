@@ -4,6 +4,7 @@ import { SimulatorRouter } from './components/scene/SimulatorRouter';
 import { TransitionWipe } from './components/ui/TransitionWipe';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { MoodSync } from './components/scene/MoodSync';
+import { HubComputerChat } from './components/ui/HubComputerChat';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -35,6 +36,7 @@ function App() {
 
   return (
     <div className="h-screen w-screen bg-black overflow-hidden relative">
+      <HubComputerChat />
       <TransitionWipe />
       <DialogueOverlay />
       
