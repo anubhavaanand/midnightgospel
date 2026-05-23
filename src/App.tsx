@@ -5,6 +5,7 @@ import { TransitionWipe } from './components/ui/TransitionWipe';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { MoodSync } from './components/scene/MoodSync';
 import { HubComputerChat } from './components/ui/HubComputerChat';
+import { TouchJoystick } from './components/ui/TouchJoystick';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -39,6 +40,7 @@ function App() {
       <HubComputerChat />
       <TransitionWipe />
       <DialogueOverlay />
+      <TouchJoystick />
       
       <Canvas
         gl={{ antialias: true, powerPreference: "high-performance" }}
