@@ -5,6 +5,7 @@ import { TransitionWipe } from './components/ui/TransitionWipe';
 import { DialogueOverlay } from './components/ui/DialogueOverlay';
 import { MoodSync } from './components/scene/MoodSync';
 import { TouchJoystick } from './components/ui/TouchJoystick';
+import { HubDialogueComputer } from './components/ui/HubDialogueComputer';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <div className="h-screen w-screen bg-black overflow-hidden relative">
+      <HubDialogueComputer />
       <TransitionWipe />
       <DialogueOverlay />
       <TouchJoystick />

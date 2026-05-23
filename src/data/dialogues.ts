@@ -49,27 +49,76 @@ export const DIALOGUE_TREES: Partial<Record<LevelId, DialogueTree>> = {
   },
   1: {
     levelId: 1,
-    startNodeId: 'ep1-1',
+    startNodeId: 'ep1-absurdist-1',
     nodes: {
-      'ep1-1': {
-        id: 'ep1-1',
-        speaker: 'Glasses Man',
-        text: "I hate this idea of 'good' drugs and 'bad' drugs... it's the relationship that humans have with the substance that is the issue.",
-        mood: { intensity: 0.8, colorTarget: '#8B0000', speed: 2.0 },
-        nextNodeId: 'ep1-2'
+      'ep1-absurdist-1': {
+        id: 'ep1-absurdist-1',
+        speaker: 'DJ',
+        text: "Good morning, simulation farmers!",
+        mood: { intensity: 0.8, colorTarget: '#FF00FF', speed: 1.5 },
+        nextNodeId: 'ep1-absurdist-2'
       },
-      'ep1-2': {
-        id: 'ep1-2',
+      'ep1-absurdist-2': {
+        id: 'ep1-absurdist-2',
         speaker: 'Clancy',
-        text: "So you're saying health isn't about avoidance, but about our relationship with reality?",
-        mood: { intensity: 0.5, colorTarget: '#14C832', speed: 1.2 },
-        nextNodeId: 'ep1-3'
+        text: "I gotta get a new avatar.",
+        mood: { intensity: 0.4, colorTarget: '#00FFFF', speed: 1.2 },
+        nextNodeId: 'ep1-absurdist-3'
       },
-      'ep1-3': {
-        id: 'ep1-3',
-        speaker: 'Glasses Man',
-        text: "Exactly. Health is about accepting and perceiving and dealing with reality on reality's terms.",
-        mood: { intensity: 0.9, colorTarget: '#8B0000', speed: 2.5 },
+      'ep1-absurdist-3': {
+        id: 'ep1-absurdist-3',
+        speaker: 'Clancy',
+        text: "Your little glasses, I'll fix your glasses.",
+        mood: { intensity: 0.7, colorTarget: '#8A2BE2', speed: 1.4 },
+        nextNodeId: 'ep1-philosophical-1-q'
+      },
+      'ep1-philosophical-1-q': {
+        id: 'ep1-philosophical-1-q',
+        speaker: 'President',
+        text: "So how do we get there... in a way that we're in control of it?",
+        mood: { intensity: 0.6, colorTarget: '#00FFFF', speed: 1.1 },
+        nextNodeId: 'ep1-philosophical-1-a'
+      },
+      'ep1-philosophical-1-a': {
+        id: 'ep1-philosophical-1-a',
+        speaker: 'Clancy',
+        text: "I think... You know, I am, right now, really into this type of meditation which is, um... just the process of sitting still, watching your breath and being very aware of your thoughts, emotions and the way your body feels.",
+        mood: { intensity: 0.5, colorTarget: '#8A2BE2', speed: 0.9 },
+        nextNodeId: 'ep1-philosophical-2-q'
+      },
+      'ep1-philosophical-2-q': {
+        id: 'ep1-philosophical-2-q',
+        speaker: 'Clancy',
+        text: "We want to go to this complete observer state until you get to the thing...",
+        mood: { intensity: 0.7, colorTarget: '#FF00FF', speed: 1.0 },
+        nextNodeId: 'ep1-philosophical-2-a'
+      },
+      'ep1-philosophical-2-a': {
+        id: 'ep1-philosophical-2-a',
+        speaker: 'President',
+        text: "Awareness of awareness.",
+        mood: { intensity: 0.9, colorTarget: '#00FFFF', speed: 0.8 },
+        nextNodeId: 'ep1-philosophical-3-q'
+      },
+      'ep1-philosophical-3-q': {
+        id: 'ep1-philosophical-3-q',
+        speaker: 'President',
+        text: "You feel shit like that when you're high on acid?",
+        mood: { intensity: 0.8, colorTarget: '#FF00FF', speed: 1.3 },
+        nextNodeId: 'ep1-philosophical-3-a'
+      },
+      'ep1-philosophical-3-a': {
+        id: 'ep1-philosophical-3-a',
+        speaker: 'Clancy',
+        text: "Yes, you do.",
+        mood: { intensity: 0.9, colorTarget: '#8A2BE2', speed: 0.7 },
+        nextNodeId: 'ep1-resolution'
+      },
+      'ep1-resolution': {
+        id: 'ep1-resolution',
+        speaker: 'Clancy',
+        text: "Thank you so much, oh, great denizens of the multiverse, for listening to Midnight Gospel.",
+        mood: { intensity: 0.8, colorTarget: '#FF00FF', speed: 1.2 },
         nextNodeId: null
       }
     }
