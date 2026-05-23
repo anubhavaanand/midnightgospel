@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Html } from '@react-three/drei';
 import { useLevelStore } from '../../store/useLevelStore';
 import { LoadingScreen } from '../ui/LoadingScreen';
+import { NPCAttentionCatcher } from './NPCAttentionCatcher';
 
 const ChromaticRibbon = lazy(() => import('../../levels/Hub/ChromaticRibbon'));
 const ZombieCapitol = lazy(() => import('../episodes/episode1/ZombieCapitol').then(m => ({ default: m.ZombieCapitol })));
@@ -24,15 +25,61 @@ export const SimulatorRouter: React.FC = () => {
 
   return (
     <Suspense fallback={<LevelSuspenseFallback />}>
-      {activeLevelId === 0 && <ChromaticRibbon />}
-      {activeLevelId === 1 && <ZombieCapitol />}
-      {activeLevelId === 2 && <BabyClown />}
-      {activeLevelId === 3 && <CreamOcean />}
-      {activeLevelId === 4 && <VengeanceKingdom />}
-      {activeLevelId === 5 && <SoulPrison />}
-      {activeLevelId === 6 && <MeditationCave />}
-      {activeLevelId === 7 && <PlanetBlankBall />}
-      {activeLevelId === 8 && <Trainworld />}
+      {activeLevelId === 0 && (
+        <>
+          <ChromaticRibbon />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Clancy" targetLevelId={0} />
+        </>
+      )}
+      {activeLevelId === 1 && (
+        <>
+          <ZombieCapitol />
+          <NPCAttentionCatcher npcPosition={[0, 1, 0]} npcName="Glasses Man" targetLevelId={1} />
+        </>
+      )}
+      {activeLevelId === 2 && (
+        <>
+          <BabyClown />
+          <NPCAttentionCatcher npcPosition={[0, 2, 0]} npcName="Baby Clown King" targetLevelId={2} />
+        </>
+      )}
+      {activeLevelId === 3 && (
+        <>
+          <CreamOcean />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Fish Mage" targetLevelId={3} />
+        </>
+      )}
+      {activeLevelId === 4 && (
+        <>
+          <VengeanceKingdom />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Knight" targetLevelId={4} />
+        </>
+      )}
+      {activeLevelId === 5 && (
+        <>
+          <SoulPrison />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Inmate" targetLevelId={5} />
+        </>
+      )}
+      {activeLevelId === 6 && (
+        <>
+          <MeditationCave />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Teacher" targetLevelId={6} />
+        </>
+      )}
+      {activeLevelId === 7 && (
+        <>
+          <PlanetBlankBall />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Death" targetLevelId={7} />
+        </>
+      )}
+      {activeLevelId === 8 && (
+        <>
+          <Trainworld />
+          <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Mom" targetLevelId={8} />
+        </>
+      )}
     </Suspense>
   );
 };
+
