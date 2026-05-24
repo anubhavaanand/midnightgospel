@@ -3,6 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Text, Float, Sparkles, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { useLevelStore } from '../../store/useLevelStore';
+import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
+import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './ZombieShader';
 
 const ZombieCapitol: React.FC = () => {
@@ -76,6 +78,10 @@ const ZombieCapitol: React.FC = () => {
           ))}
         </group>
       </Float>
+
+      {/* Dialogue System */}
+      <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Glasses Man" targetLevelId={1} />
+      <KineticDialogue position={[0, 3.5, 0]} />
 
       {/* Chaotic particles in the air */}
       <Sparkles 
