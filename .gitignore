@@ -10,3 +10,9 @@ build/
 /*.py
 .DS_Store
 .vercel
+
+# Generated / Scratch
+scratch/
+.superpowers/
+test-errors.cjs
+README.md

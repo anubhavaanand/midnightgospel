@@ -32,7 +32,7 @@ vi.mock('../store/useLevelStore', () => ({
 describe('HubDialogueComputer Component', () => {
   it('should render the input element when expanded', () => {
     render(<HubDialogueComputer />);
-    expect(screen.getByPlaceholderText(/what's on your mind/i)).toBeDefined();
+    expect(screen.getByPlaceholderText(/speak to the computer/i)).toBeDefined();
   });
 
   it('should toggle to minimized state on clicking minimize button', () => {
@@ -40,7 +40,7 @@ describe('HubDialogueComputer Component', () => {
     const minBtn = screen.getByRole('button', { name: /_/i });
     fireEvent.click(minBtn);
     
-    expect(screen.queryByPlaceholderText(/what's on your mind/i)).toBeNull();
-    expect(screen.getByText(/Dialogue Computer/i)).toBeDefined();
+    expect(screen.queryByPlaceholderText(/speak to the computer/i)).toBeNull();
+    expect(screen.getByText(/Simulation Computer/i)).toBeDefined();
   });
 });

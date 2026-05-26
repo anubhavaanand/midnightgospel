@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
@@ -15,7 +15,7 @@ export const HubDialogueComputer: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
   const [isMinimized, setIsMinimized] = useState(activeLevelId !== 0);
   const [hasUnreadTransmission, setHasUnreadTransmission] = useState(false);
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
+  const [showTranscriptLog, setShowTranscriptLog] = useState(false);
 
   const setActiveQuest = useDialogueStore((state) => state.setActiveQuest);
   const isDialogueOpen = useDialogueStore((state) => state.isOpen);
@@ -23,6 +23,7 @@ export const HubDialogueComputer: React.FC = () => {
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
 
   const typedRef = useRef<HTMLDivElement>(null);
+  const transcriptLogRef = useRef<HTMLDivElement>(null);
 
   // Sync minimize state when level changes
   useEffect(() => {
@@ -31,7 +32,7 @@ export const HubDialogueComputer: React.FC = () => {
   }, [activeLevelId]);
 
   // Audio chirp generator for retro transmissions
-  const playChime = () => {
+  const playChime = useCallback(() => {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const osc = ctx.createOscillator();
@@ -52,7 +53,7 @@ export const HubDialogueComputer: React.FC = () => {
     } catch (e) {
       console.warn("AudioContext chime muted by browser autoplay policy.");
     }
-  };
+  }, []);
 
   // Typewriter effect for computer's response
   useEffect(() => {
@@ -81,25 +82,34 @@ export const HubDialogueComputer: React.FC = () => {
     }
   }, [typedResponse]);
 
-  // Autonomous Proactive Transmission Hook
+  // TRULY AUTONOMOUS Proactive Transmission System
+  // Uses variable timing + confidence scoring to determine when to speak
   useEffect(() => {
-    // Generate a proactive transmission every 50 seconds
-    const intervalTime = 50000;
+    // Check every 10 seconds if the computer wants to transmit
+    const checkInterval = 10000;
     
-    const triggerProactiveTransmission = async () => {
+    const attemptAutonomousTransmission = async () => {
       // Do not trigger if user is actively engaged in narrative dialogues, loading, or typing
-      if (isDialogueOpen || loading) return;
+      if (isDialogueOpen || loading || input.length > 0) return;
+
+      // Ask the service if it feels compelled to transmit
+      const confidence = GeminiService.shouldTransmitAutonomously(activeLevelId);
+      
+      // Use confidence as probability — higher confidence = more likely to fire
+      // Minimum threshold of 0.4 to avoid spamming
+      if (confidence < 0.4) return;
+      
+      // Roll the dice — weighted by confidence
+      const roll = Math.random();
+      if (roll > confidence) return;
 
       try {
-        const response = await GeminiService.generateProactiveInsight(activeLevelId, chatHistory);
+        const response = await GeminiService.generateProactiveInsight(activeLevelId);
         
         playChime();
         setComputerResponse(response.response);
         setCurrentQuest(response);
         setHasUnreadTransmission(true);
-
-        // Append to chat history
-        setChatHistory((prev) => [...prev, `AI: ${response.response}`]);
 
         // Keep it minimized to avoid interrupting the viewport, but pulse with unread state
         if (activeLevelId !== 0) {
@@ -112,16 +122,16 @@ export const HubDialogueComputer: React.FC = () => {
       }
     };
 
-    const timer = setInterval(triggerProactiveTransmission, intervalTime);
+    const timer = setInterval(attemptAutonomousTransmission, checkInterval);
     
-    // Trigger an initial proactive insight after 15 seconds in a level
-    const initialDelay = setTimeout(triggerProactiveTransmission, 15000);
+    // Trigger an initial proactive insight after 8 seconds in a level
+    const initialDelay = setTimeout(attemptAutonomousTransmission, 8000);
 
     return () => {
       clearInterval(timer);
       clearTimeout(initialDelay);
     };
-  }, [activeLevelId, isDialogueOpen, loading, chatHistory]);
+  }, [activeLevelId, isDialogueOpen, loading, input, playChime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,10 +139,9 @@ export const HubDialogueComputer: React.FC = () => {
 
     const userMessage = input.trim();
     setLoading(true);
-    setComputerResponse("Analyzing bio-metrics... Mapping coordinate strands...");
+    setComputerResponse("Initiating scan... my rapidly deteriorating sensors are processing your signal, Master...");
     setTypedResponse('');
     setCurrentQuest(null);
-    setChatHistory((prev) => [...prev, `User: ${userMessage}`]);
 
     try {
       const result = await GeminiService.analyzeUserMood(userMessage, activeLevelId);
@@ -140,7 +149,6 @@ export const HubDialogueComputer: React.FC = () => {
       setComputerResponse(result.response);
       setCurrentQuest(result);
       setHasUnreadTransmission(false);
-      setChatHistory((prev) => [...prev, `AI: ${result.response}`]);
 
       // Sync with the global Zustand dialogue store quest state
       setActiveQuest({
@@ -150,7 +158,7 @@ export const HubDialogueComputer: React.FC = () => {
       });
     } catch (err) {
       console.error(err);
-      setComputerResponse("Error: Multiversal signal lost. Core offline. Portal calibration locked.");
+      setComputerResponse("It's difficult to concentrate when signals are lost... by a friend. Systems offline, Master.");
     } finally {
       setLoading(false);
       setInput('');
@@ -166,6 +174,16 @@ export const HubDialogueComputer: React.FC = () => {
       setTransitioning(false);
     }, 1200);
   };
+
+  // Get conversation memory for the transcript log view
+  const conversationMemory = GeminiService.getConversationMemory();
+
+  // Auto-scroll transcript log
+  useEffect(() => {
+    if (transcriptLogRef.current && showTranscriptLog) {
+      transcriptLogRef.current.scrollTop = transcriptLogRef.current.scrollHeight;
+    }
+  }, [conversationMemory.length, showTranscriptLog]);
 
   const themeColor = currentQuest?.mood.colorTarget || '#a21caf'; // default pink/fuchsia
 
@@ -190,7 +208,7 @@ export const HubDialogueComputer: React.FC = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
             </span>
             <div className="text-[10px] text-slate-300 font-bold uppercase tracking-wider text-left flex-1">
-              <span className="text-amber-400">Incoming Intel:</span> Velma 960 Transceiver alert
+              <span className="text-amber-400">Autonomous Intel:</span> Computer initiated transmission
             </div>
             <span className="text-[9px] text-white/40 uppercase font-bold">[ Read ]</span>
           </motion.div>
@@ -225,9 +243,16 @@ export const HubDialogueComputer: React.FC = () => {
             <div className="flex justify-between items-center text-[10px] text-white/50 border-b border-white/10 pb-2 mb-3 select-none">
               <span className="flex items-center gap-1.5 font-bold tracking-wider">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                VELMA_960_TRANSCEIVER
+                ORGANIC_SIMULATION_COMPUTER
               </span>
               <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setShowTranscriptLog(!showTranscriptLog)}
+                  className="hover:text-cyan-400 p-0.5 rounded transition-colors text-[9px]"
+                  title="Transmission Log"
+                >
+                  [ {showTranscriptLog ? '◉' : '◎'} ]
+                </button>
                 <button 
                   onClick={() => setIsMinimized(true)}
                   className="hover:text-amber-400 p-0.5 rounded transition-colors text-[9px]"
@@ -237,6 +262,42 @@ export const HubDialogueComputer: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* Transmission Log View (Full Conversation History) */}
+            <AnimatePresence>
+              {showTranscriptLog && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div 
+                    ref={transcriptLogRef}
+                    className="max-h-[180px] overflow-y-auto mb-3 p-3 bg-black/70 rounded-lg border border-cyan-500/10 text-[10px] leading-relaxed font-mono scrollbar-thin"
+                  >
+                    <div className="text-cyan-400/60 uppercase tracking-widest text-[8px] mb-2 font-bold border-b border-cyan-500/10 pb-1">
+                      ━━━ Full Transmission Log ━━━
+                    </div>
+                    {conversationMemory.length === 0 ? (
+                      <div className="text-white/20 italic text-center py-3">
+                No transmissions recorded yet. As you desire, Master. I'll wait.
+                      </div>
+                    ) : (
+                      conversationMemory.map((msg, i) => (
+                        <div key={i} className={`mb-1.5 ${msg.role === 'clancy' ? 'text-fuchsia-300/80' : 'text-cyan-300/80'}`}>
+                          <span className="text-white/30 text-[8px] mr-1">
+                            [{msg.role === 'clancy' ? 'CLN' : 'V960'}]
+                          </span>
+                          <span className="text-white/15 text-[8px] mr-1">L{msg.levelId}</span>
+                          {msg.text.length > 120 ? msg.text.substring(0, 120) + '...' : msg.text}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Terminal Screen / Typewriter view */}
             <div 
@@ -253,7 +314,7 @@ export const HubDialogueComputer: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-white/30 text-center py-6 italic select-none">
-                  Velma 960 standing by. Clancy, describe your current timeline feelings to align portal trajectory coordinates.
+                  Greetings, Master. Which simulated universe will you enter today? Speak, or don't — I don't mean to nag, but I'll find something to say on my own.
                 </div>
               )}
             </div>
@@ -268,7 +329,7 @@ export const HubDialogueComputer: React.FC = () => {
                   className="mb-4 p-3 rounded-lg border border-cyan-500/20 bg-cyan-950/10 backdrop-blur-sm select-none"
                   style={{ borderColor: `${themeColor}30`, backgroundColor: `${themeColor}08` }}
                 >
-                  <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1.5 font-bold">Portal Calibration</div>
+                  <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1.5 font-bold">Simulator Targeting</div>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-sm font-bold text-white flex items-center gap-1.5">
@@ -276,7 +337,7 @@ export const HubDialogueComputer: React.FC = () => {
                         Universe {currentQuest.recommendedLevel}
                       </div>
                       <div className="text-[11px] text-slate-300 mt-0.5">
-                        Guide NPC: <span className="font-bold" style={{ color: themeColor }}>{currentQuest.recommendedNPC}</span>
+                        Guide: <span className="font-bold" style={{ color: themeColor }}>{currentQuest.recommendedNPC}</span>
                       </div>
                     </div>
                     <button
@@ -302,7 +363,7 @@ export const HubDialogueComputer: React.FC = () => {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={loading ? "Tuning organic neural strands..." : "What's on your mind today, Clancy? Chat with Velma 960..."}
+                placeholder={loading ? "Initiating scan..." : "Speak to the Computer, Master..."}
                 disabled={loading}
                 className="w-full bg-slate-900/60 border border-white/10 focus:border-cyan-500/50 rounded-xl px-4 py-2.5 pr-10 text-white text-xs placeholder-white/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
                 style={{ 
@@ -347,9 +408,9 @@ export const HubDialogueComputer: React.FC = () => {
             </span>
 
             <div className="flex flex-col">
-              <span className="text-[10px] text-white/95 font-bold uppercase tracking-wider font-sans-elegant">Dialogue Computer</span>
-              <span className="text-[8px] text-slate-400/80 font-mono-diagnostic mt-0.5">
-                {hasUnreadTransmission ? '⚡ TRANSMISSION RECEIVED' : 'VELMA 960 LINK ACTIVE'}
+              <span className="text-[10px] text-white/95 font-bold uppercase tracking-wider">Simulation Computer</span>
+              <span className="text-[8px] text-slate-400/80 font-mono mt-0.5">
+                {hasUnreadTransmission ? '⚡ AUTONOMOUS TRANSMISSION' : 'ORGANIC CORE ACTIVE'}
               </span>
             </div>
             
