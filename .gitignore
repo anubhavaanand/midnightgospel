@@ -16,3 +16,12 @@ scratch/
 .superpowers/
 test-errors.cjs
 README.md
+
+# Local Agents & Workflows (not needed on GitHub)
+.gemini/
+.specify/
+
+# Project Documentation (local reference only)
+checklists/
+docs/
+specs/
