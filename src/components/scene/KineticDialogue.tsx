@@ -26,19 +26,12 @@ export const KineticDialogue: React.FC<KineticDialogueProps> = ({ position = [0,
     return () => clearTimeout(timer);
   }, [isOpen, activeText, advanceNode]);
 
-  // Framerate-independent mood wobble
+  // Framerate-independent mood wobble (position only — no scale to keep SDF text sharp)
   useFrame(({ clock }) => {
     if (textRef.current && currentMood.intensity) {
       const t = clock.getElapsedTime();
       const intensity = currentMood.intensity;
-      
-      // Floating wobble effect based on mood intensity
       textRef.current.position.y = Math.sin(t * 2) * 0.1 * intensity;
-      
-      // Heartbeat scale effect
-      const scaleBase = 1.0;
-      const scaleWobble = Math.sin(t * currentMood.speed * 4) * 0.05 * intensity;
-      textRef.current.scale.setScalar(scaleBase + scaleWobble);
     }
   });
 

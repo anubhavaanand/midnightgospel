@@ -53,7 +53,7 @@ function App() {
       <Canvas
         gl={{ antialias: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 10], fov: 60 }}
-        dpr={[1, 2]} // Optimize for mobile vs desktop pixel ratios
+        dpr={window.devicePixelRatio} // Full native resolution for sharp text
       >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />

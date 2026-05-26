@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React, { Suspense, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, useGLTF, Resize, Float, Center } from '@react-three/drei';
+import { OrbitControls, Environment, useGLTF, Resize, Float, Center, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
@@ -49,11 +49,13 @@ const ChromaticRibbon: React.FC = () => {
       <Environment preset="city" />
       
       {/* The Central Island (Click to open dialogue) */}
-      <group onClick={(e) => { e.stopPropagation(); openDialogue(0); }}
-        onPointerOver={() => document.body.style.cursor = 'pointer'}
-        onPointerOut={() => document.body.style.cursor = 'auto'}>
-        <CenterIsland />
-      </group>
+      <Suspense fallback={null}>
+        <group onClick={(e) => { e.stopPropagation(); openDialogue(0); }}
+          onPointerOver={() => document.body.style.cursor = 'pointer'}
+          onPointerOut={() => document.body.style.cursor = 'auto'}>
+          <CenterIsland />
+        </group>
+      </Suspense>
 
       {/* The Background Ribbon */}
       <mesh>
@@ -66,9 +68,11 @@ const ChromaticRibbon: React.FC = () => {
       <LevelSelector />
 
       {/* Randomly Placed Space Islands */}
-      <SpaceIsland position={[8, 5, -8]} />
-      <SpaceIsland position={[-10, -3, -12]} />
-      <SpaceIsland position={[4, -8, 10]} />
+      <Suspense fallback={null}>
+        <SpaceIsland position={[8, 5, -8]} />
+        <SpaceIsland position={[-10, -3, -12]} />
+        <SpaceIsland position={[4, -8, 10]} />
+      </Suspense>
     </group>
   );
 };

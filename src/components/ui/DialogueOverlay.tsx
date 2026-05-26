@@ -3,19 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 
-// Framer Motion variants for typing/stagger animation
+// Framer Motion variants for typing/stagger animation (no CSS scale — keeps text sharp)
 const containerVariants: any = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
   },
   exit: {
     opacity: 0,
     y: 40,
-    scale: 0.95,
     transition: { duration: 0.3, ease: 'easeIn' }
   }
 };

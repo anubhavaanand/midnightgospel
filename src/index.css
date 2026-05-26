@@ -38,6 +38,9 @@ body {
   background-color: black;
   color: #f4f4f5;
   font-family: 'Space Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Custom Scanline CRT Overlay Grid */
