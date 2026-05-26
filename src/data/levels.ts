@@ -1,4 +1,4 @@
-export type LevelId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type LevelId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export interface LevelConfig {
   id: LevelId;
@@ -160,6 +160,22 @@ export const LEVELS: LevelConfig[] = [
       distortionIntensity: 0.9,
       speed: 2.0,
       geometry: 'tunnel'
+    }
+  },
+  {
+    id: 9,
+    name: "The Core (Sandbox)",
+    episode: 9,
+    palette: {
+      primary: "#00FFCC",
+      secondary: "#FF007F",
+      background: "#000000",
+      bloom: "#00FFCC"
+    },
+    shaderProfile: {
+      distortionIntensity: 1.0,
+      speed: 3.0,
+      geometry: 'icosahedron'
     }
   }
 ];

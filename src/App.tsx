@@ -7,6 +7,9 @@ import { MoodSync } from './components/scene/MoodSync';
 import { TouchJoystick } from './components/ui/TouchJoystick';
 import { HubDialogueComputer } from './components/ui/HubDialogueComputer';
 import { KineticDialogue } from './components/scene/KineticDialogue';
+import { LayoutOverlay } from './components/ui/LayoutOverlay';
+import { NavigationMenu } from './components/ui/NavigationMenu';
+import { ScrollEngine } from './components/scene/ScrollEngine';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -37,7 +40,11 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-screen bg-black overflow-hidden relative">
+    <div className="h-screen w-screen bg-black overflow-hidden relative font-mono-diagnostic">
+      {/* HUD & Overlay layers */}
+      <LayoutOverlay />
+      <NavigationMenu />
+      
       <HubDialogueComputer />
       <TransitionWipe />
       <DialogueOverlay />
@@ -52,6 +59,10 @@ function App() {
         <ambientLight intensity={0.5} />
         <MoodSync />
         <KineticDialogue />
+        
+        {/* Spatial Depth Scrolling Driver */}
+        <ScrollEngine />
+        
         <SimulatorRouter />
       </Canvas>
     </div>

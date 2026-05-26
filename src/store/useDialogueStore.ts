@@ -98,3 +98,8 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
 
   setActiveQuest: (quest) => set({ activeQuest: quest })
 }));
+
+if (typeof window !== 'undefined') {
+  (window as any).useDialogueStore = useDialogueStore;
+}
+

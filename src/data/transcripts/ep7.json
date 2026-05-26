@@ -1,0 +1,76 @@
+{
+  "levelId": 7,
+  "startNodeId": "ep7-absurdist-1",
+  "nodes": {
+    "ep7-absurdist-1": {
+      "id": "ep7-absurdist-1",
+      "speaker": "David",
+      "text": "Shoving a butt plug... butt plug in the asshole... asshole of your mind.",
+      "mood": { "intensity": 0.8, "colorTarget": "#FF00FF", "speed": 1.2 },
+      "nextNodeId": "ep7-absurdist-2"
+    },
+    "ep7-absurdist-2": {
+      "id": "ep7-absurdist-2",
+      "speaker": "Clancy",
+      "text": "Uh, all right, 14 feet tall with nice hair, one fun eyeball, a crab claw with a fancy jeweled glove, a bat wing, one clown leg and all that in a child's red wagon.",
+      "mood": { "intensity": 0.9, "colorTarget": "#00FFFF", "speed": 1.5 },
+      "nextNodeId": "ep7-absurdist-3"
+    },
+    "ep7-absurdist-3": {
+      "id": "ep7-absurdist-3",
+      "speaker": "Clancy",
+      "text": "And your butt is a rhino back half with a food force field, and the rhino's legs are always standing in poop.",
+      "mood": { "intensity": 0.8, "colorTarget": "#FF8800", "speed": 1.3 },
+      "nextNodeId": "ep7-phil-q1"
+    },
+    "ep7-phil-q1": {
+      "id": "ep7-phil-q1",
+      "speaker": "Clancy",
+      "text": "Do you have any advice for people who are dealing with death in their own lives?",
+      "mood": { "intensity": 0.4, "colorTarget": "#4444FF", "speed": 1.0 },
+      "nextNodeId": "ep7-phil-a1"
+    },
+    "ep7-phil-a1": {
+      "id": "ep7-phil-a1",
+      "speaker": "Death",
+      "text": "Yeah. So the best thing you could possibly do for yourself in your entire life, I think, is be super present for those moments.",
+      "mood": { "intensity": 0.6, "colorTarget": "#00FF44", "speed": 0.9 },
+      "nextNodeId": "ep7-phil-q2"
+    },
+    "ep7-phil-q2": {
+      "id": "ep7-phil-q2",
+      "speaker": "Clancy",
+      "text": "What is that system? This seems truly like the conspiracy nobody talks about.",
+      "mood": { "intensity": 0.5, "colorTarget": "#4444FF", "speed": 1.0 },
+      "nextNodeId": "ep7-phil-a2"
+    },
+    "ep7-phil-a2": {
+      "id": "ep7-phil-a2",
+      "speaker": "Death",
+      "text": "Yeah, it's one of my favorite conspiracies, is, like, the death industrial complex.",
+      "mood": { "intensity": 0.5, "colorTarget": "#00FF44", "speed": 0.9 },
+      "nextNodeId": "ep7-phil-q3"
+    },
+    "ep7-phil-q3": {
+      "id": "ep7-phil-q3",
+      "speaker": "Clancy",
+      "text": "Can you tell me what these tart-baking mirrors are?",
+      "mood": { "intensity": 0.5, "colorTarget": "#4444FF", "speed": 1.0 },
+      "nextNodeId": "ep7-phil-a3"
+    },
+    "ep7-phil-a3": {
+      "id": "ep7-phil-a3",
+      "speaker": "Death",
+      "text": "This is a trial of judgment. All these mirrors reflect parts of yourself that you're ashamed of, stuff you try to hide from yourself. You have to forgive them.",
+      "mood": { "intensity": 0.6, "colorTarget": "#00FF44", "speed": 0.8 },
+      "nextNodeId": "ep7-resolution"
+    },
+    "ep7-resolution": {
+      "id": "ep7-resolution",
+      "speaker": "Death",
+      "text": "Besides, you're not gonna die yet. That'll be on a rolly chair.",
+      "mood": { "intensity": 0.7, "colorTarget": "#FF4400", "speed": 1.1 },
+      "nextNodeId": null
+    }
+  }
+}

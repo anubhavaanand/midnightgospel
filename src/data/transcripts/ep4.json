@@ -1,0 +1,83 @@
+{
+  "levelId": 4,
+  "startNodeId": "ep4-absurdist-1",
+  "nodes": {
+    "ep4-absurdist-1": {
+      "id": "ep4-absurdist-1",
+      "speaker": "Sarah",
+      "text": "I've been milking a crow in here for days! This dry old crow!",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#FF5555",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep4-absurdist-2"
+    },
+    "ep4-absurdist-2": {
+      "id": "ep4-absurdist-2",
+      "speaker": "Prince Jam Roll",
+      "text": "Trudy, Trudy, Trudy, it's so nice to see you. But... you smell like shit, okay? So I'm gonna rip off my nose!",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#FF00FF",
+        "speed": 1.5
+      },
+      "nextNodeId": "ep4-absurdist-3"
+    },
+    "ep4-absurdist-3": {
+      "id": "ep4-absurdist-3",
+      "speaker": "Prince Jam Roll",
+      "text": "Monkey see, monkey do, Trudy! Monkey lie, monkey die, Jam Roll!",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#FFFF00",
+        "speed": 1.4
+      },
+      "nextNodeId": "ep4-phil-1"
+    },
+    "ep4-phil-1": {
+      "id": "ep4-phil-1",
+      "speaker": "Trudy",
+      "text": "Think of forgiveness as freeing your own heart... from these states of grudge and resentment and anger and ill-will.",
+      "mood": {
+        "intensity": 0.4,
+        "colorTarget": "#00FFFF",
+        "speed": 0.8
+      },
+      "nextNodeId": "ep4-phil-2"
+    },
+    "ep4-phil-2": {
+      "id": "ep4-phil-2",
+      "speaker": "Clancy",
+      "text": "Forgiveness is the pull-up bar. We look at it... and we think, 'No... fucking... way.'",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#00FF00",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep4-phil-3"
+    },
+    "ep4-phil-3": {
+      "id": "ep4-phil-3",
+      "speaker": "Trudy",
+      "text": "Because if we really did understand that this body will be a corpse... we would have fewer of the kind of moments where we regret having wasted our time or somebody else's.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#0000FF",
+        "speed": 0.7
+      },
+      "nextNodeId": "ep4-res-1"
+    },
+    "ep4-res-1": {
+      "id": "ep4-res-1",
+      "speaker": "Clancy",
+      "text": "This is your new home, Rose. No one's gonna bother you here. This is where you're gonna be safe. For the rest of your life.",
+      "mood": {
+        "intensity": 0.3,
+        "colorTarget": "#FFFFFF",
+        "speed": 0.5
+      },
+      "nextNodeId": null
+    }
+  }
+}

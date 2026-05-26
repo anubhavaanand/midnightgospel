@@ -1,11 +1,10 @@
 import React, { Suspense, lazy } from 'react';
 import { Html } from '@react-three/drei';
 import { useLevelStore } from '../../store/useLevelStore';
-import { LoadingScreen } from '../ui/LoadingScreen';
 import { NPCAttentionCatcher } from './NPCAttentionCatcher';
 
 const ChromaticRibbon = lazy(() => import('../../levels/Hub/ChromaticRibbon'));
-const ZombieCapitol = lazy(() => import('../episodes/episode1/ZombieCapitol').then(m => ({ default: m.ZombieCapitol })));
+const ZombieCapitol = lazy(() => import('../../levels/Episode1/ZombieCapitol'));
 const BabyClown = lazy(() => import('../../levels/Episode2/BabyClown'));
 const CreamOcean = lazy(() => import('../../levels/Episode3/CreamOcean'));
 const VengeanceKingdom = lazy(() => import('../../levels/Episode4/VengeanceKingdom'));
@@ -13,18 +12,22 @@ const SoulPrison = lazy(() => import('../../levels/Episode5/SoulPrison'));
 const MeditationCave = lazy(() => import('../../levels/Episode6/MeditationCave'));
 const PlanetBlankBall = lazy(() => import('../../levels/Episode7/PlanetBlankBall'));
 const Trainworld = lazy(() => import('../../levels/Episode8/Trainworld'));
-
-const LevelSuspenseFallback = () => (
-  <Html center zIndexRange={[100, 0]}>
-    <LoadingScreen />
-  </Html>
-);
+const TheCore = lazy(() => import('../../levels/Episode9/TheCore'));
 
 export const SimulatorRouter: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
 
   return (
-    <Suspense fallback={<LevelSuspenseFallback />}>
+    <Suspense fallback={
+      <Html center>
+        <div className="flex flex-col items-center justify-center text-center whitespace-nowrap pointer-events-none select-none">
+          <div className="w-12 h-12 rounded-full border-2 border-t-fuchsia-500 border-r-transparent border-b-cyan-500 border-l-transparent animate-spin mb-4" />
+          <span className="font-sans-elegant text-sm font-bold tracking-[0.2em] text-white">
+            SCANNING MULTIVERSE...
+          </span>
+        </div>
+      </Html>
+    }>
       {activeLevelId === 0 && (
         <>
           <ChromaticRibbon />
@@ -77,6 +80,12 @@ export const SimulatorRouter: React.FC = () => {
         <>
           <Trainworld />
           <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Mom" targetLevelId={8} />
+        </>
+      )}
+      {activeLevelId === 9 && (
+        <>
+          <TheCore />
+          <NPCAttentionCatcher npcPosition={[0, 5, 0]} npcName="The Simulator" targetLevelId={9} />
         </>
       )}
     </Suspense>

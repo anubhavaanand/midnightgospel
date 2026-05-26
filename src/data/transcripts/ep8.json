@@ -1,0 +1,83 @@
+{
+  "levelId": 8,
+  "startNodeId": "ep8-absurdist-1",
+  "nodes": {
+    "ep8-absurdist-1": {
+      "id": "ep8-absurdist-1",
+      "speaker": "Duncan",
+      "text": "American baby gets blasted out of the pussy... sprays in the doctor's face and then gets the tip of his penis cut off.",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#FF00FF",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep8-absurdist-2"
+    },
+    "ep8-absurdist-2": {
+      "id": "ep8-absurdist-2",
+      "speaker": "Mom",
+      "text": "Then, they wrapped you in a pink blanket.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#FF00FF",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep8-absurdist-3"
+    },
+    "ep8-absurdist-3": {
+      "id": "ep8-absurdist-3",
+      "speaker": "Duncan",
+      "text": "\"Humiliate him! Snip off the tip of his penis and wrap him in a pink blanket.\" It's like some evil initiation into a terrible fraternity.",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#FF00FF",
+        "speed": 1.3
+      },
+      "nextNodeId": "ep8-philosophical-1"
+    },
+    "ep8-philosophical-1": {
+      "id": "ep8-philosophical-1",
+      "speaker": "Mom",
+      "text": "I think the easiest thing for that person to do is to get present. And that means to put the past aside, put the future aside, and sense into their bodies.",
+      "mood": {
+        "intensity": 0.4,
+        "colorTarget": "#00FFFF",
+        "speed": 0.8
+      },
+      "nextNodeId": "ep8-philosophical-2"
+    },
+    "ep8-philosophical-2": {
+      "id": "ep8-philosophical-2",
+      "speaker": "Duncan",
+      "text": "Is there a... Can you walk me through what that might be like? Can you sense the inside of your hand right now?",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#00FFFF",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep8-philosophical-3"
+    },
+    "ep8-philosophical-3": {
+      "id": "ep8-philosophical-3",
+      "speaker": "Mom",
+      "text": "Okay, so sense your hand. Sense your index finger from the inside.",
+      "mood": {
+        "intensity": 0.3,
+        "colorTarget": "#00FFFF",
+        "speed": 0.7
+      },
+      "nextNodeId": "ep8-resolution-1"
+    },
+    "ep8-resolution-1": {
+      "id": "ep8-resolution-1",
+      "speaker": "Mom",
+      "text": "And, Duncan, that kind of love isn't going anywhere. That's another thing you find. That I may leave this plane of existence sooner rather than later... but the love isn't going anywhere. I'm as certain of that as I am of anything.",
+      "mood": {
+        "intensity": 0.2,
+        "colorTarget": "#FFFFFF",
+        "speed": 0.5
+      },
+      "nextNodeId": null
+    }
+  }
+}

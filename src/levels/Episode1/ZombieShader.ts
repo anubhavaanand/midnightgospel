@@ -83,6 +83,7 @@ export const ZombieShaderMaterial = shaderMaterial(
     uColorBloom: new THREE.Color('#ffb300'), // Fleshy / toxic yellow
     uSpeed: 1.0,
     uDistortion: 0.8,
+    uMouse: new THREE.Vector2(-9999, -9999),
   },
   // Vertex Shader
   `
@@ -90,6 +91,7 @@ export const ZombieShaderMaterial = shaderMaterial(
     uniform float uIntensity;
     uniform float uSpeed;
     uniform float uDistortion;
+    uniform vec2 uMouse;
     
     varying vec2 vUv;
     varying vec3 vNormal;
@@ -108,8 +110,15 @@ export const ZombieShaderMaterial = shaderMaterial(
       
       vNoise = n * 0.5 + n2 * 0.5;
       
+      // Add interactive cursor wave displacement
+      float mouseDist = distance(uv, uMouse);
+      float ripple = 0.0;
+      if (uMouse.x > -10.0) {
+        ripple = sin(mouseDist * 40.0 - uTime * 12.0) * exp(-mouseDist * 5.0) * 0.3 * uIntensity;
+      }
+      
       // Displace vertices along normal
-      vec3 newPosition = position + normal * vNoise * uDistortion * uIntensity;
+      vec3 newPosition = position + normal * (vNoise * uDistortion * uIntensity + ripple);
       vPosition = newPosition;
       
       gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
@@ -123,6 +132,7 @@ export const ZombieShaderMaterial = shaderMaterial(
     uniform vec3 uColorPrimary;
     uniform vec3 uColorSecondary;
     uniform vec3 uColorBloom;
+    uniform vec2 uMouse;
     
     varying vec2 vUv;
     varying vec3 vNormal;
@@ -155,6 +165,13 @@ export const ZombieShaderMaterial = shaderMaterial(
       
       // Add rim light
       color += uColorBloom * fresnel * uIntensity * 1.5;
+
+      // Add dynamic glowing ring at cursor raycast intersection
+      if (uMouse.x > -10.0) {
+        float mouseDist = distance(vUv, uMouse);
+        float ring = smoothstep(0.015, 0.0, abs(sin(mouseDist * 40.0 - uTime * 12.0) * exp(-mouseDist * 5.0) - 0.04));
+        color += uColorBloom * ring * 0.7 * uIntensity;
+      }
 
       gl_FragColor = vec4(color, 1.0);
       

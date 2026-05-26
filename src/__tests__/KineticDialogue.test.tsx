@@ -25,6 +25,7 @@ vi.mock('@react-three/drei', () => ({
       {children}
     </div>
   ),
+  Billboard: ({ children }: any) => <div>{children}</div>,
 }));
 
 describe('KineticDialogue Component', () => {

@@ -1,0 +1,83 @@
+{
+  "levelId": 6,
+  "startNodeId": "ep6-absurdist-1",
+  "nodes": {
+    "ep6-absurdist-1": {
+      "id": "ep6-absurdist-1",
+      "speaker": "Clancy",
+      "text": "I was in a flooded basement snorting cocaine with strangers when a neighbor brought us that Pie Messiah.",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#FF00FF",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep6-absurdist-2"
+    },
+    "ep6-absurdist-2": {
+      "id": "ep6-absurdist-2",
+      "speaker": "Clancy",
+      "text": "Actually, It's not even supposed to be ovenable. Not sure if that's a word.",
+      "mood": {
+        "intensity": 0.4,
+        "colorTarget": "#FFA500",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep6-absurdist-3"
+    },
+    "ep6-absurdist-3": {
+      "id": "ep6-absurdist-3",
+      "speaker": "Clancy",
+      "text": "What does the kind of wobble do that's pee-pee yellow and creeping up behind you?",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#FFFF00",
+        "speed": 1.5
+      },
+      "nextNodeId": "ep6-philosophical-1"
+    },
+    "ep6-philosophical-1": {
+      "id": "ep6-philosophical-1",
+      "speaker": "David",
+      "text": "If you're caught up in your story, it's like living in a tiny apartment with just enough room for you and your little mattress.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#00FFFF",
+        "speed": 0.8
+      },
+      "nextNodeId": "ep6-philosophical-2"
+    },
+    "ep6-philosophical-2": {
+      "id": "ep6-philosophical-2",
+      "speaker": "David",
+      "text": "The moment you get a little space between yourself and your thoughts, it's like moving into a much bigger house. Then there's room to invite people in.",
+      "mood": {
+        "intensity": 0.7,
+        "colorTarget": "#0000FF",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep6-philosophical-3"
+    },
+    "ep6-philosophical-3": {
+      "id": "ep6-philosophical-3",
+      "speaker": "Clancy",
+      "text": "It seems more like it's accepting there's this infinite swarm of thoughts and that by understanding that you're not necessarily as connected to them as you thought, it allows...",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#800080",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep6-conclusion-1"
+    },
+    "ep6-conclusion-1": {
+      "id": "ep6-conclusion-1",
+      "speaker": "Captain Bryce",
+      "text": "I finally have time to really think about things, you know? Gives me a whole new perspective.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#00FF00",
+        "speed": 0.7
+      },
+      "nextNodeId": null
+    }
+  }
+}

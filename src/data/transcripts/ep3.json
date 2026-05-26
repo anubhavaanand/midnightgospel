@@ -1,0 +1,116 @@
+{
+  "levelId": 3,
+  "startNodeId": "ep3-absurdist-1",
+  "nodes": {
+    "ep3-absurdist-1": {
+      "id": "ep3-absurdist-1",
+      "speaker": "Clancy",
+      "text": "Ice cream, there's got to be a planet with ice cream.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#FF00FF",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep3-absurdist-2"
+    },
+    "ep3-absurdist-2": {
+      "id": "ep3-absurdist-2",
+      "speaker": "Simulator",
+      "text": "My rapidly deteriorating sensors have honed in on this magical fishbowl man.",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#00FFFF",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep3-absurdist-3"
+    },
+    "ep3-absurdist-3": {
+      "id": "ep3-absurdist-3",
+      "speaker": "Clancy",
+      "text": "Captain, you got any ice cream on this big fun boat?",
+      "mood": {
+        "intensity": 0.7,
+        "colorTarget": "#FFFF00",
+        "speed": 1.5
+      },
+      "nextNodeId": "ep3-phil-q1"
+    },
+    "ep3-phil-q1": {
+      "id": "ep3-phil-q1",
+      "speaker": "Clancy",
+      "text": "What are the roots of magic?",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#4444FF",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-phil-a1"
+    },
+    "ep3-phil-a1": {
+      "id": "ep3-phil-a1",
+      "speaker": "Fishbowl Man",
+      "text": "You know, magic, ceremonial magic, what we call high magic, originated in ancient Mesopotamia somewhere around 3500 BC.",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#44FF44",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-phil-q2"
+    },
+    "ep3-phil-q2": {
+      "id": "ep3-phil-q2",
+      "speaker": "Clancy",
+      "text": "Is it the words that have the energy, or is it the energy coming out of the person saying the words?",
+      "mood": {
+        "intensity": 0.7,
+        "colorTarget": "#4444FF",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-phil-a2"
+    },
+    "ep3-phil-a2": {
+      "id": "ep3-phil-a2",
+      "speaker": "Fishbowl Man",
+      "text": "Combination of both. For example, you can only pass the current if you've received the current.",
+      "mood": {
+        "intensity": 0.7,
+        "colorTarget": "#44FF44",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-phil-q3"
+    },
+    "ep3-phil-q3": {
+      "id": "ep3-phil-q3",
+      "speaker": "Clancy",
+      "text": "Do you think that the reason you ended up in prison is because, this sounds so weird, good karma?",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#4444FF",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-phil-a3"
+    },
+    "ep3-phil-a3": {
+      "id": "ep3-phil-a3",
+      "speaker": "Fishbowl Man",
+      "text": "Yes. This will sound crazy to people, but I absolutely do. I am thankful now for the time that I spent in prison.",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#44FF44",
+        "speed": 0.9
+      },
+      "nextNodeId": "ep3-conclusion"
+    },
+    "ep3-conclusion": {
+      "id": "ep3-conclusion",
+      "speaker": "Darryl",
+      "text": "Behold the death of the old eon... and the birth of the new.",
+      "mood": {
+        "intensity": 1.0,
+        "colorTarget": "#FFFFFF",
+        "speed": 2.0
+      },
+      "nextNodeId": null
+    }
+  }
+}

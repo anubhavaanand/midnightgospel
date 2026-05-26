@@ -63,7 +63,7 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
 };
 
 export const LevelSelector: React.FC = () => {
-  const episodes = [1, 2, 3, 4, 5, 6, 7, 8] as LevelId[];
+  const episodes = [1, 2, 3, 4, 5, 6, 7, 8, 9] as LevelId[];
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {

@@ -1,0 +1,76 @@
+{
+  "levelId": 2,
+  "startNodeId": "ep2-absurdist-1",
+  "nodes": {
+    "ep2-absurdist-1": {
+      "id": "ep2-absurdist-1",
+      "speaker": "Clancy",
+      "text": "You come on, times a klobexia!",
+      "mood": { "intensity": 0.8, "colorTarget": "#FF5500", "speed": 1.2 },
+      "nextNodeId": "ep2-absurdist-2"
+    },
+    "ep2-absurdist-2": {
+      "id": "ep2-absurdist-2",
+      "speaker": "Computer",
+      "text": "What's a klobexia?",
+      "mood": { "intensity": 0.3, "colorTarget": "#00FFFF", "speed": 0.8 },
+      "nextNodeId": "ep2-absurdist-3"
+    },
+    "ep2-absurdist-3": {
+      "id": "ep2-absurdist-3",
+      "speaker": "Clancy",
+      "text": "I don't know. I made it up.",
+      "mood": { "intensity": 0.5, "colorTarget": "#FFFF00", "speed": 1.0 },
+      "nextNodeId": "ep2-phil-1"
+    },
+    "ep2-phil-1": {
+      "id": "ep2-phil-1",
+      "speaker": "Clancy",
+      "text": "My first question to you is, um, are you worried? Because it seems like we're all about to die.",
+      "mood": { "intensity": 0.6, "colorTarget": "#AA00FF", "speed": 0.9 },
+      "nextNodeId": "ep2-phil-2"
+    },
+    "ep2-phil-2": {
+      "id": "ep2-phil-2",
+      "speaker": "Annie",
+      "text": "Hmm... It does feel that way, but I've actually had a lot of deaths in my life.",
+      "mood": { "intensity": 0.5, "colorTarget": "#8800CC", "speed": 0.8 },
+      "nextNodeId": "ep2-phil-3"
+    },
+    "ep2-phil-3": {
+      "id": "ep2-phil-3",
+      "speaker": "Clancy",
+      "text": "The information you're talking about, acknowledging death is an inevitable part of...",
+      "mood": { "intensity": 0.6, "colorTarget": "#660099", "speed": 0.8 },
+      "nextNodeId": "ep2-phil-4"
+    },
+    "ep2-phil-4": {
+      "id": "ep2-phil-4",
+      "speaker": "Annie",
+      "text": "Yeah, it's so freeing to accept it.",
+      "mood": { "intensity": 0.7, "colorTarget": "#AA00FF", "speed": 0.7 },
+      "nextNodeId": "ep2-phil-5"
+    },
+    "ep2-phil-5": {
+      "id": "ep2-phil-5",
+      "speaker": "Clancy",
+      "text": "Do you ever think, 'Well, wait! Maybe if I encountered this early on, I wouldn't have been such a great writer'?",
+      "mood": { "intensity": 0.6, "colorTarget": "#9900AA", "speed": 0.9 },
+      "nextNodeId": "ep2-phil-6"
+    },
+    "ep2-phil-6": {
+      "id": "ep2-phil-6",
+      "speaker": "Annie",
+      "text": "I felt terror that if I stopped drinking, I would never write again, because I needed the misery.",
+      "mood": { "intensity": 0.8, "colorTarget": "#CC0055", "speed": 0.8 },
+      "nextNodeId": "ep2-conclusion"
+    },
+    "ep2-conclusion": {
+      "id": "ep2-conclusion",
+      "speaker": "Annie",
+      "text": "Yeah, and then you know what comes out? New life.",
+      "mood": { "intensity": 0.9, "colorTarget": "#FFFFFF", "speed": 0.5 },
+      "nextNodeId": null
+    }
+  }
+}

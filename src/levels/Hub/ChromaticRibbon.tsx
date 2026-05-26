@@ -57,7 +57,7 @@ const ChromaticRibbon: React.FC = () => {
 
       {/* The Background Ribbon */}
       <mesh>
-        <torusGeometry args={[15, 3, 64, 128]} />
+        <torusGeometry args={[15, 3, 32, 64]} />
         {/* @ts-ignore - custom shader material */}
         <chromaticShaderMaterial ref={materialRef} side={THREE.BackSide} />
       </mesh>

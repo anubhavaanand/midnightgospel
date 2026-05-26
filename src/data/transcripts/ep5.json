@@ -1,0 +1,83 @@
+{
+  "levelId": 5,
+  "startNodeId": "ep5-absurdist-1",
+  "nodes": {
+    "ep5-absurdist-1": {
+      "id": "ep5-absurdist-1",
+      "speaker": "Clancy",
+      "text": "Oh, no, somebody puked on you. Fuck. Someone puked on you.",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#ff5555",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep5-absurdist-2"
+    },
+    "ep5-absurdist-2": {
+      "id": "ep5-absurdist-2",
+      "speaker": "Clancy",
+      "text": "Music cured my shepherd's paunch, my marriage, my thick dog, my empty bank account, even my withered... garden.",
+      "mood": {
+        "intensity": 0.6,
+        "colorTarget": "#ffaa00",
+        "speed": 1.0
+      },
+      "nextNodeId": "ep5-absurdist-3"
+    },
+    "ep5-absurdist-3": {
+      "id": "ep5-absurdist-3",
+      "speaker": "Computer",
+      "text": "It's a tower of malfunctioning sims so enraged with existential dread that they've ripped out their own tongues.",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#aa00ff",
+        "speed": 1.5
+      },
+      "nextNodeId": "ep5-philosophical-1"
+    },
+    "ep5-philosophical-1": {
+      "id": "ep5-philosophical-1",
+      "speaker": "Jason",
+      "text": "So the concept is that all the consciousnesses in the world are connected. Imagine, like, a giant net, like, a glowing, blue net in infinity.",
+      "mood": {
+        "intensity": 0.5,
+        "colorTarget": "#00aaff",
+        "speed": 0.8
+      },
+      "nextNodeId": "ep5-philosophical-2"
+    },
+    "ep5-philosophical-2": {
+      "id": "ep5-philosophical-2",
+      "speaker": "Jason",
+      "text": "The Buddhist perspective is, 'Dude, you're grinding in World Of Warcraft.' You're trying all these spiritual practices or you're trying to add experience points to a character that doesn't fucking exist! You forgot that you're playing a game.",
+      "mood": {
+        "intensity": 0.8,
+        "colorTarget": "#ff00aa",
+        "speed": 1.2
+      },
+      "nextNodeId": "ep5-philosophical-3"
+    },
+    "ep5-philosophical-3": {
+      "id": "ep5-philosophical-3",
+      "speaker": "Jason",
+      "text": "The moment you accept things as they are... you don't need to hope anymore. Because you realize that where you are is kind of okay.",
+      "mood": {
+        "intensity": 0.4,
+        "colorTarget": "#55ffaa",
+        "speed": 0.6
+      },
+      "nextNodeId": "ep5-resolution-1"
+    },
+    "ep5-resolution-1": {
+      "id": "ep5-resolution-1",
+      "speaker": "Jason",
+      "text": "Just beating yourself up with hope. Not one fucking second you let yourself be hopeless. Let go of hope. Let go.",
+      "mood": {
+        "intensity": 0.9,
+        "colorTarget": "#ffffff",
+        "speed": 0.5
+      },
+      "nextNodeId": null
+    }
+  }
+}

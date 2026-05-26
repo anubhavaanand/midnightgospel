@@ -11,10 +11,13 @@ export const BabyClownShaderMaterial = shaderMaterial(
     uColorPrimary: new THREE.Color('#FFB6C1'), // Pastel Pink
     uColorBloom: new THREE.Color('#FFFACD'),   // Lemon Chiffon
     uSpeed: 1.0,
+    uMouse: new THREE.Vector2(-9999, -9999),
   },
   // Vertex Shader
   `
     ${commonShaderChunks}
+    uniform vec2 uMouse;
+    
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
@@ -27,7 +30,13 @@ export const BabyClownShaderMaterial = shaderMaterial(
       float wave = sin(position.x * 2.0 + uTime * uSpeed * 0.5) * 
                    cos(position.y * 1.5 + uTime * uSpeed * 0.3);
                    
-      vec3 newPosition = position + normal * wave * uIntensity * 0.8;
+      float mouseDist = distance(uv, uMouse);
+      float ripple = 0.0;
+      if (uMouse.x > -10.0) {
+        ripple = sin(mouseDist * 30.0 - uTime * 8.0) * exp(-mouseDist * 4.0) * 0.25 * uIntensity;
+      }
+      
+      vec3 newPosition = position + normal * (wave * uIntensity * 0.8 + ripple);
       vPosition = newPosition;
       
       gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
@@ -36,6 +45,8 @@ export const BabyClownShaderMaterial = shaderMaterial(
   // Fragment Shader
   `
     ${commonShaderChunks}
+    uniform vec2 uMouse;
+    
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
@@ -52,6 +63,13 @@ export const BabyClownShaderMaterial = shaderMaterial(
       
       // Gentle glow
       finalColor += uColorBloom * pow(fresnel, 3.0) * uIntensity;
+      
+      // Add soft glowing ring under cursor raycast
+      if (uMouse.x > -10.0) {
+        float mouseDist = distance(vUv, uMouse);
+        float ring = smoothstep(0.012, 0.0, abs(sin(mouseDist * 30.0 - uTime * 8.0) * exp(-mouseDist * 4.0) - 0.04));
+        finalColor += uColorBloom * ring * 0.5 * uIntensity;
+      }
 
       gl_FragColor = vec4(finalColor, 1.0);
       

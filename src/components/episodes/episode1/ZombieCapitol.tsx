@@ -6,6 +6,8 @@ import { LittlePresident } from './LittlePresident';
 import { AudioAnalyzerNode } from '../../audio/AudioAnalyzerNode';
 import vertexShader from './shaders/ZombieVertex.glsl?raw';
 import fragmentShader from './shaders/ZombieFragment.glsl?raw';
+import { ZombieCrowd } from './ZombieCrowd';
+import { DebateUI } from './DebateUI';
 
 export const ZombieCapitol: React.FC = () => {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
@@ -44,6 +46,16 @@ export const ZombieCapitol: React.FC = () => {
       targetChaos,
       0.05
     );
+
+    // Camera shake based on audio volume and chaos
+    if (targetChaos > 0) {
+      const shakeForce = metrics.rms * targetChaos * 0.5;
+      state.camera.position.x = Math.sin(state.clock.elapsedTime * 50) * shakeForce;
+      state.camera.position.y = Math.cos(state.clock.elapsedTime * 43) * shakeForce;
+    } else {
+      state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, 0, 0.1);
+      state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, 0, 0.1);
+    }
   });
 
   return (
@@ -51,6 +63,8 @@ export const ZombieCapitol: React.FC = () => {
       <AudioAnalyzerNode />
       
       <LittlePresident />
+      <ZombieCrowd />
+      <DebateUI />
 
       <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[40, 40, 256, 256]} />

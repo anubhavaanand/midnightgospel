@@ -63,7 +63,21 @@ const BabyClown: React.FC = () => {
       </Float>
 
       {/* Undulating Pastel Terrain */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+      <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, -2, 0]}
+        onPointerMove={(e) => {
+          e.stopPropagation();
+          if (e.uv && materialRef.current) {
+            materialRef.current.uMouse.copy(e.uv);
+          }
+        }}
+        onPointerOut={() => {
+          if (materialRef.current) {
+            materialRef.current.uMouse.set(-9999, -9999);
+          }
+        }}
+      >
         <planeGeometry args={[100, 100, 128, 128]} />
         {/* @ts-ignore */}
         <babyClownShaderMaterial ref={materialRef} side={THREE.DoubleSide} />
