@@ -1,6 +1,6 @@
 import React, { Suspense, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, useGLTF, Resize, Float, Center, Html } from '@react-three/drei';
+import { OrbitControls, Environment, useGLTF, Resize, Float, Center } from '@react-three/drei';
 import * as THREE from 'three';
 import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
@@ -60,7 +60,6 @@ const ChromaticRibbon: React.FC = () => {
       {/* The Background Ribbon */}
       <mesh>
         <torusGeometry args={[15, 3, 32, 64]} />
-        {/* @ts-ignore - custom shader material */}
         <chromaticShaderMaterial ref={materialRef} side={THREE.BackSide} />
       </mesh>
 

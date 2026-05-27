@@ -16,8 +16,6 @@ const BabyClown: React.FC = () => {
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uTime = state.clock.elapsedTime;
-      // Keep intensity gentle for a dreamlike wave
-      materialRef.current.uIntensity = 0.5;
     }
   });
 
@@ -79,7 +77,6 @@ const BabyClown: React.FC = () => {
         }}
       >
         <planeGeometry args={[100, 100, 128, 128]} />
-        {/* @ts-ignore */}
         <babyClownShaderMaterial ref={materialRef} side={THREE.DoubleSide} />
       </mesh>
 

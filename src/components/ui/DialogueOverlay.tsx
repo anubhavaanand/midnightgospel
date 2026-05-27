@@ -3,18 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 
-// Framer Motion variants for typing/stagger animation (no CSS scale — keeps text sharp)
 const containerVariants: any = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+    transition: { type: 'spring', damping: 25, stiffness: 220 }
   },
   exit: {
     opacity: 0,
     y: 40,
-    transition: { duration: 0.3, ease: 'easeIn' }
+    transition: { duration: 0.25, ease: 'easeIn' }
   }
 };
 
@@ -83,25 +82,15 @@ export const DialogueOverlay: React.FC = () => {
     <svg className="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="clancy-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FF007F" stopOpacity="0.4" />
+          <stop offset="0%" stopColor="#FF007F" stopOpacity="0.25" />
           <stop offset="100%" stopColor="#FF007F" stopOpacity="0" />
         </radialGradient>
-        <filter id="neon-glow-pink">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
       </defs>
-      {/* Background glow */}
       <circle cx="50" cy="50" r="45" fill="url(#clancy-glow)" />
-      {/* Outer tech circles */}
-      <circle cx="50" cy="50" r="40" stroke="#FF007F" strokeWidth="1" strokeDasharray="4 6 animate-spin" className="origin-center animate-[spin_20s_linear_infinite]" opacity="0.6" />
-      <circle cx="50" cy="50" r="36" stroke="#00FFFF" strokeWidth="0.5" strokeDasharray="20 4" className="origin-center animate-[spin_10s_linear_infinite_reverse]" opacity="0.4" />
+      <circle cx="50" cy="50" r="40" stroke="#FF007F" strokeWidth="0.5" strokeDasharray="4 6" opacity="0.5" className="animate-[spin_20s_linear_infinite]" />
+      <circle cx="50" cy="50" r="36" stroke="#00FFFF" strokeWidth="0.5" strokeDasharray="20 4" opacity="0.3" className="animate-[spin_10s_linear_infinite_reverse]" />
       
-      {/* Clancy's head */}
-      <circle cx="50" cy="58" r="16" fill="#FF007F" filter="url(#neon-glow-pink)" />
+      <circle cx="50" cy="58" r="16" fill="#FF007F" />
       
       {/* Clancy's wizard bucket hat */}
       <path d="M26 44 C26 44, 30 36, 40 34 C44 26, 56 26, 60 34 C70 36, 74 44, 74 44 C74 44, 72 48, 64 48 C54 48, 46 48, 36 48 C28 48, 26 44, 26 44 Z" fill="#FFE94A" />
@@ -129,30 +118,19 @@ export const DialogueOverlay: React.FC = () => {
     <svg className="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="glasses-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#00FFFF" stopOpacity="0.4" />
+          <stop offset="0%" stopColor="#00FFFF" stopOpacity="0.25" />
           <stop offset="100%" stopColor="#00FFFF" stopOpacity="0" />
         </radialGradient>
-        <filter id="neon-glow-cyan">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
       </defs>
-      {/* Background glow */}
       <circle cx="50" cy="50" r="45" fill="url(#glasses-glow)" />
-      {/* Outer tech circles */}
-      <circle cx="50" cy="50" r="40" stroke="#00FFFF" strokeWidth="1" strokeDasharray="10 5" className="origin-center animate-[spin_15s_linear_infinite]" opacity="0.6" />
-      <rect x="18" y="18" width="64" height="64" rx="8" stroke="#10B981" strokeWidth="0.5" strokeDasharray="4 8" opacity="0.3" />
+      <circle cx="50" cy="50" r="40" stroke="#00FFFF" strokeWidth="0.5" strokeDasharray="10 5" opacity="0.5" className="animate-[spin_15s_linear_infinite]" />
+      <rect x="18" y="18" width="64" height="64" rx="8" stroke="#10B981" strokeWidth="0.5" strokeDasharray="4 8" opacity="0.2" />
       
-      {/* Minimalist head */}
       <path d="M35 65 C35 55, 38 45, 50 45 C62 45, 65 55, 65 65 H35 Z" fill="#334155" />
       <circle cx="50" cy="40" r="12" fill="#1E293B" stroke="#00FFFF" strokeWidth="1" />
       
-      {/* Glasses */}
-      <circle cx="44" cy="40" r="4.5" fill="#FFE94A" stroke="#00FFFF" strokeWidth="1" filter="url(#neon-glow-cyan)" />
-      <circle cx="56" cy="40" r="4.5" fill="#FFE94A" stroke="#00FFFF" strokeWidth="1" filter="url(#neon-glow-cyan)" />
+      <circle cx="44" cy="40" r="4.5" fill="#FFE94A" stroke="#00FFFF" strokeWidth="1" />
+      <circle cx="56" cy="40" r="4.5" fill="#FFE94A" stroke="#00FFFF" strokeWidth="1" />
       <line x1="48.5" y1="40" x2="51.5" y2="40" stroke="#00FFFF" strokeWidth="1.5" />
       
       {/* Futuristic scanning line */}
@@ -234,11 +212,10 @@ export const DialogueOverlay: React.FC = () => {
 
           {/* Main Neon Glassmorphic Dialogue Panel */}
           <div 
-            className="relative overflow-hidden rounded-2xl border bg-[#0d071b]/80 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col md:flex-row gap-5 items-stretch cursor-pointer select-none"
+            className="relative overflow-hidden rounded-2xl border bg-[#0d071b]/80 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] flex flex-col md:flex-row gap-5 items-stretch cursor-pointer select-none shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
             onClick={handleAdvance}
             style={{ 
-              borderColor: `${glowColor}50`,
-              boxShadow: `0 0 35px ${glowColor}25, inset 0 0 15px ${glowColor}10`
+              borderColor: `${glowColor}40`,
             }}
           >
             {/* Tech Corner Brackets */}

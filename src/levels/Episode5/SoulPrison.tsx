@@ -22,8 +22,7 @@ export const SoulPrison: React.FC = () => {
     const time = state.clock.elapsedTime;
     
     if (materialRef.current) {
-      materialRef.current.uTime = time;
-      materialRef.current.uIntensity = 0.8;
+      materialRef.current.uTime = state.clock.elapsedTime;
     }
 
     // Heavy floating cycle for Bob NPC
@@ -67,7 +66,6 @@ export const SoulPrison: React.FC = () => {
       {/* 1. COSMIC GRID SHADER FLOOR (Terrain mesh like Level 2) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
         <planeGeometry args={[112, 112, 128, 128]} />
-        {/* @ts-ignore - custom shader material */}
         <soulPrisonShaderMaterial 
           ref={materialRef} 
           side={THREE.DoubleSide} 

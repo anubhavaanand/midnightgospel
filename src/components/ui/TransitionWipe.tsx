@@ -13,8 +13,8 @@ export const TransitionWipe: React.FC = () => {
           initial={{ clipPath: 'circle(0% at 50% 50%)' }}
           animate={{ clipPath: 'circle(150% at 50% 50%)' }}
           exit={{ clipPath: 'circle(0% at 50% 50%)', opacity: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-50 bg-black pointer-events-none flex items-center justify-center"
+          transition={{ type: 'spring', damping: 30, stiffness: 180, duration: 0.8 }}
+          className="fixed inset-0 z-50 bg-[#0a0a0f] pointer-events-none flex items-center justify-center"
         >
           {/* Internal visual effects for the wipe */}
           <motion.div

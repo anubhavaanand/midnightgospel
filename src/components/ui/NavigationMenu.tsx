@@ -40,7 +40,7 @@ export const NavigationMenu: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ type: 'spring', damping: 28, stiffness: 200 }}
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex flex-col justify-center items-center p-8 pointer-events-auto"
         >
           {/* Subtle spinning background spiral */}

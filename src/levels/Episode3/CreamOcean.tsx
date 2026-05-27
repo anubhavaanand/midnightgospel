@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Float, Sparkles, Text, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
@@ -18,12 +18,19 @@ export const CreamOcean: React.FC = () => {
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
   const openDialogue = useDialogueStore((state) => state.openDialogue);
 
+  useEffect(() => {
+    return () => {
+      if (materialRef.current) {
+        materialRef.current.dispose();
+      }
+    };
+  }, []);
+
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     
     if (materialRef.current) {
       materialRef.current.uTime = time;
-      materialRef.current.uIntensity = 0.8;
     }
 
     // Gentle rotate and wave for Fish Mage NPC
@@ -82,7 +89,6 @@ export const CreamOcean: React.FC = () => {
         }}
       >
         <planeGeometry args={[110, 110, 128, 128]} />
-        {/* @ts-ignore - custom shader material */}
         <creamOceanShaderMaterial 
           ref={materialRef} 
           side={THREE.DoubleSide}

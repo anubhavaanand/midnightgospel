@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
 import { useLevelStore } from '../../store/useLevelStore';
 
+const SpeakerIcon = ({ muted }: { muted: boolean }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    {muted ? (
+      <>
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <line x1="23" y1="9" x2="17" y2="15" />
+        <line x1="17" y1="9" x2="23" y2="15" />
+      </>
+    ) : (
+      <>
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      </>
+    )}
+  </svg>
+);
+
 export const LayoutOverlay: React.FC = () => {
   const { activeLevelId, scrollProgress, isMenuOpen, setMenuOpen } = useLevelStore();
   const [isMuted, setIsMuted] = useState(false);
@@ -57,7 +75,7 @@ export const LayoutOverlay: React.FC = () => {
             className="w-10 h-10 rounded-full glass-button flex items-center justify-center text-xs text-gray-400 font-mono-diagnostic hover:text-white"
             title="Toggle Ambient Audio"
           >
-            {isMuted ? '🔇' : '🔊'}
+            <SpeakerIcon muted={isMuted} />
           </button>
 
           {/* Hamburger Menu Trigger */}
@@ -76,7 +94,7 @@ export const LayoutOverlay: React.FC = () => {
       </header>
 
       {/* 2. Left Footer (Simulation Telemetry Diagnostic Overlay) */}
-      <footer className="absolute bottom-6 left-6 p-5 w-80 rounded-2xl glass-panel font-mono-diagnostic text-xs leading-relaxed pointer-events-auto select-none border border-white/5 shadow-2xl">
+      <footer className="absolute bottom-6 left-6 p-5 w-80 rounded-2xl glass-panel font-mono-diagnostic text-xs leading-relaxed pointer-events-auto select-none border border-white/5 shadow-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
         <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
           <span className="text-[10px] tracking-wider text-fuchsia-500 font-bold">SIMULATOR DIAGNOSTICS</span>
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
@@ -106,7 +124,7 @@ export const LayoutOverlay: React.FC = () => {
       </footer>
 
       {/* 3. Right Footer (Z-Axis Depth Scroll Gauge) */}
-      <footer className="absolute bottom-6 right-6 p-5 w-80 rounded-2xl glass-panel font-mono-diagnostic text-xs pointer-events-auto select-none border border-white/5 shadow-2xl">
+      <footer className="absolute bottom-6 right-6 p-5 w-80 rounded-2xl glass-panel font-mono-diagnostic text-xs pointer-events-auto select-none border border-white/5 shadow-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
         <div className="flex justify-between items-center mb-3">
           <span className="text-[10px] tracking-wider text-cyan-400 font-bold">PORTAL DEPTH GAUGE</span>
           <span className="text-white text-[10px] font-bold">

@@ -33,8 +33,6 @@ export const ZombieCapitol: React.FC = () => {
     
     if (materialRef.current) {
       materialRef.current.uTime = time;
-      // Keep distortion intensity perfectly calibrated for undulating ground
-      materialRef.current.uIntensity = 0.6;
     }
     
     // Animate Glasses Man (distorted orange centerpiece)
@@ -91,7 +89,6 @@ export const ZombieCapitol: React.FC = () => {
         }}
       >
         <planeGeometry args={[120, 120, 128, 128]} />
-        {/* @ts-ignore - custom shader material */}
         <zombieShaderMaterial 
           ref={materialRef} 
           side={THREE.DoubleSide} 
