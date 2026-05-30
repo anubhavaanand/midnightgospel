@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text, Billboard } from '@react-three/drei';
 import { useDialogueStore } from '../../store/useDialogueStore';
+import { useLevelStore } from '../../store/useLevelStore';
 
 interface KineticDialogueProps {
   position?: [number, number, number];
@@ -9,6 +10,7 @@ interface KineticDialogueProps {
 
 export const KineticDialogue: React.FC<KineticDialogueProps> = ({ position = [0, 2, 0] }) => {
   const { isOpen, activeText, currentMood, advanceNode } = useDialogueStore();
+  const activeLevelId = useLevelStore((state) => state.activeLevelId);
   const textRef = useRef<any>(null);
 
   // Auto-advance logic based on string length
@@ -18,13 +20,12 @@ export const KineticDialogue: React.FC<KineticDialogueProps> = ({ position = [0,
     // Calculate delay: 50ms per character, minimum 2 seconds
     const delay = Math.max(2000, activeText.length * 50);
     
-    // Hardcoding level 1 for now as per the specification
     const timer = setTimeout(() => {
-      advanceNode(1);
+      advanceNode(activeLevelId);
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [isOpen, activeText, advanceNode]);
+  }, [isOpen, activeText, advanceNode, activeLevelId]);
 
   // Framerate-independent mood wobble (position only — no scale to keep SDF text sharp)
   useFrame(({ clock }) => {

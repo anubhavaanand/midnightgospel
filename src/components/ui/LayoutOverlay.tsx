@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLevelStore } from '../../store/useLevelStore';
+import { LEVELS } from '../../data/levels';
 
 const SpeakerIcon = ({ muted }: { muted: boolean }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -25,10 +26,13 @@ export const LayoutOverlay: React.FC = () => {
 
   // Dynamic content mapping based on the active level ID
   const getLevelTelemetry = () => {
+    const level = LEVELS.find(l => l.id === activeLevelId);
+    const levelName = level?.name ?? `Simulated Planet #${activeLevelId}`;
+
     switch (activeLevelId) {
       case 0:
         return {
-          world: "Chromatic Ribbon",
+          world: levelName,
           avatar: "Default Clancy Form",
           guest: "Hub Computer AI (Velma 960)",
           theme: "Digital Escapism & Solitude",
@@ -36,7 +40,7 @@ export const LayoutOverlay: React.FC = () => {
         };
       case 1:
         return {
-          world: "Earth 4-169 (Zombie Capitol)",
+          world: levelName,
           avatar: "Beach Body Form (Buff)",
           guest: "Glasses Man (Dr. Drew Pinsky)",
           theme: "Psychedelics & Drug Philosophy",
@@ -44,7 +48,7 @@ export const LayoutOverlay: React.FC = () => {
         };
       default:
         return {
-          world: `Simulated Planet #${activeLevelId}`,
+          world: levelName,
           avatar: "Custom Holographic Skin",
           guest: "Multiverse Native NPC",
           theme: "Existential Exploration",

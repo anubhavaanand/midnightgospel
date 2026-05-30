@@ -1,21 +1,16 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLevelStore } from '../../store/useLevelStore';
+import { LEVELS } from '../../data/levels';
 
 export const NavigationMenu: React.FC = () => {
   const { isMenuOpen, setMenuOpen, activeLevelId, setLevel, setTransitioning } = useLevelStore();
 
-  const menuItems = [
-    { id: 0, label: "L-00", name: "CHROMATIC RIBBON (CLANCY'S HUB)" },
-    { id: 1, label: "L-01", name: "EARTH 4-169 (ZOMBIE CAPITOL)" },
-    { id: 2, label: "L-02", name: "BABY CLOWN PASTURES (SLAUGHTERHOUSE)" },
-    { id: 3, label: "L-03", name: "CREAM OCEAN (CEREMONIAL MAGIC)" },
-    { id: 4, label: "L-04", name: "VENGEANCE KINGDOM (BLOOD ROSE)" },
-    { id: 5, label: "L-05", name: "MOON R3T8 (SOUL PRISON)" },
-    { id: 6, label: "L-06", name: "BUTON 78914 (MEDITATION CAVE)" },
-    { id: 7, label: "L-07", name: "PLANET BLANK BALL (DEATH INDUSTRIAL)" },
-    { id: 8, label: "L-08", name: "MOUSE OF SILVER (LIFE CYCLE)" }
-  ];
+  const menuItems = LEVELS.filter(l => l.id < 9).map(l => ({
+    id: l.id,
+    label: `L-${String(l.id).padStart(2, '0')}`,
+    name: l.name.toUpperCase()
+  }));
 
   const handleLevelSelect = (id: number) => {
     if (id === activeLevelId) {
@@ -42,9 +37,18 @@ export const NavigationMenu: React.FC = () => {
           exit={{ opacity: 0 }}
           transition={{ type: 'spring', damping: 28, stiffness: 200 }}
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex flex-col justify-center items-center p-8 pointer-events-auto"
+          onClick={() => setMenuOpen(false)}
         >
           {/* Subtle spinning background spiral */}
           <div className="absolute w-[80vw] h-[80vw] rounded-full bg-gradient-to-tr from-fuchsia-900/10 via-black to-cyan-900/10 opacity-30 mix-blend-color-dodge animate-spin-slow pointer-events-none" />
+
+          {/* Close button */}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="absolute top-6 right-6 z-10 px-4 py-2 rounded-full glass-button font-mono-diagnostic text-xs text-white/70 hover:text-white border border-white/10 hover:border-fuchsia-500/50 transition-all duration-300 pointer-events-auto"
+          >
+            ✕ CLOSE
+          </button>
 
           {/* Navigation Title */}
           <motion.div 
@@ -67,6 +71,7 @@ export const NavigationMenu: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.4 }}
             className="w-full max-w-xl flex flex-col gap-3 font-mono-diagnostic"
+            onClick={(e) => e.stopPropagation()}
           >
             {menuItems.map((item) => {
               const isActive = activeLevelId === item.id;

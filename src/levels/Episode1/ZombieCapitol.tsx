@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Float, Sparkles, MeshDistortMaterial } from '@react-three/drei';
+import { OrbitControls, Environment, Float, Sparkles, MeshDistortMaterial, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { useDialogueStore } from '../../store/useDialogueStore';
+import { useLevelStore } from '../../store/useLevelStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './ZombieShader';
@@ -14,6 +15,20 @@ export const ZombieCapitol: React.FC = () => {
   const zombiesRef = useRef<THREE.Group>(null);
   
   const openDialogue = useDialogueStore((state) => state.openDialogue);
+  
+  const setLevel = useLevelStore((state) => state.setLevel);
+  const setTransitioning = useLevelStore((state) => state.setTransitioning);
+  const isTransitioning = useLevelStore((state) => state.isTransitioning);
+
+  const handleBackToHub = (e: any) => {
+    e.stopPropagation();
+    if (isTransitioning) return;
+    setTransitioning(true);
+    setTimeout(() => { 
+      setLevel(0); 
+      setTransitioning(false); 
+    }, 800);
+  };
 
   // Generate deterministic random positions for the Zombie Horde placeholders
   const zombiePositions = React.useMemo(() => {
@@ -266,6 +281,19 @@ export const ZombieCapitol: React.FC = () => {
         opacity={0.3} 
         color="#8e24aa" 
       />
+
+      {/* Return to Hub Platform Portal */}
+      <group position={[0, -1.0, 9]}>
+        <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.2}>
+          <mesh onClick={handleBackToHub} onPointerOver={() => document.body.style.cursor = 'pointer'} onPointerOut={() => document.body.style.cursor = 'auto'}>
+            <boxGeometry args={[3.2, 0.4, 1.2]} />
+            <meshStandardMaterial color="#424242" emissive="#ffb300" emissiveIntensity={0.6} roughness={0.3} />
+          </mesh>
+          <Text position={[0, 0.5, 0]} fontSize={0.35} color="white" anchorX="center" anchorY="middle" outlineWidth={0.03} outlineColor="#000" font="https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff">
+            Return to Hub
+          </Text>
+        </Float>
+      </group>
 
       {/* Fallback Ground Grid Platform */}
       <gridHelper args={[60, 40, '#8e24aa', '#3b0066']} position={[0, -1.9, 0]} />

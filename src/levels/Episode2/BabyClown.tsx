@@ -4,18 +4,27 @@ import { OrbitControls, Environment, Text, Sparkles, Float, Sphere } from '@reac
 import * as THREE from 'three';
 import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
+import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
+import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './BabyClownShader';
 
 const BabyClown: React.FC = () => {
   const materialRef = useRef<any>(null);
+  const clancyRef = useRef<THREE.Group>(null);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
   const openDialogue = useDialogueStore((state) => state.openDialogue);
 
   useFrame((state) => {
+    const time = state.clock.elapsedTime;
     if (materialRef.current) {
-      materialRef.current.uTime = state.clock.elapsedTime;
+      materialRef.current.uTime = time;
+    }
+    // Animate Clancy Avatar
+    if (clancyRef.current) {
+      clancyRef.current.rotation.y = time * 0.2;
+      clancyRef.current.position.y = -0.6 + Math.sin(time * 0.5) * 0.1;
     }
   });
 
@@ -60,6 +69,49 @@ const BabyClown: React.FC = () => {
         </group>
       </Float>
 
+      {/* UNIQUE CLANCY AVATAR (Glowing Pastel Clown Balloon Canine) */}
+      <Float speed={2} rotationIntensity={0.3} floatIntensity={0.4} position={[0, -0.6, 4.5]}>
+        <group ref={clancyRef}>
+          {/* Body capsule */}
+          <mesh castShadow>
+            <cylinderGeometry args={[0.35, 0.35, 1.2, 16]} />
+            <meshStandardMaterial 
+              color="#FFFACD" 
+              emissive="#FFFACD" 
+              emissiveIntensity={1.5}
+              roughness={0.2}
+              metalness={0.5}
+              transparent
+              opacity={0.85}
+            />
+          </mesh>
+          {/* Balloon Ears */}
+          <mesh position={[-0.4, 0.6, 0]}>
+            <sphereGeometry args={[0.2, 16, 16]} />
+            <meshStandardMaterial color="#FFB6C1" emissive="#FFB6C1" emissiveIntensity={1.5} />
+          </mesh>
+          <mesh position={[0.4, 0.6, 0]}>
+            <sphereGeometry args={[0.2, 16, 16]} />
+            <meshStandardMaterial color="#FFB6C1" emissive="#FFB6C1" emissiveIntensity={1.5} />
+          </mesh>
+          {/* Main sphere head */}
+          <mesh position={[0, 0.7, 0]}>
+            <sphereGeometry args={[0.35, 16, 16]} />
+            <meshStandardMaterial 
+              color="#FFB6C1" 
+              emissive="#FFB6C1" 
+              emissiveIntensity={2.0}
+              roughness={0.1}
+            />
+          </mesh>
+          {/* Orbiting bubble ring */}
+          <mesh rotation={[Math.PI / 4, 0, 0]}>
+            <torusGeometry args={[0.6, 0.02, 8, 32]} />
+            <meshBasicMaterial color="#FF69B4" transparent opacity={0.7} />
+          </mesh>
+        </group>
+      </Float>
+
       {/* Undulating Pastel Terrain */}
       <mesh 
         rotation={[-Math.PI / 2, 0, 0]} 
@@ -81,17 +133,24 @@ const BabyClown: React.FC = () => {
       </mesh>
 
       {/* Return to Hub Portal */}
-      <group position={[0, -1, 8]}>
-        <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.5}>
+      <group position={[0, -1.0, 8]}>
+        <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.2}>
           <mesh onClick={handleBackToHub} onPointerOver={() => document.body.style.cursor = 'pointer'} onPointerOut={() => document.body.style.cursor = 'auto'}>
-            <boxGeometry args={[3, 0.5, 1]} />
-            <meshStandardMaterial color="#FF69B4" emissive="#FF1493" emissiveIntensity={0.5} />
+            <boxGeometry args={[3.2, 0.4, 1.2]} />
+            <meshStandardMaterial color="#424242" emissive="#FF69B4" emissiveIntensity={0.6} roughness={0.3} />
           </mesh>
-          <Text position={[0, 0.6, 0]} fontSize={0.4} color="white" anchorX="center" anchorY="middle" outlineWidth={0.02} outlineColor="#000">
+          <Text position={[0, 0.5, 0]} fontSize={0.35} color="white" anchorX="center" anchorY="middle" outlineWidth={0.03} outlineColor="#000" font="https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff">
             Return to Hub
           </Text>
         </Float>
       </group>
+
+      {/* Proximity Dialogue and Attention Catchers */}
+      <NPCAttentionCatcher npcPosition={[0, 2.0, 0]} npcName="Baby Clown King" targetLevelId={2} />
+      <KineticDialogue position={[0, 4.2, 0]} />
+
+      {/* Thematic Grid Platform */}
+      <gridHelper args={[60, 40, '#FFB6C1', '#FFFACD']} position={[0, -1.95, 0]} />
     </group>
   );
 };

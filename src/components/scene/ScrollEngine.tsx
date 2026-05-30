@@ -60,7 +60,7 @@ export const ScrollEngine: React.FC = () => {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [isTransitioning]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const lerpSpeed = 3.0;
     progressRef.current = THREE.MathUtils.damp(
       progressRef.current,
@@ -74,8 +74,17 @@ export const ScrollEngine: React.FC = () => {
     const point = curve.getPointAt(t);
     const lookAhead = curve.getPointAt(Math.min(t + 0.1, 1));
 
-    camera.position.copy(point);
-    camera.lookAt(lookAhead);
+    const isScrolling = Math.abs(progressRef.current - targetProgressRef.current) > 0.001 || isTransitioning;
+    const controls = (state as any).controls;
+
+    if (isScrolling || t < 0.01) {
+      camera.position.copy(point);
+      camera.lookAt(lookAhead);
+      if (controls) {
+        controls.target.copy(lookAhead);
+        controls.update();
+      }
+    }
 
     if (activeLevelId === 0) {
       setScrollProgress(THREE.MathUtils.clamp(t, 0, 1));
