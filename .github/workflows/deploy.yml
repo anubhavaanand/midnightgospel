@@ -82,22 +82,6 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./
-          production: true
+          vercel-args: '--prod'
         env:
           VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-
-      - name: Create Lighthouse report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lighthouse-report
-          path: ./lighthouse
-
-      - name: Post deployment status
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const deployment = context.payload.deployment;
-            const status = job.status === 'success' ? '✅ Deployed' : '❌ Deployment failed';
-            console.log(`${status}`);
