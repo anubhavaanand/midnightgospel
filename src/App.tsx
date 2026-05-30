@@ -10,6 +10,7 @@ import { KineticDialogue } from './components/scene/KineticDialogue';
 import { LayoutOverlay } from './components/ui/LayoutOverlay';
 import { NavigationMenu } from './components/ui/NavigationMenu';
 import { ScrollEngine } from './components/scene/ScrollEngine';
+import { AudioListener } from './components/audio/AudioListener';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -57,6 +58,7 @@ function App() {
       >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
+        <AudioListener />
         <MoodSync />
         <KineticDialogue />
         

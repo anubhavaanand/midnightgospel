@@ -18,12 +18,16 @@ interface DialogueState {
     rms: number;
   };
   activeQuest: ActiveQuest | null;
+  audioState: 'suspended' | 'running' | 'uninitialized';
+  isMuted: boolean;
   openDialogue: (levelId: LevelId) => void;
   advanceNode: (levelId: LevelId) => void;
   closeDialogue: () => void;
   setNarrativePhase: (phase: NarrativePhase) => void;
   updateAudioMetrics: (metrics: Partial<DialogueState['audioMetrics']>) => void;
   setActiveQuest: (quest: ActiveQuest | null) => void;
+  setAudioState: (audioState: 'suspended' | 'running' | 'uninitialized') => void;
+  setIsMuted: (isMuted: boolean) => void;
 }
 
 export const useDialogueStore = create<DialogueState>((set, get) => ({
@@ -35,6 +39,8 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
   narrativePhase: 'CHAOS_INTRO',
   audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
   activeQuest: null,
+  audioState: 'uninitialized',
+  isMuted: false,
 
   openDialogue: (levelId: LevelId) => {
     const tree = DIALOGUE_TREES[levelId];
@@ -96,7 +102,11 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
     audioMetrics: { ...state.audioMetrics, ...metrics } 
   })),
 
-  setActiveQuest: (quest) => set({ activeQuest: quest })
+  setActiveQuest: (quest) => set({ activeQuest: quest }),
+  
+  setAudioState: (audioState) => set({ audioState }),
+
+  setIsMuted: (isMuted) => set({ isMuted })
 }));
 
 if (typeof window !== 'undefined') {

@@ -13,6 +13,8 @@ describe('useDialogueStore', () => {
       narrativePhase: 'CHAOS_INTRO',
       audioMetrics: { bass: 0, mid: 0, treble: 0, rms: 0 },
       activeQuest: null,
+      audioState: 'uninitialized',
+      isMuted: false,
     });
   });
 

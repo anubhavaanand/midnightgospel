@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLevelStore } from '../../store/useLevelStore';
 import { LEVELS } from '../../data/levels';
+import { useDialogueStore } from '../../store/useDialogueStore';
+import * as THREE from 'three';
 
 const SpeakerIcon = ({ muted }: { muted: boolean }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -22,7 +24,45 @@ const SpeakerIcon = ({ muted }: { muted: boolean }) => (
 
 export const LayoutOverlay: React.FC = () => {
   const { activeLevelId, scrollProgress, isMenuOpen, setMenuOpen } = useLevelStore();
-  const [isMuted, setIsMuted] = useState(false);
+  const isMuted = useDialogueStore((state) => state.isMuted);
+  const setIsMuted = useDialogueStore((state) => state.setIsMuted);
+  const audioState = useDialogueStore((state) => state.audioState);
+  const setAudioState = useDialogueStore((state) => state.setAudioState);
+
+  // Setup click & touch listeners to auto-resume AudioContext on first user interaction
+  useEffect(() => {
+    const resumeAudio = async () => {
+      try {
+        const ctx = THREE.AudioContext.getContext();
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
+          setAudioState(ctx.state as any);
+        }
+      } catch (e) {
+        // Safe to ignore in test or background envs
+      }
+    };
+
+    window.addEventListener('click', resumeAudio, { once: true });
+    window.addEventListener('touchstart', resumeAudio, { once: true });
+
+    return () => {
+      window.removeEventListener('click', resumeAudio);
+      window.removeEventListener('touchstart', resumeAudio);
+    };
+  }, [setAudioState]);
+
+  const handleInitiateAudio = async () => {
+    try {
+      const ctx = THREE.AudioContext.getContext();
+      if (ctx.state === 'suspended') {
+        await ctx.resume();
+      }
+      setAudioState(ctx.state as any);
+    } catch (e) {
+      console.warn("Failed to resume AudioContext manually:", e);
+    }
+  };
 
   // Dynamic content mapping based on the active level ID
   const getLevelTelemetry = () => {
@@ -71,8 +111,22 @@ export const LayoutOverlay: React.FC = () => {
           </span>
         </div>
 
-        {/* Top Right Controls */}
         <div className="flex items-center gap-4">
+          {/* Initiate Audio / Suspended Warning */}
+          {audioState === 'suspended' && (
+            <button
+              onClick={handleInitiateAudio}
+              className="px-4 h-10 rounded-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-mono-diagnostic text-xs font-bold animate-pulse pointer-events-auto border border-fuchsia-400 flex items-center gap-2 shadow-[0_0_15px_rgba(217,70,239,0.5)]"
+              title="Click to Enable Spatial Audio"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              INITIATE AUDIO
+            </button>
+          )}
+
           {/* Mute Toggle */}
           <button 
             onClick={() => setIsMuted(!isMuted)}
