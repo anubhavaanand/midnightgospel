@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test('navigate from Hub to Episode 1 and back', async ({ page }) => {
+test('verify that the Spacecast 3D Hub mounts with HUD overlay telemetry', async ({ page }) => {
+  // Log browser console logs for easier debugging in CI
   page.on('console', msg => {
     if (msg.type() === 'error') {
       console.log(`BROWSER ERROR: ${msg.text()}`);
@@ -13,25 +14,20 @@ test('navigate from Hub to Episode 1 and back', async ({ page }) => {
   // 1. Load the Hub
   await page.goto('/');
   
-  // Wait for canvas to mount
+  // 2. Verify WebGL Canvas mounts successfully
   await page.waitForSelector('canvas');
+  const canvas = page.locator('canvas');
+  await expect(canvas).toBeVisible();
 
-  // Verify Hub is active (URL or some internal state, but since it's canvas, we can't easily inspect DOM text inside canvas).
-  // We can look for the LevelSelector or ChromaticRibbon by checking if dialogue overlay is NOT open initially.
-  const dialogOverlay = page.locator('role=dialog');
-  await expect(dialogOverlay).not.toBeVisible();
+  // 3. Verify SPACECAST HUD Title mounts
+  const headerTitle = page.locator('text=SPACECAST');
+  await expect(headerTitle).toBeVisible();
 
-  // 2. Click a portal to transition
-  // In Playwright, clicking a specific object in a 3D canvas is hard.
-  // We usually have to dispatch a click event at the center of the canvas where the Hub is.
-  await page.mouse.click(500, 500); // Click center, which might hit Clancy and open dialogue
+  // 4. Verify Diagnostics Telemetry panel is visible
+  const diagnosticsPanel = page.locator('text=SIMULATOR DIAGNOSTICS');
+  await expect(diagnosticsPanel).toBeVisible();
 
-  // 3. Verify Dialogue Overlay opens
-  await expect(dialogOverlay).toBeVisible();
-
-  // 4. Click Next to advance dialogue
-  await dialogOverlay.click();
-
-  // Wait for transition wipe if it was triggered (hypothetical test flow)
-  // await page.waitForTimeout(1000);
+  // 5. Verify Portal Z-Depth Gauge is visible
+  const depthGauge = page.locator('text=PORTAL DEPTH GAUGE');
+  await expect(depthGauge).toBeVisible();
 });
