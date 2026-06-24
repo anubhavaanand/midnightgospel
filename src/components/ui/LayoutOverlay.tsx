@@ -64,37 +64,25 @@ export const LayoutOverlay: React.FC = () => {
     }
   };
 
-  // Dynamic content mapping based on the active level ID
+  const levelTelemetryData: Record<number, { avatar: string; guest: string; theme: string; status: string }> = {
+    0: { avatar: "Default Clancy Form", guest: "Hub Computer AI (Velma 960)", theme: "Digital Escapism & Solitude", status: "Simulation Farmer Online" },
+    1: { avatar: "Beach Body Form (Buff)", guest: "Glasses Man (Dr. Drew Pinsky)", theme: "Psychedelics & Drug Philosophy", status: "98.7% Zombie Overrun" },
+    2: { avatar: "Pastel Balloon Canine", guest: "Baby Clown King (Anne Lamott)", theme: "Death, Grief & New Life", status: "Eternal Pastures Active" },
+    3: { avatar: "Octopus Alien Form", guest: "Fish Mage (Damien Echols)", theme: "Magic, Forgiveness & Suffering", status: "Cream Ocean Calm" },
+    4: { avatar: "Warrior Form", guest: "Knight (Caitlin Doughty)", theme: "Death Positivity & Mortality", status: "Volcanic Forge Lit" },
+    5: { avatar: "Prismatic Glass Form", guest: "Inmate Bob (Jason Louv)", theme: "Buddhism & Letting Go", status: "Soul Prison Secure" },
+    6: { avatar: "Zen Meditation Form", guest: "Teacher David (Trudy Goodman)", theme: "Heartbreak & Relationships", status: "Cave Resonance Calm" },
+    7: { avatar: "Golden Sphere Form", guest: "Death (David Nichtern)", theme: "Enlightenment & Cosmic Awareness", status: "Void Observation Active" },
+    8: { avatar: "Golden Heart Form", guest: "Mom (Duncan's Mother)", theme: "Mother-Son Love & Rebirth", status: "Life Cycle in Transit" },
+    9: { avatar: "Transcendent Unity Form", guest: "The Simulator Core", theme: "Integration & Cosmic Chaos", status: "Sandbox Mode Engaged" },
+  };
+
   const getLevelTelemetry = () => {
     const level = LEVELS.find(l => l.id === activeLevelId);
     const levelName = level?.name ?? `Simulated Planet #${activeLevelId}`;
+    const data = levelTelemetryData[activeLevelId] ?? levelTelemetryData[0];
 
-    switch (activeLevelId) {
-      case 0:
-        return {
-          world: levelName,
-          avatar: "Default Clancy Form",
-          guest: "Hub Computer AI (Velma 960)",
-          theme: "Digital Escapism & Solitude",
-          status: "Simulation Farmer Online"
-        };
-      case 1:
-        return {
-          world: levelName,
-          avatar: "Beach Body Form (Buff)",
-          guest: "Glasses Man (Dr. Drew Pinsky)",
-          theme: "Psychedelics & Drug Philosophy",
-          status: "98.7% Zombie Overrun"
-        };
-      default:
-        return {
-          world: levelName,
-          avatar: "Custom Holographic Skin",
-          guest: "Multiverse Native NPC",
-          theme: "Existential Exploration",
-          status: "Simulation Running"
-        };
-    }
+    return { world: levelName, ...data };
   };
 
   const telemetry = getLevelTelemetry();
