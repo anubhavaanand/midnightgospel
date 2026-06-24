@@ -303,6 +303,7 @@ export const HubDialogueComputer: React.FC = () => {
             <div 
               ref={typedRef}
               className="flex-1 min-h-[90px] max-h-[140px] overflow-y-auto mb-4 p-3 bg-black/55 rounded-lg border border-white/5 text-xs leading-relaxed text-slate-300 font-mono scrollbar-thin select-text"
+              style={{ whiteSpace: 'pre-wrap' }}
             >
               {typedResponse ? (
                 <div>
