@@ -4,6 +4,7 @@ import { OrbitControls, Environment, useGLTF, Resize, Float, Center } from '@rea
 import * as THREE from 'three';
 import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
+import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import './ChromaticShader';
 
 const SpaceIsland = ({ position }: { position: [number, number, number] }) => {
@@ -45,7 +46,7 @@ const ChromaticRibbon: React.FC = () => {
 
   return (
     <group>
-      <OrbitControls makeDefault maxDistance={20} minDistance={5} />
+      <OrbitControls makeDefault maxDistance={20} minDistance={3} enablePan={false} maxPolarAngle={Math.PI / 2.5} />
       <Environment preset="city" />
       
       {/* The Central Island (Click to open dialogue) */}
@@ -65,6 +66,8 @@ const ChromaticRibbon: React.FC = () => {
 
       {/* Diegetic Portals */}
       <LevelSelector />
+
+      <NPCAttentionCatcher npcPosition={[0, 0, 0]} npcName="Clancy" targetLevelId={0} />
 
       {/* Randomly Placed Space Islands */}
       <Suspense fallback={null}>
