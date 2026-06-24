@@ -74,7 +74,16 @@ export const DialogueOverlay: React.FC = () => {
     }
   }, [activeText]);
 
-  // Color mappings based on speaker or mood
+  const portraitMap: Record<string, string> = {
+    'clancy': '/images/characters/clancy.png',
+    'simulator': '/images/characters/simulator.png',
+    'death': '/images/characters/death.png',
+    'charlotte': '/images/characters/charlotte.png',
+  };
+
+  const speakerKey = (activeSpeaker || '').toLowerCase().replace(/\s+/g, '-');
+  const portraitSrc = portraitMap[speakerKey] || null;
+
   const glowColor = currentMood.colorTarget || '#FF00FF';
 
   // Clancy Minimalist Avatar Component (floppy yellow hat, pink head)
@@ -188,7 +197,21 @@ export const DialogueOverlay: React.FC = () => {
     <AnimatePresence>
       {isOpen && activeText && (
         <motion.div
-          key="dialogue-container"
+          key="dialogue-overlay-group"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/20"
+            onClick={(e) => { e.stopPropagation(); closeDialogue(); }}
+          />
+          <motion.div
+            key="dialogue-container"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -243,6 +266,14 @@ export const DialogueOverlay: React.FC = () => {
                 className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-black/40 border flex items-center justify-center overflow-hidden transition-all duration-300 relative"
                 style={{ borderColor: `${glowColor}30` }}
               >
+                {portraitSrc && (
+                  <img 
+                    src={portraitSrc} 
+                    alt="" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-20"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
                 {activeSpeaker?.toLowerCase() === 'clancy' ? (
                   <ClancyAvatar />
                 ) : activeSpeaker?.toLowerCase() === 'glasses man' ? (
@@ -335,6 +366,7 @@ export const DialogueOverlay: React.FC = () => {
               </div>
             </div>
           </div>
+        </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
