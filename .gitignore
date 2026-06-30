@@ -26,3 +26,5 @@ checklists/
 docs/
 specs/
 .firecrawl/
+playwright-report/
+test-results/
