@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { IceFloes, CatShip, SleepingGiant } from './OceanProps';
 import './CreamOceanShader';
 
 export const CreamOcean: React.FC = () => {
@@ -175,6 +176,11 @@ export const CreamOcean: React.FC = () => {
       {/* NPC Proximity Triggers and Kinetic Dialogues */}
       <NPCAttentionCatcher npcPosition={[0, 1.2, 0]} npcName="Fish Mage" targetLevelId={3} />
       <KineticDialogue position={[0, 3.0, 0]} />
+
+      {/* Ep3 set dressing: ice floes, Darryl's cat ship, sleeping Barry */}
+      <IceFloes count={9} />
+      <CatShip position={[8, -1.4, -6]} />
+      <SleepingGiant position={[-14, -2, -16]} />
 
       <gridHelper args={[50, 30, '#00ffff', '#003333']} position={[0, -1.95, 0]} />
     </group>
