@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { TarotTower, ArcanaRing, PingPongRain } from './BlankBallProps';
 import './PlanetBlankBallShader';
 
 export const PlanetBlankBall: React.FC = () => {
@@ -145,6 +146,11 @@ export const PlanetBlankBall: React.FC = () => {
       {/* NPC Proximity Attention Catcher and Dialogue bills */}
       <NPCAttentionCatcher npcPosition={[0, 1.5, 0]} npcName="Death" targetLevelId={7} />
       <KineticDialogue position={[0, 3.2, 0]} />
+
+      {/* Ep7 set dressing: tarot tower, arcana ring, ping-pong rain */}
+      <TarotTower position={[-9, -1.9, -10]} />
+      <ArcanaRing position={[0, 5.5, -14]} />
+      <PingPongRain />
 
       <gridHelper args={[60, 40, '#ffe082', '#1c1c1c']} position={[0, -1.95, 0]} />
     </group>
