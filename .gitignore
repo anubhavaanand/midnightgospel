@@ -23,7 +23,6 @@ README.md
 
 # Project Documentation (local reference only)
 checklists/
-docs/
 specs/
 .firecrawl/
 playwright-report/
