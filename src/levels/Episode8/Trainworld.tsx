@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { AfterlifeExpress, SteampunkFlyby, BearObservatory } from './TrainProps';
 import './TrainworldShader';
 
 export const Trainworld: React.FC = () => {
@@ -142,6 +143,11 @@ export const Trainworld: React.FC = () => {
       {/* NPC Proximity Attention Catcher and Dialogue bills */}
       <NPCAttentionCatcher npcPosition={[0, 1.4, 0]} npcName="Mom" targetLevelId={8} />
       <KineticDialogue position={[0, 3.1, 0]} />
+
+      {/* Ep8 set dressing: Afterlife Express, plane flyby, bear observatory */}
+      <AfterlifeExpress position={[-16, -1.6, -12]} />
+      <SteampunkFlyby />
+      <BearObservatory position={[10, -1.9, -8]} />
 
       <gridHelper args={[60, 40, '#ad1457', '#3c0022']} position={[0, -1.95, 0]} />
     </group>
