@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { BardoScale, SoulStrings, GlyphPillars } from './PrisonProps';
 import './SoulPrisonShader';
 
 export const SoulPrison: React.FC = () => {
@@ -144,6 +145,11 @@ export const SoulPrison: React.FC = () => {
       {/* NPC Proximity Attention Catcher and Dialogue bills */}
       <NPCAttentionCatcher npcPosition={[0, 1.2, 0]} npcName="Inmate" targetLevelId={5} />
       <KineticDialogue position={[0, 3.1, 0]} />
+
+      {/* Ep5 set dressing: Bardo Loop scale, soul strings, glyph pillars */}
+      <BardoScale position={[0, -1.9, -14]} />
+      <SoulStrings count={7} />
+      <GlyphPillars count={6} />
 
       <gridHelper args={[60, 40, '#00e5ff', '#1a0033']} position={[0, -1.95, 0]} />
     </group>
