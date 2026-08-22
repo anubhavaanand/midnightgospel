@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { SimulatorRouter } from './components/scene/SimulatorRouter';
 import { TransitionWipe } from './components/ui/TransitionWipe';
@@ -14,6 +14,8 @@ import { AudioListener } from './components/audio/AudioListener';
 import { AudioAnalyzerNode } from './components/audio/AudioAnalyzerNode';
 import { Effects } from './components/scene/Effects';
 import { LevelAtmosphere } from './components/scene/LevelAtmosphere';
+import CinematicIntro, { CinematicIntroOverlay } from './components/intro/CinematicIntro';
+import { useIntroState } from './components/intro/useIntroState';
 
 const WebGLFallback = () => (
   <div className="flex h-screen w-screen items-center justify-center bg-black text-white text-center p-8">
@@ -26,6 +28,16 @@ const WebGLFallback = () => (
 
 function App() {
   const [hasWebGL, setHasWebGL] = useState(true);
+  const { hasSeenIntro, markIntroSeen } = useIntroState();
+  const [introActive, setIntroActive] = useState(!hasSeenIntro);
+  const [introProgress, setIntroProgress] = useState(0);
+
+  // Sync intro progress from the 3D component via a custom event
+  useEffect(() => {
+    const handleProgress = (e: CustomEvent<number>) => setIntroProgress(e.detail);
+    window.addEventListener('cinematic-intro-progress', handleProgress as EventListener);
+    return () => window.removeEventListener('cinematic-intro-progress', handleProgress as EventListener);
+  }, []);
 
   useEffect(() => {
     try {
@@ -38,6 +50,16 @@ function App() {
       setHasWebGL(false);
     }
   }, []);
+
+  const handleIntroComplete = useCallback(() => {
+    markIntroSeen();
+    setIntroActive(false);
+  }, [markIntroSeen]);
+
+  const handleIntroSkip = useCallback(() => {
+    markIntroSeen();
+    setIntroActive(false);
+  }, [markIntroSeen]);
 
   if (!hasWebGL) {
     return <WebGLFallback />;
@@ -53,11 +75,18 @@ function App() {
       <TransitionWipe />
       <DialogueOverlay />
       <TouchJoystick />
+
+      {/* Cinematic Intro Overlay (2D) */}
+      <CinematicIntroOverlay
+        isVisible={introActive}
+        progress={introProgress}
+        onSkip={handleIntroSkip}
+      />
       
       <Canvas
         gl={{ antialias: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 10], fov: 60 }}
-        dpr={window.devicePixelRatio} // Full native resolution for sharp text
+        dpr={window.devicePixelRatio}
       >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
@@ -67,11 +96,22 @@ function App() {
         <Effects />
         <MoodSync />
         <KineticDialogue />
+
+        {/* Cinematic Intro (3D camera animation) */}
+        {introActive && (
+          <CinematicIntro
+            duration={6000}
+            onComplete={handleIntroComplete}
+          />
+        )}
         
-        {/* Spatial Depth Scrolling Driver */}
-        <ScrollEngine />
-        
-        <SimulatorRouter />
+        {/* Hub & Level Router - only after intro completes */}
+        {!introActive && (
+          <>
+            <ScrollEngine />
+            <SimulatorRouter />
+          </>
+        )}
       </Canvas>
     </div>
   );
