@@ -19,7 +19,12 @@ const levelBloomConfig: Record<number, { intensity: number; luminanceThreshold: 
 export const Effects: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
 
-  if (activeLevelId === 0) return null;
+  // Debug escape hatch: ?noFx disables the post pipeline (software-GL fallback)
+  const disabled =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).has('noFx');
+
+  if (activeLevelId === 0 || disabled) return null;
 
   const config = levelBloomConfig[activeLevelId] ?? levelBloomConfig[0];
 
