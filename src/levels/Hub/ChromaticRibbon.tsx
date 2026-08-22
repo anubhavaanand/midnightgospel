@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
+import { HubDecorations } from './HubDecorations';
 import './ChromaticShader';
 
 const SpaceIsland = ({ position }: { position: [number, number, number] }) => {
@@ -75,6 +76,9 @@ const ChromaticRibbon: React.FC = () => {
         <SpaceIsland position={[-10, -3, -12]} />
         <SpaceIsland position={[4, -8, 10]} />
       </Suspense>
+
+      {/* Mobius halo + cyber orbs + mini planets (additive decorations) */}
+      <HubDecorations />
     </group>
   );
 };
