@@ -134,7 +134,7 @@ export const MeditationCave: React.FC = () => {
             <boxGeometry args={[3.2, 0.4, 1.2]} />
             <meshStandardMaterial color="#5d4037" emissive="#ffb300" emissiveIntensity={0.5} roughness={0.6} />
           </mesh>
-          <Text position={[0, 0.5, 0]} fontSize={0.35} color="white" anchorX="center" anchorY="middle" outlineWidth={0.03} outlineColor="#000" font="https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff">
+          <Text position={[0, 0.5, 0]} fontSize={0.35} color="white" anchorX="center" anchorY="middle" outlineWidth={0.03} outlineColor="#000">
             Return to Hub
           </Text>
         </Float>

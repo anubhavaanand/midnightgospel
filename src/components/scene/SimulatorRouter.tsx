@@ -1,7 +1,12 @@
-import React, { useState, useEffect, ComponentType } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Html } from '@react-three/drei';
 import { useLevelStore } from '../../store/useLevelStore';
 
+/**
+ * Plain spinner — intentionally NOT driven by drei's useProgress.
+ * useProgress only tracks three.js asset loads; JS module chunks never
+ * register, which previously left the fallback stuck forever.
+ */
 const LoadingFallback: React.FC = () => (
   <Html center>
     <div className="flex flex-col items-center justify-center text-center pointer-events-none select-none gap-3">
@@ -13,52 +18,57 @@ const LoadingFallback: React.FC = () => (
   </Html>
 );
 
-const levelLoaders: Record<number, () => Promise<{ default: ComponentType }>> = {
-  0: () => import('../../levels/Hub/ChromaticRibbon'),
-  1: () => import('../../levels/Episode1/ZombieCapitol'),
-  2: () => import('../../levels/Episode2/BabyClown'),
-  3: () => import('../../levels/Episode3/CreamOcean'),
-  4: () => import('../../levels/Episode4/VengeanceKingdom'),
-  5: () => import('../../levels/Episode5/SoulPrison'),
-  6: () => import('../../levels/Episode6/MeditationCave'),
-  7: () => import('../../levels/Episode7/PlanetBlankBall'),
-  8: () => import('../../levels/Episode8/Trainworld'),
-  9: () => import('../../levels/Episode9/TheCore'),
-};
+class LevelErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+  componentDidCatch(error: Error, info: unknown) {
+    console.error('[LevelErrorBoundary]', error, info);
+    this.setState({ error });
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <Html center>
+          <div style={{ color: '#ff4488', fontFamily: 'monospace', maxWidth: 480 }}>
+            LEVEL CRASHED: {this.state.error.message}
+          </div>
+        </Html>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const ChromaticRibbon = lazy(() => import('../../levels/Hub/ChromaticRibbon'));
+const ZombieCapitol = lazy(() => import('../../levels/Episode1/ZombieCapitol'));
+const BabyClown = lazy(() => import('../../levels/Episode2/BabyClown'));
+const CreamOcean = lazy(() => import('../../levels/Episode3/CreamOcean'));
+const VengeanceKingdom = lazy(() => import('../../levels/Episode4/VengeanceKingdom'));
+const SoulPrison = lazy(() => import('../../levels/Episode5/SoulPrison'));
+const MeditationCave = lazy(() => import('../../levels/Episode6/MeditationCave'));
+const PlanetBlankBall = lazy(() => import('../../levels/Episode7/PlanetBlankBall'));
+const Trainworld = lazy(() => import('../../levels/Episode8/Trainworld'));
+const TheCore = lazy(() => import('../../levels/Episode9/TheCore'));
 
 export const SimulatorRouter: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
-  const [LoadedLevel, setLoadedLevel] = useState<ComponentType | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    const loader = levelLoaders[activeLevelId];
-    if (!loader) return;
-
-    console.log(`[Router] loading level ${activeLevelId}`);
-    setLoading(true);
-    setLoadedLevel(null);
-
-    loader().then((mod) => {
-      console.log(`[Router] level ${activeLevelId} module resolved`);
-      if (!cancelled) {
-        setLoadedLevel(() => mod.default);
-        setLoading(false);
-      } else {
-        console.warn(`[Router] level ${activeLevelId} resolved but cancelled`);
-      }
-    }).catch((err) => {
-      console.error(`[Router] Failed to load level ${activeLevelId}:`, err);
-      if (!cancelled) setLoading(false);
-    });
-
-    return () => { cancelled = true; };
-  }, [activeLevelId]);
-
-  if (loading) return <LoadingFallback />;
-  if (!LoadedLevel) return null;
-
-  return <LoadedLevel />;
+  return (
+    <LevelErrorBoundary>
+      <Suspense fallback={<LoadingFallback />}>
+        {activeLevelId === 0 && <ChromaticRibbon />}
+        {activeLevelId === 1 && <ZombieCapitol />}
+        {activeLevelId === 2 && <BabyClown />}
+        {activeLevelId === 3 && <CreamOcean />}
+        {activeLevelId === 4 && <VengeanceKingdom />}
+        {activeLevelId === 5 && <SoulPrison />}
+        {activeLevelId === 6 && <MeditationCave />}
+        {activeLevelId === 7 && <PlanetBlankBall />}
+        {activeLevelId === 8 && <Trainworld />}
+        {activeLevelId === 9 && <TheCore />}
+      </Suspense>
+    </LevelErrorBoundary>
+  );
 };
-

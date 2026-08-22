@@ -9,7 +9,6 @@ import * as THREE from 'three';
  * steampunk plane flyby, cosmic teddy-bear scientists.
  */
 
-const FONT_URL = 'https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff';
 
 /** The Afterlife Express — endless train passing on a parallel track */
 export const AfterlifeExpress: React.FC<{ position?: [number, number, number] }> = ({ position = [-16, -1.6, -12] }) => {
@@ -155,7 +154,6 @@ export const BearObservatory: React.FC<{ position?: [number, number, number] }> 
         anchorX="center"
         outlineWidth={0.02}
         outlineColor="#000"
-        font={FONT_URL}
       >
         LOVE RESEARCH STATION
       </Text>

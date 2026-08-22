@@ -223,7 +223,6 @@ export const MysteryEgg: React.FC<{ position?: [number, number, number] }> = ({ 
         anchorY="middle"
         outlineWidth={0.02}
         outlineColor="#000"
-        font="https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff"
       >
         ???
       </Text>

@@ -93,7 +93,6 @@ export const KineticDialogue: React.FC<KineticDialogueProps> = ({ position = [0,
           anchorY="bottom"
           maxWidth={6}
           textAlign="center"
-          font="https://fonts.gstatic.com/s/outfit/v11/0oWkYn31adA7zp0t7TxB6H8.woff"
           outlineWidth={0.05}
           outlineColor="#000000"
         >
