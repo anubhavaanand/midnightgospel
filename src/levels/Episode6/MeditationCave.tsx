@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { SingingBowls, CandleLanterns, CrystalClusters } from './CaveProps';
 import './MeditationCaveShader';
 
 export const MeditationCave: React.FC = () => {
@@ -142,6 +143,11 @@ export const MeditationCave: React.FC = () => {
       {/* NPC Proximity Attention Catcher and Dialogue bills */}
       <NPCAttentionCatcher npcPosition={[0, 1.2, 0]} npcName="Teacher" targetLevelId={6} />
       <KineticDialogue position={[0, 3.0, 0]} />
+
+      {/* Ep6 set dressing: singing bowls, candle lanterns, crystals */}
+      <SingingBowls />
+      <CandleLanterns count={8} />
+      <CrystalClusters count={5} />
 
       <gridHelper args={[60, 40, '#8e24aa', '#1b0033']} position={[0, -1.95, 0]} />
     </group>
