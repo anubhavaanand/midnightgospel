@@ -100,7 +100,7 @@ export const CandleLanterns: React.FC<{ count?: number }> = ({ count = 8 }) => {
           <pointLight intensity={3.5} color="#FFA726" distance={5.5} />
         </Float>
       ))}
-    </>
+    </group>
   );
 };
 
