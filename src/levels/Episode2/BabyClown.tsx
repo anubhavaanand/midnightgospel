@@ -6,6 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { CircusTent, MeatClowns, Balloons, CarouselRing, MysteryEgg } from './ClownWorldProps';
 import './BabyClownShader';
 
 const BabyClown: React.FC = () => {
@@ -148,6 +149,17 @@ const BabyClown: React.FC = () => {
       {/* Proximity Dialogue and Attention Catchers */}
       <NPCAttentionCatcher npcPosition={[0, 2.0, 0]} npcName="Baby Clown King" targetLevelId={2} />
       <KineticDialogue position={[0, 4.2, 0]} />
+
+      {/* Clown World set dressing */}
+      <CircusTent position={[-11, -2, -12]} />
+      <MeatClowns count={6} />
+      <Balloons />
+      <CarouselRing position={[9, -1.6, 4]} />
+      <MysteryEgg position={[-4, -1.7, 3]} />
+
+      {/* Carnival lighting accents */}
+      <pointLight position={[-8, 5, 2]} intensity={40} color="#FF69B4" distance={20} />
+      <pointLight position={[9, 6, -6]} intensity={35} color="#00CED1" distance={18} />
 
       {/* Thematic Grid Platform */}
       <gridHelper args={[60, 40, '#FFB6C1', '#FFFACD']} position={[0, -1.95, 0]} />
