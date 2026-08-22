@@ -1,6 +1,7 @@
 import React, { Suspense, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF, Clone, Float } from '@react-three/drei';
+import { computeScale } from '../../lib/modelScales';
 import * as THREE from 'three';
 
 const HUB_MODEL_BASE = '/models/hub';
@@ -11,7 +12,7 @@ function usePreparedModel(url: string, height: number): THREE.Object3D | null {
     const clone = scene.clone(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    const s = height / (size.y || 1);
+    const s = computeScale(url, height, size.y);
     clone.scale.setScalar(s);
     const box2 = new THREE.Box3().setFromObject(clone);
     const center = box2.getCenter(new THREE.Vector3());

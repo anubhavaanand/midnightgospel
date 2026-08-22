@@ -8,14 +8,15 @@ import {
   MeshDistortMaterial,
   Text,
   useGLTF,
-  Clone,
 } from '@react-three/drei';
 import * as THREE from 'three';
+import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './ZombieShader';
+import { computeScale } from '../../lib/modelScales';
 
 const MODEL_BASE = '/models/level1';
 
@@ -26,7 +27,7 @@ const MODEL_BASE = '/models/level1';
 function usePreparedModel(url: string, height: number): THREE.Object3D | null {
   const { scene } = useGLTF(url);
   return useMemo(() => {
-    const clone = scene.clone(true);
+    const clone = skeletonClone(scene);
     clone.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) {
         o.castShadow = true;
@@ -34,7 +35,7 @@ function usePreparedModel(url: string, height: number): THREE.Object3D | null {
     });
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    const s = height / (size.y || 1);
+    const s = computeScale(url, height, size.y);
     clone.scale.setScalar(s);
     const box2 = new THREE.Box3().setFromObject(clone);
     const center = box2.getCenter(new THREE.Vector3());
@@ -58,12 +59,16 @@ const ZombieHorde: React.FC<{
   positions: { pos: [number, number, number]; rotY: number }[];
 }> = ({ positions }) => {
   const warrior = usePreparedModel(`${MODEL_BASE}/zombie_warrior.glb`, 1.6);
-  if (!warrior) return null;
+  const instances = useMemo(
+    () => (warrior ? positions.map(() => skeletonClone(warrior)) : []),
+    [warrior, positions]
+  );
+  if (!instances.length) return null;
   return (
     <>
       {positions.map((z, idx) => (
         <group key={idx} position={z.pos} rotation={[0, z.rotY, 0]}>
-          <Clone object={warrior} />
+          <primitive object={instances[idx]} />
         </group>
       ))}
     </>
@@ -74,12 +79,16 @@ const ZombieDogs: React.FC<{
   positions: { pos: [number, number, number]; rotY: number }[];
 }> = ({ positions }) => {
   const dog = usePreparedModel(`${MODEL_BASE}/zombie_dog.glb`, 0.9);
-  if (!dog) return null;
+  const instances = useMemo(
+    () => (dog ? positions.map(() => skeletonClone(dog)) : []),
+    [dog, positions]
+  );
+  if (!instances.length) return null;
   return (
     <>
       {positions.map((d, idx) => (
         <group key={idx} position={d.pos} rotation={[0, d.rotY, 0]}>
-          <Clone object={dog} />
+          <primitive object={instances[idx]} />
         </group>
       ))}
     </>

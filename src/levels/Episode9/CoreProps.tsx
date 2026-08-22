@@ -26,7 +26,7 @@ const SkyboxModel: React.FC = () => {
     });
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    clone.scale.setScalar(120 / Math.max(size.x, size.y, size.z));
+    clone.scale.setScalar(120 / Math.max(size.x, size.y, size.z)); // skybox: raw max-dim fit
     return clone;
   }, [scene]);
   return <primitive object={prepared} />;
@@ -44,7 +44,8 @@ const SolarModel: React.FC = () => {
     const clone = scene.clone(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    clone.scale.setScalar(6 / Math.max(size.x, size.y, size.z));
+    const s = 6 / Math.max(size.x, size.y, size.z);
+    clone.scale.setScalar(Number.isFinite(s) && s > 1e-4 && s < 1e4 ? s : 1);
     const center = box.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -center.y, -center.z);
     return clone;

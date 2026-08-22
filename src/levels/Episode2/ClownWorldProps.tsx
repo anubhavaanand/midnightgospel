@@ -1,6 +1,7 @@
 import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF, Float, Text } from '@react-three/drei';
+import { computeScale } from '../../lib/modelScales';
 import * as THREE from 'three';
 
 /**
@@ -196,7 +197,7 @@ const EggModel: React.FC = () => {
     const clone = scene.clone(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    clone.scale.setScalar(1.4 / (size.y || 1));
+    clone.scale.setScalar(computeScale('/models/shared/mystery_egg.glb', 1.4, size.y));
     const box2 = new THREE.Box3().setFromObject(clone);
     const center = box2.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -box2.min.y, -center.z);

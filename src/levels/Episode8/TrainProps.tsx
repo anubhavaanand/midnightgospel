@@ -1,6 +1,7 @@
 import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Text, useGLTF } from '@react-three/drei';
+import { computeScale } from '../../lib/modelScales';
 import * as THREE from 'three';
 
 /**
@@ -79,7 +80,7 @@ const PlaneModel: React.FC = () => {
     const clone = scene.clone(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = box.getSize(new THREE.Vector3());
-    clone.scale.setScalar(2.6 / (size.y || 1));
+    clone.scale.setScalar(computeScale('/models/shared/steampunk_plane.glb', 2.6, size.y));
     const center = box.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -center.y, -center.z);
     return clone;
