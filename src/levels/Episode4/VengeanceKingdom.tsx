@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
+import { DuelArena, Banners, HealingRose, ForgeCauldron } from './KingdomProps';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './VengeanceKingdomShader';
 
@@ -144,6 +145,12 @@ export const VengeanceKingdom: React.FC = () => {
       {/* NPC Proximity Attention Catcher and Dialogue bills */}
       <NPCAttentionCatcher npcPosition={[0, 1.5, 0]} npcName="Knight" targetLevelId={4} />
       <KineticDialogue position={[0, 3.2, 0]} />
+
+      {/* Ep4 set dressing: duel arena, heraldic banners, healing rose, forge */}
+      <DuelArena position={[-10, -1.9, -10]} />
+      <Banners />
+      <HealingRose position={[4, -1.9, 3]} />
+      <ForgeCauldron position={[0, -1.9, -13]} />
 
       <gridHelper args={[60, 40, '#c62828', '#2b0000']} position={[0, -1.95, 0]} />
     </group>
