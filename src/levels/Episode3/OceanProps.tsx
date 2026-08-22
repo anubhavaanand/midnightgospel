@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float, Sparkles } from '@react-three/drei';
+import { Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
@@ -65,7 +65,7 @@ export const CatShip: React.FC<{ position?: [number, number, number] }> = ({ pos
   });
 
   return (
-    <Float speed={0} decayRate={0}>
+    <group>
       <group ref={shipRef} position={position} rotation={[0, -0.6, 0]}>
         {/* Hull */}
         <mesh castShadow>
@@ -105,7 +105,7 @@ export const CatShip: React.FC<{ position?: [number, number, number] }> = ({ pos
         {/* Lantern glow */}
         <pointLight position={[0, 1.6, 0]} intensity={10} color="#FFB347" distance={8} />
       </group>
-    </Float>
+    </group>
   );
 };
 
