@@ -36,16 +36,20 @@ export const SimulatorRouter: React.FC = () => {
     const loader = levelLoaders[activeLevelId];
     if (!loader) return;
 
+    console.log(`[Router] loading level ${activeLevelId}`);
     setLoading(true);
     setLoadedLevel(null);
 
     loader().then((mod) => {
+      console.log(`[Router] level ${activeLevelId} module resolved`);
       if (!cancelled) {
         setLoadedLevel(() => mod.default);
         setLoading(false);
+      } else {
+        console.warn(`[Router] level ${activeLevelId} resolved but cancelled`);
       }
     }).catch((err) => {
-      console.error(`Failed to load level ${activeLevelId}:`, err);
+      console.error(`[Router] Failed to load level ${activeLevelId}:`, err);
       if (!cancelled) setLoading(false);
     });
 
