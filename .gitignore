@@ -28,3 +28,7 @@ specs/
 .firecrawl/
 playwright-report/
 test-results/
+
+# Tool artifacts
+.serena/
+*.local.yml
