@@ -81,16 +81,50 @@ const MiniPlanets: React.FC = () => {
   );
 };
 
+/** Clancy's retro motorhome spaceship parked beside the island + satellite dish array */
+const ClancyTrailer: React.FC = () => {
+  const groupRef = React.useRef<THREE.Group>(null);
+  const trailer = usePreparedModel(`${HUB_MODEL_BASE}/clancy_trailer.glb`, 3.2);
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.4) * 0.15;
+    }
+  });
+
+  if (!trailer) return null;
+  return (
+    <group ref={groupRef} position={[6.5, -1, 4]} rotation={[0, -0.7, 0]}>
+      <primitive object={trailer} />
+      <pointLight position={[0, 1.5, 0]} intensity={12} color="#00ffff" distance={8} />
+    </group>
+  );
+};
+
+const SatelliteDish: React.FC = () => {
+  const dish = usePreparedModel(`${HUB_MODEL_BASE}/satellite_dish.glb`, 2.4);
+  if (!dish) return null;
+  return (
+    <group position={[-6.5, -1.2, 5]} rotation={[0, 0.9, 0]}>
+      <primitive object={dish} />
+    </group>
+  );
+};
+
 export const HubDecorations: React.FC = () => (
   <Suspense fallback={null}>
     <MobiusHalo />
     <CyberOrbs />
     <MiniPlanets />
+    <ClancyTrailer />
+    <SatelliteDish />
   </Suspense>
 );
 
 useGLTF.preload(`${HUB_MODEL_BASE}/triple_twist_mobius_strip.glb`);
 useGLTF.preload(`${HUB_MODEL_BASE}/cyber_orb.glb`);
 useGLTF.preload(`${HUB_MODEL_BASE}/mars_form_gumball.glb`);
+useGLTF.preload(`${HUB_MODEL_BASE}/clancy_trailer.glb`);
+useGLTF.preload(`${HUB_MODEL_BASE}/satellite_dish.glb`);
 
 export default HubDecorations;
