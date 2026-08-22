@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, Clone, Float, Text } from '@react-three/drei';
+import { useGLTF, Float, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
