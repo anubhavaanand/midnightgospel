@@ -87,6 +87,13 @@ function App() {
         gl={{ antialias: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 10], fov: 60 }}
         dpr={window.devicePixelRatio}
+        onCreated={(state) => {
+          // Debug hooks for automated QA
+          (window as any).__r3f = state;
+          state.gl.domElement.addEventListener('webglcontextlost', (e: Event) => {
+            console.error('WEBGL_CONTEXT_LOST', e);
+          });
+        }}
       >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
