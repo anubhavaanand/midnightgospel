@@ -8,6 +8,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { DeepSpaceSky, SolarOrbit, UplinkDish, LightPillars } from './CoreProps';
 import { FluidFloor } from './FluidFloor';
 import { RaymarchedFractal } from './RaymarchedFractal';
 import { PhysicsOrbs } from './PhysicsOrbs';
@@ -126,6 +127,12 @@ const TheCore: React.FC = () => {
       <Sparkles count={100} scale={30} size={7} speed={0.3} opacity={0.4} color="#FF007F" />
 
       {/* Fallback Ground Grid Platform */}
+      {/* Ep9 set dressing: deep space skybox, solar orbit, uplink dish, light pillars */}
+      <DeepSpaceSky />
+      <SolarOrbit position={[0, 9, -18]} />
+      <UplinkDish position={[11, -8.5, -6]} />
+      <LightPillars count={6} />
+
       <gridHelper args={[60, 40, '#00FFCC', '#FF007F']} position={[0, -9.95, 0]} />
     </>
   );
