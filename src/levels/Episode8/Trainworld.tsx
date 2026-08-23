@@ -7,7 +7,7 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { AfterlifeExpress, SteampunkFlyby, BearObservatory } from './TrainProps';
-import { HeroTram, RedVortex } from './HeroProps';
+import { HeroTram, RedVortex, PinkFatePlanet } from './HeroProps';
 import './TrainworldShader';
 
 export const Trainworld: React.FC = () => {
@@ -151,6 +151,7 @@ export const Trainworld: React.FC = () => {
       <BearObservatory position={[10, -1.9, -8]} />
       <HeroTram position={[16, -1.2, -14]} />
       <RedVortex position={[-24, 9, -30]} />
+      <PinkFatePlanet position={[8, 14, -34]} />
 
       <gridHelper args={[60, 40, '#ad1457', '#3c0022']} position={[0, -1.95, 0]} />
     </group>

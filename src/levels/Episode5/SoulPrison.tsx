@@ -6,7 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
-import { BardoScale, SoulStrings, GlyphPillars } from './PrisonProps';
+import { BardoScale, SoulStrings, GlyphPillars, HangingCages, CrashRubble } from './PrisonProps';
 import './SoulPrisonShader';
 
 export const SoulPrison: React.FC = () => {
@@ -150,6 +150,8 @@ export const SoulPrison: React.FC = () => {
       <BardoScale position={[0, -1.9, -14]} />
       <SoulStrings count={7} />
       <GlyphPillars count={6} />
+      <HangingCages count={4} />
+      <CrashRubble count={9} />
 
       <gridHelper args={[60, 40, '#00e5ff', '#1a0033']} position={[0, -1.95, 0]} />
     </group>

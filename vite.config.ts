@@ -60,13 +60,13 @@ export default defineConfig({
         manualChunks: {
           three: ['three'],
           r3f: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing', '@react-three/rapier'],
-          utils: ['zustand', 'gsap', 'framer-motion'],
+          utils: ['zustand', 'framer-motion'],
         },
       },
     },
   },
   optimizeDeps: {
-    include: ['three', 'zustand', 'gsap'],
+    include: ['three', 'zustand'],
   },
   test: {
     globals: true,

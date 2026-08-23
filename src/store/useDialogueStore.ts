@@ -26,6 +26,7 @@ interface DialogueState {
   setNarrativePhase: (phase: NarrativePhase) => void;
   updateAudioMetrics: (metrics: Partial<DialogueState['audioMetrics']>) => void;
   setActiveQuest: (quest: ActiveQuest | null) => void;
+  setMood: (mood: { intensity: number; colorTarget: string; speed: number }) => void;
   setAudioState: (audioState: 'suspended' | 'running' | 'uninitialized') => void;
   setIsMuted: (isMuted: boolean) => void;
 }
@@ -103,6 +104,7 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
   })),
 
   setActiveQuest: (quest) => set({ activeQuest: quest }),
+  setMood: (mood) => set({ currentMood: mood }),
   
   setAudioState: (audioState) => set({ audioState }),
 

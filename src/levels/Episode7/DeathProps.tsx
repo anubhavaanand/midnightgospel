@@ -65,10 +65,15 @@ const TurtleModel: React.FC = () => {
   return <primitive object={prepared} />;
 };
 
-export const TitanTurtle: React.FC<{ position?: [number, number, number] }> = ({ position = [-20, -4.5, -22] }) => {
+export const TitanTurtle: React.FC<{ position?: [number, number, number] }> = ({ position = [-6, 26, -40] }) => {
   const ref = useRef<THREE.Group>(null);
   useFrame((state) => {
-    if (ref.current) ref.current.rotation.y = state.clock.elapsedTime * 0.02;
+    if (!ref.current) return;
+    // Eclipse walker: slow sky crossing overhead
+    const t = state.clock.elapsedTime * 0.008;
+    ref.current.position.x = position[0] + Math.sin(t) * 30;
+    ref.current.position.z = position[2] + Math.cos(t) * 18;
+    ref.current.rotation.y = -t + Math.PI / 2;
   });
   return (
     <Suspense fallback={null}>

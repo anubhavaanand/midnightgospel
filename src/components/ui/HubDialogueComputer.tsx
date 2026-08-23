@@ -18,6 +18,7 @@ export const HubDialogueComputer: React.FC = () => {
   const [showTranscriptLog, setShowTranscriptLog] = useState(false);
 
   const setActiveQuest = useDialogueStore((state) => state.setActiveQuest);
+  const setMood = useDialogueStore((state) => state.setMood);
   const isDialogueOpen = useDialogueStore((state) => state.isOpen);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
@@ -156,6 +157,11 @@ export const HubDialogueComputer: React.FC = () => {
         recommendedNPC: result.recommendedNPC,
         userContext: userMessage
       });
+
+      // AI emotion now tints the world via MoodSync
+      if (result.mood) {
+        setMood(result.mood);
+      }
     } catch (err) {
       console.error(err);
       setComputerResponse("It's difficult to concentrate when signals are lost... by a friend. Systems offline, Master.");

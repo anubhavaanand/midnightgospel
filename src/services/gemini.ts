@@ -110,10 +110,31 @@ CRITICAL: You MUST write in CLEAN, PROPER English. No text effects, no glitch te
 
 
 export class GeminiService {
-  private static apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  private static apiKey = import.meta.env.VITE_GEMINI_API_KEY ?? import.meta.env.VITE_GOOGLE_API_KEY;
 
-  // Persistent conversation memory within the session
-  private static conversationMemory: Array<{ role: 'clancy' | 'computer'; text: string; timestamp: number; levelId: number }> = [];
+  // Conversation memory — persists across page reloads via localStorage
+  private static readonly MEMORY_KEY = 'midnight-computer-memory';
+  private static readonly MEMORY_LIMIT = 100;
+  private static conversationMemory: Array<{ role: 'clancy' | 'computer'; text: string; timestamp: number; levelId: number }> =
+    GeminiService.hydrateMemory();
+
+  /** Restore previous-session transmissions so the Computer remembers Master. */
+  private static hydrateMemory() {
+    try {
+      const raw = localStorage.getItem(GeminiService.MEMORY_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.slice(-GeminiService.MEMORY_LIMIT) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** Clear remembered transmissions (Master asked to forget). */
+  public static clearMemory() {
+    this.conversationMemory = [];
+    try { localStorage.removeItem(this.MEMORY_KEY); } catch { /* noop */ }
+  }
   
   // Track emotional momentum for autonomous trigger decisions
   private static emotionalMomentum: number = 0;
@@ -186,6 +207,11 @@ export class GeminiService {
       timestamp: Date.now(),
       levelId
     });
+    // Persist + trim so memory survives reloads
+    if (this.conversationMemory.length > this.MEMORY_LIMIT) {
+      this.conversationMemory = this.conversationMemory.slice(-this.MEMORY_LIMIT);
+    }
+    try { localStorage.setItem(this.MEMORY_KEY, JSON.stringify(this.conversationMemory)); } catch { /* storage full */ }
     
     // Update emotional momentum based on conversation activity
     if (role === 'clancy') {
@@ -270,7 +296,7 @@ ALWAYS quote or reference specific transcript lines when relevant.
 
 Provide the output strictly in the following JSON schema:
 {
-  "recommendedLevel": number, // 1 to 8
+  "recommendedLevel": number, // 0 to 9 — 0 is the Ribbon hub, 9 is The Core sandbox
   "recommendedNPC": string, // The guest/NPC name from that universe
   "response": string, // Your organic computer voice response — in character, personal, referencing transcripts
   "mood": {

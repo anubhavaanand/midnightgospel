@@ -73,3 +73,27 @@ export const RedVortex: React.FC<{ position?: [number, number, number] }> = ({ p
 
 useGLTF.preload('/models/level8/tram.glb');
 useGLTF.preload('/models/level8/red_orb.glb');
+
+/** Pink planet with orbiting moon — Clancy's transcendent fate in the finale */
+export const PinkFatePlanet: React.FC<{ position?: [number, number, number] }> = ({ position = [8, 14, -34] }) => {
+  const moonRef = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    if (moonRef.current) {
+      const t = state.clock.elapsedTime * 0.35;
+      moonRef.current.position.set(Math.cos(t) * 3.2, Math.sin(t * 1.3) * 0.6, Math.sin(t) * 3.2);
+    }
+  });
+  return (
+    <group position={position}>
+      <mesh>
+        <sphereGeometry args={[3, 32, 32]} />
+        <meshStandardMaterial color="#FF9EC4" emissive="#FF6FA8" emissiveIntensity={0.55} roughness={0.55} />
+      </mesh>
+      <mesh ref={moonRef}>
+        <sphereGeometry args={[0.5, 16, 16]} />
+        <meshStandardMaterial color="#FCE4EC" emissive="#F8BBD0" emissiveIntensity={0.4} />
+      </mesh>
+      <pointLight intensity={25} color="#FF80AB" distance={28} />
+    </group>
+  );
+};

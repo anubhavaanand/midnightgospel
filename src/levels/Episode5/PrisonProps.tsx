@@ -246,3 +246,31 @@ export const HangingCages: React.FC<{ count?: number }> = ({ count = 4 }) => {
 };
 
 useGLTF.preload('/models/level5/prison_cage.glb');
+
+/** Crash-rubble field at the spawn point — canon landing site of Clancy's ship */
+export const CrashRubble: React.FC<{ count?: number }> = ({ count = 9 }) => {
+  const rocks = useMemo(
+    () =>
+      Array.from({ length: count }).map(() => ({
+        pos: [(Math.random() - 0.5) * 10, -1.85 + Math.random() * 0.15, 6 + (Math.random() - 0.5) * 5] as [number, number, number],
+        scale: 0.3 + Math.random() * 0.7,
+        rot: [Math.random() * 3, Math.random() * 3, Math.random() * 3] as [number, number, number],
+      })),
+    [count]
+  );
+  return (
+    <group>
+      {rocks.map((r, i) => (
+        <mesh key={i} position={r.pos} rotation={r.rot} scale={r.scale} castShadow>
+          <dodecahedronGeometry args={[0.5, 0]} />
+          <meshStandardMaterial color="#2B2438" roughness={0.9} flatShading />
+        </mesh>
+      ))}
+      {/* Scorch decal */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.92, 7]}>
+        <circleGeometry args={[2.4, 24]} />
+        <meshBasicMaterial color="#120A1E" transparent opacity={0.75} />
+      </mesh>
+    </group>
+  );
+};
