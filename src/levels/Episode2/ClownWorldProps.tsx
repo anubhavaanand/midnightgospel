@@ -232,3 +232,56 @@ export const MysteryEgg: React.FC<{ position?: [number, number, number] }> = ({ 
 );
 
 useGLTF.preload('/models/shared/mystery_egg.glb');
+
+/** Real baby-clown model flock — wobbly limbless spheres from Poly Pizza */
+export const ClownFlock: React.FC<{ count?: number }> = ({ count = 6 }) => {
+  const groupRef = React.useRef<THREE.Group>(null);
+  const { scene } = useGLTF('/models/level2/clown_baby.glb');
+  const prepared = useMemo(() => {
+    const clone = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = box.getSize(new THREE.Vector3());
+    clone.scale.setScalar(computeScale('/models/level2/clown_baby.glb', 0.9, size.y));
+    const box2 = new THREE.Box3().setFromObject(clone);
+    const center = box2.getCenter(new THREE.Vector3());
+    clone.position.set(-center.x, -box2.min.y, -center.z);
+    return clone;
+  }, [scene]);
+
+  const spots = useMemo(
+    () =>
+      Array.from({ length: count }).map((_, i) => ({
+        pos: [Math.sin(i * 1.9) * 6 + 3, -1.75, Math.cos(i * 2.6) * 5 - 2] as [number, number, number],
+        rotY: (i * 37) % 628 / 100,
+        speed: 0.8 + ((i * 11) % 10) / 12,
+        phase: i * 2.1,
+      })),
+    [count]
+  );
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    groupRef.current.children.forEach((child, i) => {
+      const s = spots[i];
+      if (s) {
+        child.position.x = s.pos[0] + Math.sin(state.clock.elapsedTime * s.speed + s.phase) * 0.7;
+        child.rotation.y = state.clock.elapsedTime * s.speed * 0.4 + s.phase;
+        child.rotation.z = Math.abs(Math.sin(state.clock.elapsedTime * s.speed * 2 + s.phase)) * 0.18;
+      }
+    });
+  });
+
+  return (
+    <Suspense fallback={null}>
+      <group ref={groupRef}>
+        {spots.map((s, i) => (
+          <group key={i} position={s.pos} rotation={[0, s.rotY, 0]}>
+            <primitive object={prepared.clone(true)} />
+          </group>
+        ))}
+      </group>
+    </Suspense>
+  );
+};
+
+useGLTF.preload('/models/level2/clown_baby.glb');

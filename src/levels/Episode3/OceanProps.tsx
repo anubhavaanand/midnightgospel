@@ -1,6 +1,8 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Sparkles } from '@react-three/drei';
+import { Suspense } from 'react';
+import { Sparkles, useGLTF } from '@react-three/drei';
+import { computeScale } from '../../lib/modelScales';
 import * as THREE from 'three';
 
 /**
@@ -54,6 +56,22 @@ export const IceFloes: React.FC<{ count?: number }> = ({ count = 9 }) => {
   );
 };
 
+/** Real galleon model (Poly Pizza) — replaces procedural hull, cats stay on deck */
+const SailShipHull: React.FC = () => {
+  const { scene } = useGLTF('/models/level3/sail_ship.glb');
+  const prepared = useMemo(() => {
+    const clone = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = box.getSize(new THREE.Vector3());
+    clone.scale.setScalar(computeScale('/models/level3/sail_ship.glb', 5.2, size.y));
+    const box2 = new THREE.Box3().setFromObject(clone);
+    const center = box2.getCenter(new THREE.Vector3());
+    clone.position.set(-center.x, -box2.min.y, -center.z);
+    return clone;
+  }, [scene]);
+  return <primitive object={prepared} />;
+};
+
 /** Darryl the fish-man's ship with an all-cat crew (procedural) */
 export const CatShip: React.FC<{ position?: [number, number, number] }> = ({ position = [8, -1.4, -6] }) => {
   const shipRef = useRef<THREE.Group>(null);
@@ -67,26 +85,17 @@ export const CatShip: React.FC<{ position?: [number, number, number] }> = ({ pos
   return (
     <group>
       <group ref={shipRef} position={position} rotation={[0, -0.6, 0]}>
-        {/* Hull */}
-        <mesh castShadow>
-          <capsuleGeometry args={[0.9, 3.4, 8, 16]} />
-          <meshStandardMaterial color="#8B5A3C" roughness={0.65} />
-        </mesh>
-        <mesh position={[0, 0.55, 0]}>
-          <boxGeometry args={[1.5, 0.25, 4.2]} />
-          <meshStandardMaterial color="#A0714F" roughness={0.6} />
-        </mesh>
-        {/* Mast + sail */}
-        <mesh position={[0, 2.2, 0]}>
-          <cylinderGeometry args={[0.08, 0.08, 3.4, 8]} />
-          <meshStandardMaterial color="#5C4030" roughness={0.7} />
-        </mesh>
-        <mesh position={[0, 2.1, 0.35]} rotation={[0, 0, 0]}>
-          <planeGeometry args={[2.2, 2]} />
-          <meshStandardMaterial color="#F5F5DC" roughness={0.8} side={THREE.DoubleSide} />
+        {/* Real galleon hull + sails */}
+        <Suspense fallback={null}>
+          <SailShipHull />
+        </Suspense>
+        {/* Deck plate for cat crew */}
+        <mesh position={[0, 0.9, 0]}>
+          <boxGeometry args={[1.4, 0.12, 3.6]} />
+          <meshStandardMaterial color="#A0714F" roughness={0.65} />
         </mesh>
         {/* Cat crew — three tiny cats on deck */}
-        {[[-0.5, 0.85, 0.9], [0.4, 0.85, 0.2], [0, 0.85, -0.8]].map((p, i) => (
+        {[[-0.5, 1.15, 0.9], [0.4, 1.15, 0.2], [0, 1.15, -0.8]].map((p, i) => (
           <group key={i} position={p as [number, number, number]}>
             <mesh>
               <sphereGeometry args={[0.18, 10, 10]} />

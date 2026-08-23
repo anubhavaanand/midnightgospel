@@ -7,6 +7,7 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { TarotTower, ArcanaRing, PingPongRain } from './BlankBallProps';
+import { DeathNPC, TitanTurtle } from './DeathProps';
 import './PlanetBlankBallShader';
 
 export const PlanetBlankBall: React.FC = () => {
@@ -151,6 +152,10 @@ export const PlanetBlankBall: React.FC = () => {
       <TarotTower position={[-9, -1.9, -10]} />
       <ArcanaRing position={[0, 5.5, -14]} />
       <PingPongRain />
+
+      {/* Ep7 hero props: gentle Death + titan turtle */}
+      <DeathNPC position={[4.5, -1.9, 2]} />
+      <TitanTurtle position={[-20, -4.5, -22]} />
 
       <gridHelper args={[60, 40, '#ffe082', '#1c1c1c']} position={[0, -1.95, 0]} />
     </group>

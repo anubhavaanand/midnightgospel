@@ -6,7 +6,7 @@ import { useLevelStore } from '../../store/useLevelStore';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
-import { CircusTent, MeatClowns, Balloons, CarouselRing, MysteryEgg } from './ClownWorldProps';
+import { CircusTent, MeatClowns, Balloons, CarouselRing, MysteryEgg, ClownFlock } from './ClownWorldProps';
 import './BabyClownShader';
 
 const BabyClown: React.FC = () => {
@@ -153,6 +153,7 @@ const BabyClown: React.FC = () => {
       {/* Clown World set dressing */}
       <CircusTent position={[-11, -2, -12]} />
       <MeatClowns count={6} />
+      <ClownFlock count={6} />
       <Balloons />
       <CarouselRing position={[9, -1.6, 4]} />
       <MysteryEgg position={[-4, -1.7, 3]} />

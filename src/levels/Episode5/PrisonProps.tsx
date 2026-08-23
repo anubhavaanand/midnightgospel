@@ -1,6 +1,6 @@
-import React, { useMemo, useRef } from 'react';
+import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Float } from '@react-three/drei';
+import { Float, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
@@ -193,3 +193,56 @@ export const GlyphPillars: React.FC<{ count?: number }> = ({ count = 6 }) => {
     </>
   );
 };
+
+/** Real jail-cage models suspended in the void (Poly Pizza) */
+export const HangingCages: React.FC<{ count?: number }> = ({ count = 4 }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  const { scene } = useGLTF('/models/level5/prison_cage.glb');
+  const prepared = useMemo(() => {
+    const clone = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = box.getSize(new THREE.Vector3());
+    clone.scale.setScalar(3.2 / (size.y || 1));
+    const box2 = new THREE.Box3().setFromObject(clone);
+    const center = box2.getCenter(new THREE.Vector3());
+    clone.position.set(-center.x, -box2.min.y, -center.z);
+    return clone;
+  }, [scene]);
+
+  const spots = useMemo(
+    () =>
+      Array.from({ length: count }).map((_, i) => {
+        const a = (i / count) * Math.PI * 2 + 0.8;
+        return { pos: [Math.sin(a) * 12, 1.5 + ((i * 23) % 20) / 8, Math.cos(a) * 10 - 4] as [number, number, number], phase: i };
+      }),
+    [count]
+  );
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    groupRef.current.children.forEach((child, i) => {
+      child.rotation.y = state.clock.elapsedTime * (0.15 + i * 0.05);
+      child.position.y = spots[i].pos[1] + Math.sin(state.clock.elapsedTime * 0.4 + i) * 0.25;
+    });
+  });
+
+  return (
+    <Suspense fallback={null}>
+      <group ref={groupRef}>
+        {spots.map((s, i) => (
+          <group key={i} position={s.pos}>
+            {/* Chain into darkness */}
+            <mesh position={[0, 3.6, 0]}>
+              <cylinderGeometry args={[0.02, 0.02, 7, 6]} />
+              <meshStandardMaterial color="#555555" metalness={0.7} roughness={0.45} />
+            </mesh>
+            <primitive object={prepared.clone(true)} />
+            <pointLight position={[0, 0.8, 0]} intensity={5} color="#00E5FF" distance={6} />
+          </group>
+        ))}
+      </group>
+    </Suspense>
+  );
+};
+
+useGLTF.preload('/models/level5/prison_cage.glb');
