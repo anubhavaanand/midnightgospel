@@ -97,6 +97,12 @@ const ZombieDogs: React.FC<{
 
 export const ZombieCapitol: React.FC = () => {
   const materialRef = useRef<any>(null);
+
+  React.useEffect(() => {
+    return () => {
+      materialRef.current?.dispose();
+    };
+  }, []);
   const coreRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
   const zombiesRef = useRef<THREE.Group>(null);

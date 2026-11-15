@@ -37,6 +37,12 @@ const CenterIsland = () => {
 
 const ChromaticRibbon: React.FC = () => {
   const materialRef = useRef<any>(null);
+
+  React.useEffect(() => {
+    return () => {
+      materialRef.current?.dispose();
+    };
+  }, []);
   const openDialogue = useDialogueStore((state) => state.openDialogue);
 
   useFrame((state) => {

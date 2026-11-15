@@ -11,6 +11,12 @@ import './BabyClownShader';
 
 const BabyClown: React.FC = () => {
   const materialRef = useRef<any>(null);
+
+  React.useEffect(() => {
+    return () => {
+      materialRef.current?.dispose();
+    };
+  }, []);
   const clancyRef = useRef<THREE.Group>(null);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
