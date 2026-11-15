@@ -5,7 +5,7 @@ interface AudioAnalyzerNodeProps {
   audioUrl?: string; // Optional for testing or actual use
 }
 
-export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = ({ audioUrl: _audioUrl }) => {
+export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyzerRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
@@ -16,7 +16,8 @@ export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = ({ audioUrl: 
     // We initialize on first render for this component
     // In a real scenario, this might need to be tied to a user interaction (like a play button)
     const initAudio = async () => {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      audioContextRef.current = new AudioCtx();
       analyzerRef.current = audioContextRef.current.createAnalyser();
       analyzerRef.current.fftSize = 256;
       
@@ -26,7 +27,7 @@ export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = ({ audioUrl: 
       const analyze = () => {
         if (!analyzerRef.current || !dataArrayRef.current) return;
         
-        analyzerRef.current.getByteFrequencyData(dataArrayRef.current as any);
+        analyzerRef.current.getByteFrequencyData(dataArrayRef.current as unknown as Uint8Array<ArrayBuffer>);
         
         let bassSum = 0;
         let midSum = 0;

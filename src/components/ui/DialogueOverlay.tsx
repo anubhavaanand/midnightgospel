@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 
-const containerVariants: any = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
@@ -17,7 +17,7 @@ const containerVariants: any = {
   }
 };
 
-const textContainerVariants: any = {
+const textContainerVariants: Variants = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
@@ -27,7 +27,7 @@ const textContainerVariants: any = {
   }
 };
 
-const letterVariants: any = {
+const letterVariants: Variants = {
   hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
@@ -41,11 +41,11 @@ export const DialogueOverlay: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
   const [keyTrigger, setKeyTrigger] = useState(0);
 
-  const handleAdvance = () => {
+  const handleAdvance = useCallback(() => {
     if (isOpen) {
       advanceNode(activeLevelId);
     }
-  };
+  }, [isOpen, activeLevelId, advanceNode]);
 
   const handleSkip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,7 +65,7 @@ export const DialogueOverlay: React.FC = () => {
       window.addEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, activeLevelId, advanceNode]);
+  }, [isOpen, handleAdvance]);
 
   // Restart text typing animation whenever text changes
   useEffect(() => {

@@ -35,7 +35,8 @@ export const HubDialogueComputer: React.FC = () => {
   // Audio chirp generator for retro transmissions
   const playChime = useCallback(() => {
     try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
@@ -51,7 +52,7 @@ export const HubDialogueComputer: React.FC = () => {
       
       osc.start();
       osc.stop(ctx.currentTime + 0.25);
-    } catch (e) {
+    } catch {
       console.warn("AudioContext chime muted by browser autoplay policy.");
     }
   }, []);
