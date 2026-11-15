@@ -16,8 +16,11 @@ vi.mock('framer-motion', () => ({
 
 // Mock the Zustand stores
 vi.mock('../store/useDialogueStore', () => ({
-  useDialogueStore: (cb: (state: { setActiveQuest: () => void }) => unknown) => cb({
+  useDialogueStore: (cb: (state: { setActiveQuest: () => void; setMood: () => void; isOpen: boolean; isMuted: boolean }) => unknown) => cb({
     setActiveQuest: vi.fn(),
+    setMood: vi.fn(),
+    isOpen: false,
+    isMuted: false,
   })
 }));
 
