@@ -19,6 +19,7 @@ export const ScrollEngine: React.FC = () => {
   const progressRef = useRef(0);
   const targetProgressRef = useRef(0);
   const touchStartY = useRef<number | null>(null);
+  const lastProgressRef = useRef(0);
 
   const hubCurve = useMemo(() => new THREE.CatmullRomCurve3(
     HUB_POINTS.map(p => new THREE.Vector3(p[0], p[1], p[2]))
@@ -108,7 +109,10 @@ export const ScrollEngine: React.FC = () => {
       }
     }
 
-    setScrollProgress(THREE.MathUtils.clamp(t, 0, 1));
+    if (isScrolling || Math.abs(t - lastProgressRef.current) > 0.005) {
+      lastProgressRef.current = t;
+      setScrollProgress(THREE.MathUtils.clamp(t, 0, 1));
+    }
 
     if (t >= 0.95 && !isTransitioning) {
       setTransitioning(true);

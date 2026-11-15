@@ -17,6 +17,7 @@ import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher'
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './ZombieShader';
 import { computeScale } from '../../lib/modelScales';
+import { CustomShaderMaterial } from '../../types/three.d';
 
 const MODEL_BASE = '/models/level1';
 
@@ -95,10 +96,14 @@ const ZombieDogs: React.FC<{
   );
 };
 
-import { CustomShaderMaterial } from '../../types/three.d';
-
 export const ZombieCapitol: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      materialRef.current?.dispose();
+    };
+  }, []);
   const coreRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
   const zombiesRef = useRef<THREE.Group>(null);

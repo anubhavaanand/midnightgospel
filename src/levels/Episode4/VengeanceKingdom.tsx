@@ -12,6 +12,12 @@ import './VengeanceKingdomShader';
 
 export const VengeanceKingdom: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      materialRef.current?.dispose();
+    };
+  }, []);
   const npcRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
 
