@@ -129,4 +129,18 @@ describe('DialogueOverlay Component', () => {
     const img = container.querySelector('img');
     expect(img?.getAttribute('src')).toBe('/images/characters/simulator.png');
   });
+
+  it('should dismiss dialogue when Escape key is pressed', () => {
+    useDialogueStore.setState({
+      isOpen: true,
+      activeText: 'Testing escape key dismissal',
+    });
+    render(<DialogueOverlay />);
+
+    expect(useDialogueStore.getState().isOpen).toBe(true);
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    expect(useDialogueStore.getState().isOpen).toBe(false);
+  });
 });
