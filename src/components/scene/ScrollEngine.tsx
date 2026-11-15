@@ -18,6 +18,8 @@ export const ScrollEngine: React.FC = () => {
 
   const progressRef = useRef(0);
   const targetProgressRef = useRef(0);
+  const touchStartY = useRef<number | null>(null);
+  const lastProgressRef = useRef(0);
 
   const hubCurve = useMemo(() => new THREE.CatmullRomCurve3(
     HUB_POINTS.map(p => new THREE.Vector3(p[0], p[1], p[2]))
@@ -39,13 +41,50 @@ export const ScrollEngine: React.FC = () => {
     targetProgressRef.current = next;
   }, [isTransitioning, activeLevelId]);
 
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (touchStartY.current === null || isTransitioning || activeLevelId !== 0) return;
+    const currentY = e.touches[0].clientY;
+    const diff = touchStartY.current - currentY;
+    touchStartY.current = currentY;
+    const speed = 0.003;
+    let next = targetProgressRef.current + diff * speed;
+    next = THREE.MathUtils.clamp(next, 0, 1);
+    targetProgressRef.current = next;
+  }, [isTransitioning, activeLevelId]);
+
+  const handleTouchEnd = useCallback(() => {
+    touchStartY.current = null;
+  }, []);
+
   useEffect(() => {
     window.addEventListener('wheel', handleWheel, { passive: true });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [handleWheel]);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   useFrame((state, delta) => {
     if (activeLevelId !== 0) return;
+
+    // Connect virtual joystick delta on mobile if available
+    const joystick = (window as unknown as { joystickDelta?: { x: number; y: number } }).joystickDelta;
+    if (joystick && Math.abs(joystick.y) > 0.05) {
+      targetProgressRef.current = THREE.MathUtils.clamp(
+        targetProgressRef.current - joystick.y * delta * 0.4,
+        0,
+        1
+      );
+    }
 
     const isScrolling = Math.abs(progressRef.current - targetProgressRef.current) > 0.001;
 
@@ -70,7 +109,10 @@ export const ScrollEngine: React.FC = () => {
       }
     }
 
-    setScrollProgress(THREE.MathUtils.clamp(t, 0, 1));
+    if (isScrolling || Math.abs(t - lastProgressRef.current) > 0.005) {
+      lastProgressRef.current = t;
+      setScrollProgress(THREE.MathUtils.clamp(t, 0, 1));
+    }
 
     if (t >= 0.95 && !isTransitioning) {
       setTransitioning(true);
