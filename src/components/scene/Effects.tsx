@@ -16,6 +16,8 @@ const levelBloomConfig: Record<number, { intensity: number; luminanceThreshold: 
   9: { intensity: 1.8, luminanceThreshold: 0.0, luminanceSmoothing: 0.9 },
 };
 
+const CHROMATIC_ABERRATION_OFFSET = new THREE.Vector2(0.002, 0.0005);
+
 export const Effects: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
 
@@ -37,7 +39,7 @@ export const Effects: React.FC = () => {
         mipmapBlur
       />
       <ChromaticAberration
-        offset={new THREE.Vector2(0.002, 0.0005)}
+        offset={CHROMATIC_ABERRATION_OFFSET}
         radialModulation={false}
         modulationOffset={0}
       />
