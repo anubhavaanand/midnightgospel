@@ -31,6 +31,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
   
   const currentMood = useDialogueStore((state) => state.currentMood);
   const audioState = useDialogueStore((state) => state.audioState);
+  const isMuted = useDialogueStore((state) => state.isMuted);
 
   // Lazy-initialize THREE.PositionalAudio when the listener becomes available on the camera
   useEffect(() => {
@@ -67,7 +68,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
 
   // Hook into typewriter ticks to play cute retro synth blips reactive to mood
   useEffect(() => {
-    if (!camera || tickCount === 0 || !positionalAudioRef.current || audioState !== 'running') return;
+    if (isMuted || !camera || tickCount === 0 || !positionalAudioRef.current || audioState !== 'running') return;
 
     const listener = camera.children.find((child) => (child as THREE.Object3D & { isAudioListener?: boolean }).isAudioListener) as THREE.AudioListener | undefined;
     if (!listener) return;
@@ -108,7 +109,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
         // already stopped
       }
     };
-  }, [tickCount, audioState, camera, currentMood]);
+  }, [tickCount, audioState, isMuted, camera, currentMood]);
 
   return <group ref={groupRef} position={position} />;
 };
