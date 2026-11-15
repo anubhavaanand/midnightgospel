@@ -6,9 +6,9 @@ import { LEVELS } from '../../data/levels';
 export const NavigationMenu: React.FC = () => {
   const { isMenuOpen, setMenuOpen, activeLevelId, setLevel, setTransitioning } = useLevelStore();
 
-  const menuItems = LEVELS.filter(l => l.id < 9).map(l => ({
+  const menuItems = LEVELS.map(l => ({
     id: l.id,
-    label: `L-${String(l.id).padStart(2, '0')}`,
+    label: l.id === 0 ? 'HUB' : `L-${String(l.id).padStart(2, '0')}`,
     name: l.name.toUpperCase()
   }));
 

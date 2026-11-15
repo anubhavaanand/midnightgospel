@@ -261,6 +261,14 @@ export class GeminiService {
     return Math.min(1.0, confidence);
   }
 
+  private static sanitizeJsonResponse(rawText: string): string {
+    return rawText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+  }
+
   /**
    * Core dialogue: Clancy speaks to the computer, computer responds.
    * Full transcript context + conversation memory injected.
@@ -334,7 +342,7 @@ Provide the output strictly in the following JSON schema:
         throw new Error("Empty text response from Google Gemini");
       }
 
-      const result = JSON.parse(textResponse.trim()) as GeminiQuestResponse;
+      const result = JSON.parse(this.sanitizeJsonResponse(textResponse)) as GeminiQuestResponse;
       
       // Record computer's response in memory
       this.addToMemory('computer', result.response, currentLevelId);
@@ -442,7 +450,7 @@ Provide the output strictly in the following JSON schema:
         throw new Error("Empty text response");
       }
 
-      const result = JSON.parse(textResponse.trim()) as GeminiQuestResponse;
+      const result = JSON.parse(this.sanitizeJsonResponse(textResponse)) as GeminiQuestResponse;
 
       // Record in memory
       this.addToMemory('computer', result.response, currentLevelId);
