@@ -8,36 +8,39 @@ export const RaymarchedFractal = () => {
     const oscillatorRef = useRef<OscillatorNode | null>(null);
     const gainNodeRef = useRef<GainNode | null>(null);
 
-    // Initialize Synthetic Ambient Drone
+    // Initialize Synthetic Ambient Drone using shared AudioContext singleton
     useEffect(() => {
-        // Attempt to start audio context (might need user interaction first)
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioContext) return;
+        try {
+            const ctx = THREE.AudioContext.getContext();
+            audioContextRef.current = ctx;
 
-        const ctx = new AudioContext();
-        audioContextRef.current = ctx;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
 
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 55; // Low A for a deep space drone
 
-        osc.type = 'sine';
-        osc.frequency.value = 55; // Low A for a deep space drone
+            gain.gain.value = 0.05; // Keep it ambient and quiet
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start();
+            oscillatorRef.current = osc;
+            gainNodeRef.current = gain;
 
-        gain.gain.value = 0.05; // Keep it ambient and quiet
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start();
-        oscillatorRef.current = osc;
-        gainNodeRef.current = gain;
-
-        return () => {
-            osc.stop();
-            osc.disconnect();
-            gain.disconnect();
-            ctx.close();
-        };
+            return () => {
+                try {
+                    osc.stop();
+                    osc.disconnect();
+                    gain.disconnect();
+                } catch {
+                    // Ignore if already stopped
+                }
+            };
+        } catch {
+            // Safe fallback if audio is not permitted
+        }
     }, []);
 
     // 4D Raymarched SDF Shader

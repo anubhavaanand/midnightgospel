@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import * as THREE from 'three';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 import { GeminiService, type GeminiQuestResponse } from '../../services/gemini';
@@ -32,10 +33,13 @@ export const HubDialogueComputer: React.FC = () => {
     setHasUnreadTransmission(false);
   }, [activeLevelId]);
 
-  // Audio chirp generator for retro transmissions
+  // Audio chirp generator using shared AudioContext singleton
   const playChime = useCallback(() => {
     try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const ctx = THREE.AudioContext.getContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
@@ -51,7 +55,7 @@ export const HubDialogueComputer: React.FC = () => {
       
       osc.start();
       osc.stop(ctx.currentTime + 0.25);
-    } catch (e) {
+    } catch {
       console.warn("AudioContext chime muted by browser autoplay policy.");
     }
   }, []);
