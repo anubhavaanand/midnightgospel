@@ -19,20 +19,47 @@ const LoadingFallback: React.FC = () => (
 );
 
 class LevelErrorBoundary extends React.Component<
-  { children: React.ReactNode },
+  { children: React.ReactNode; levelId: number },
   { error: Error | null }
 > {
   state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
   componentDidCatch(error: Error, info: unknown) {
     console.error('[LevelErrorBoundary]', error, info);
-    this.setState({ error });
   }
+
+  componentDidUpdate(prevProps: { levelId: number }) {
+    if (prevProps.levelId !== this.props.levelId && this.state.error) {
+      this.setState({ error: null });
+    }
+  }
+
+  handleReturnToHub = () => {
+    this.setState({ error: null });
+    useLevelStore.getState().setLevel(0);
+  };
+
   render() {
     if (this.state.error) {
       return (
         <Html center>
-          <div style={{ color: '#ff4488', fontFamily: 'monospace', maxWidth: 480 }}>
-            LEVEL CRASHED: {this.state.error.message}
+          <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/90 border border-rose-500/50 backdrop-blur-xl text-center font-mono-diagnostic max-w-md shadow-2xl pointer-events-auto select-none">
+            <span className="text-xs font-bold text-rose-400 tracking-widest uppercase mb-2">
+              SIMULATION PARADOX // LEVEL ERROR
+            </span>
+            <p className="text-white/80 text-xs mb-4 line-clamp-3">
+              {this.state.error.message || 'Dimensional rendering encountered an anomaly.'}
+            </p>
+            <button
+              onClick={this.handleReturnToHub}
+              className="px-4 py-2 rounded-full glass-button text-xs text-white hover:text-fuchsia-400 border border-white/20 hover:border-fuchsia-400/50 transition-all font-bold tracking-wider"
+            >
+              RETURN TO HUB ⟲
+            </button>
           </div>
         </Html>
       );
@@ -56,7 +83,7 @@ export const SimulatorRouter: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
 
   return (
-    <LevelErrorBoundary>
+    <LevelErrorBoundary key={activeLevelId} levelId={activeLevelId}>
       <Suspense fallback={<LoadingFallback />}>
         {activeLevelId === 0 && <ChromaticRibbon />}
         {activeLevelId === 1 && <ZombieCapitol />}

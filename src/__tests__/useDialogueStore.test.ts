@@ -95,4 +95,18 @@ describe('useDialogueStore', () => {
     useDialogueStore.getState().setActiveQuest(null);
     expect(useDialogueStore.getState().activeQuest).toBe(null);
   });
+
+  it('should open and advance dialogue on Level 9 (The Core)', () => {
+    useDialogueStore.getState().openDialogue(9);
+
+    const state = useDialogueStore.getState();
+    expect(state.isOpen).toBe(true);
+    expect(state.activeSpeaker).toBe('Simulator Core');
+    expect(state.activeText).toContain('Bio-organic simulator core wobbling');
+
+    useDialogueStore.getState().advanceNode(9);
+    const advancedState = useDialogueStore.getState();
+    expect(advancedState.activeSpeaker).toBe('Clancy');
+    expect(advancedState.activeText).toContain('Wait, Computer!');
+  });
 });

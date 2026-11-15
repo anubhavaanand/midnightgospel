@@ -25,9 +25,6 @@ export const AudioListener: React.FC = () => {
     
     listenerRef.current = listener;
 
-    // Apply current mute state
-    listener.setMasterVolume(isMuted ? 0 : 1);
-
     // Initialize and track standard AudioContext state changes
     const ctx = listener.context;
     setAudioState((ctx.state === 'closed' ? 'uninitialized' : ctx.state) as 'suspended' | 'running' | 'uninitialized');
@@ -44,7 +41,14 @@ export const AudioListener: React.FC = () => {
         camera.remove(listenerRef.current);
       }
     };
-  }, [camera, setAudioState, isMuted]);
+  }, [camera, setAudioState]);
+
+  // Decoupled mute control without tearing down AudioListener
+  useEffect(() => {
+    if (listenerRef.current) {
+      listenerRef.current.setMasterVolume(isMuted ? 0 : 1);
+    }
+  }, [isMuted]);
 
   return null;
 };
