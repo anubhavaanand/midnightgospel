@@ -78,4 +78,14 @@ describe('NavigationMenu Component', () => {
     expect(useLevelStore.getState().isTransitioning).toBe(false);
     expect(useLevelStore.getState().isMenuOpen).toBe(false);
   });
+
+  it('should close navigation menu when Escape key is pressed', () => {
+    render(<NavigationMenu />);
+
+    expect(useLevelStore.getState().isMenuOpen).toBe(true);
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    expect(useLevelStore.getState().isMenuOpen).toBe(false);
+  });
 });

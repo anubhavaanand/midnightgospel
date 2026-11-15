@@ -52,12 +52,18 @@ export const DialogueOverlay: React.FC = () => {
     closeDialogue();
   };
 
-  // Listen to space/enter key presses to advance dialogue
+  // Listen to space/enter key presses to advance dialogue, and escape to dismiss
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't intercept keypresses if the user is typing in an input or textarea
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDialogue();
         return;
       }
 
@@ -71,7 +77,7 @@ export const DialogueOverlay: React.FC = () => {
       window.addEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, handleAdvance]);
+  }, [isOpen, handleAdvance, closeDialogue]);
 
   // Restart text typing animation whenever text changes
   useEffect(() => {

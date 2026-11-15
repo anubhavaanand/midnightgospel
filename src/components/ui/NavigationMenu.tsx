@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLevelStore } from '../../store/useLevelStore';
 import { LEVELS, LevelId } from '../../data/levels';
 
 export const NavigationMenu: React.FC = () => {
   const { isMenuOpen, setMenuOpen, activeLevelId, setLevel, setTransitioning } = useLevelStore();
+
+  // Listen to Escape key to dismiss the navigation modal
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen, setMenuOpen]);
 
   const menuItems = LEVELS.map(l => ({
     id: l.id,
