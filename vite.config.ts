@@ -30,9 +30,25 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        // Exclude large 3D models from service worker cache - they load on demand
+        // Exclude large 3D models from initial precache manifest
         globIgnores: ['**/models/**/*.{glb,gltf,fbx}'],
-        maximumFileSizeToCacheInBytes: 5000000
+        maximumFileSizeToCacheInBytes: 5000000,
+        runtimeCaching: [
+          {
+            urlPattern: /\/models\/.*\.glb$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'midnight-3d-models-cache',
+              expiration: {
+                maxEntries: 40,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       }
     })
   ],
@@ -59,7 +75,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing', '@react-three/rapier'],
+          r3f: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing'],
+          physics: ['@react-three/rapier'],
           utils: ['zustand', 'framer-motion'],
         },
       },

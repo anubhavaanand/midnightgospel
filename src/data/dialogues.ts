@@ -64,4 +64,31 @@ export const DIALOGUE_TREES: Partial<Record<LevelId, DialogueTree>> = {
   6: ep6 as unknown as DialogueTree,
   7: ep7 as unknown as DialogueTree,
   8: ep8 as unknown as DialogueTree,
+  9: {
+    levelId: 9,
+    startNodeId: 'core-1',
+    nodes: {
+      'core-1': {
+        id: 'core-1',
+        speaker: 'Simulator Core',
+        text: 'CRITICAL SYSTEM STATUS: Bio-organic simulator core wobbling... All realities are merging into pure consciousness.',
+        mood: { intensity: 0.8, colorTarget: '#00FFCC', speed: 2.0 },
+        nextNodeId: 'core-2',
+      },
+      'core-2': {
+        id: 'core-2',
+        speaker: 'Clancy',
+        text: 'Wait, Computer! If all the simulated worlds are collapsing, what happens to the spacecast? Where do we go now?',
+        mood: { intensity: 0.9, colorTarget: '#FF007F', speed: 1.8 },
+        nextNodeId: 'core-3',
+      },
+      'core-3': {
+        id: 'core-3',
+        speaker: 'Simulator Core',
+        text: 'Nowhere to go, Master. You cry, you let go, and you just be here now.',
+        mood: { intensity: 0.5, colorTarget: '#00FFCC', speed: 1.2 },
+        nextNodeId: null,
+      },
+    },
+  },
 };
