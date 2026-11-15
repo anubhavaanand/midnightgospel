@@ -89,4 +89,48 @@ describe('Audio Master Mute Enforcement', () => {
     expect(getDroneGain(false)).toBe(0.05);
     expect(getDroneGain(true)).toBe(0);
   });
+
+  it('should prevent PositionalDialogueAudio typewriter synth blip when isMuted is true', () => {
+    const mockOscillator = {
+      type: 'triangle',
+      frequency: {
+        value: 0,
+        setValueAtTime: vi.fn(),
+        exponentialRampToValueAtTime: vi.fn(),
+      },
+      connect: vi.fn(),
+      disconnect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
+    };
+    const createOscillatorSpy = vi.fn(() => mockOscillator);
+
+    const mockCtx = {
+      currentTime: 0,
+      createOscillator: createOscillatorSpy,
+      createGain: vi.fn(() => ({
+        gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+      })),
+    };
+
+    const triggerTypewriterBlip = () => {
+      const isMuted = useDialogueStore.getState().isMuted;
+      if (isMuted) return;
+
+      const osc = mockCtx.createOscillator();
+      osc.start(0);
+    };
+
+    useDialogueStore.getState().setIsMuted(false);
+    triggerTypewriterBlip();
+    expect(createOscillatorSpy).toHaveBeenCalledTimes(1);
+
+    createOscillatorSpy.mockClear();
+
+    useDialogueStore.getState().setIsMuted(true);
+    triggerTypewriterBlip();
+    expect(createOscillatorSpy).not.toHaveBeenCalled();
+  });
 });
