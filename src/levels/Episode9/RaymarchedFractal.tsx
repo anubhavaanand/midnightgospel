@@ -1,12 +1,14 @@
 import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useDialogueStore } from '../../store/useDialogueStore';
 
 export const RaymarchedFractal = () => {
     const materialRef = useRef<THREE.ShaderMaterial>(null);
     const audioContextRef = useRef<AudioContext | null>(null);
     const oscillatorRef = useRef<OscillatorNode | null>(null);
     const gainNodeRef = useRef<GainNode | null>(null);
+    const isMuted = useDialogueStore((state) => state.isMuted);
 
     // Initialize Synthetic Ambient Drone using shared AudioContext singleton
     useEffect(() => {
@@ -20,7 +22,7 @@ export const RaymarchedFractal = () => {
             osc.type = 'sine';
             osc.frequency.value = 55; // Low A for a deep space drone
 
-            gain.gain.value = 0.05; // Keep it ambient and quiet
+            gain.gain.value = isMuted ? 0 : 0.05; // Keep it ambient and quiet, obey master mute
             
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -42,6 +44,20 @@ export const RaymarchedFractal = () => {
             // Safe fallback if audio is not permitted
         }
     }, []);
+
+    // Dynamically adjust ambient drone gain when master mute is toggled
+    useEffect(() => {
+        if (!gainNodeRef.current || !audioContextRef.current) return;
+        try {
+            const ctx = audioContextRef.current;
+            const targetGain = isMuted ? 0 : 0.05;
+            gainNodeRef.current.gain.cancelScheduledValues(ctx.currentTime);
+            gainNodeRef.current.gain.setValueAtTime(gainNodeRef.current.gain.value, ctx.currentTime);
+            gainNodeRef.current.gain.linearRampToValueAtTime(targetGain, ctx.currentTime + 0.08);
+        } catch {
+            // Safe fallback
+        }
+    }, [isMuted]);
 
     // 4D Raymarched SDF Shader
     const fractalShader = useMemo(() => new THREE.ShaderMaterial({

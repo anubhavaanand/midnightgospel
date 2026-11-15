@@ -21,6 +21,7 @@ export const HubDialogueComputer: React.FC = () => {
   const setActiveQuest = useDialogueStore((state) => state.setActiveQuest);
   const setMood = useDialogueStore((state) => state.setMood);
   const isDialogueOpen = useDialogueStore((state) => state.isOpen);
+  const isMuted = useDialogueStore((state) => state.isMuted);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
 
@@ -35,6 +36,7 @@ export const HubDialogueComputer: React.FC = () => {
 
   // Audio chirp generator using shared AudioContext singleton
   const playChime = useCallback(() => {
+    if (isMuted) return;
     try {
       const ctx = THREE.AudioContext.getContext();
       if (ctx.state === 'suspended') {
@@ -58,7 +60,7 @@ export const HubDialogueComputer: React.FC = () => {
     } catch {
       console.warn("AudioContext chime muted by browser autoplay policy.");
     }
-  }, []);
+  }, [isMuted]);
 
   // Typewriter effect for computer's response
   useEffect(() => {
