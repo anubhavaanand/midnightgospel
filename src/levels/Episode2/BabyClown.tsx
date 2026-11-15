@@ -7,10 +7,11 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { CircusTent, MeatClowns, Balloons, CarouselRing, MysteryEgg, ClownFlock } from './ClownWorldProps';
+import { CustomShaderMaterial } from '../../types/three.d';
 import './BabyClownShader';
 
 const BabyClown: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
   const clancyRef = useRef<THREE.Group>(null);
   const setLevel = useLevelStore((state) => state.setLevel);
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
@@ -29,7 +30,7 @@ const BabyClown: React.FC = () => {
     }
   });
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

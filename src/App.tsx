@@ -89,7 +89,7 @@ function App() {
         dpr={window.devicePixelRatio}
         onCreated={(state) => {
           // Debug hooks for automated QA
-          (window as any).__r3f = state;
+          (window as unknown as { __r3f: unknown }).__r3f = state;
           state.gl.domElement.addEventListener('webglcontextlost', (e: Event) => {
             console.error('WEBGL_CONTEXT_LOST', e);
           });

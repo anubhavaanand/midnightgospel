@@ -11,10 +11,10 @@ export const RaymarchedFractal = () => {
     // Initialize Synthetic Ambient Drone
     useEffect(() => {
         // Attempt to start audio context (might need user interaction first)
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioContext) return;
+        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (!AudioCtx) return;
 
-        const ctx = new AudioContext();
+        const ctx = new AudioCtx();
         audioContextRef.current = ctx;
 
         const osc = ctx.createOscillator();

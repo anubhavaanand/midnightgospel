@@ -16,7 +16,7 @@ export const AudioListener: React.FC = () => {
 
   useEffect(() => {
     // Prevent multiple AudioListeners on the same camera
-    let listener = camera.children.find((child) => (child as any).isAudioListener) as THREE.AudioListener | undefined;
+    let listener = camera.children.find((child) => (child as THREE.Object3D & { isAudioListener?: boolean }).isAudioListener) as THREE.AudioListener | undefined;
 
     if (!listener) {
       listener = new THREE.AudioListener();
@@ -30,10 +30,10 @@ export const AudioListener: React.FC = () => {
 
     // Initialize and track standard AudioContext state changes
     const ctx = listener.context;
-    setAudioState(ctx.state as any);
+    setAudioState((ctx.state === 'closed' ? 'uninitialized' : ctx.state) as 'suspended' | 'running' | 'uninitialized');
 
     const handleStateChange = () => {
-      setAudioState(ctx.state as any);
+      setAudioState((ctx.state === 'closed' ? 'uninitialized' : ctx.state) as 'suspended' | 'running' | 'uninitialized');
     };
 
     ctx.addEventListener('statechange', handleStateChange);

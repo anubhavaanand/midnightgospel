@@ -18,7 +18,7 @@ function usePreparedModel(url: string, height: number): THREE.Object3D | null {
     const center = box2.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -box2.min.y, -center.z);
     return clone;
-  }, [scene, height]);
+  }, [scene, height, url]);
 }
 
 /** Mobius strip orbiting the hub island like a chromatic halo */
