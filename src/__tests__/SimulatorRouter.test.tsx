@@ -47,4 +47,10 @@ describe('SimulatorRouter and LevelErrorBoundary', () => {
     fireEvent.click(returnBtn);
     expect(useLevelStore.getState().activeLevelId).toBe(0);
   });
+
+  it('should reset document body cursor to auto when changing levels', () => {
+    document.body.style.cursor = 'pointer';
+    render(<SimulatorRouter />);
+    expect(document.body.style.cursor).toBe('auto');
+  });
 });

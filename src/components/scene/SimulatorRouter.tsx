@@ -82,6 +82,14 @@ const TheCore = lazy(() => import('../../levels/Episode9/TheCore'));
 export const SimulatorRouter: React.FC = () => {
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
 
+  // Restore cursor style to default when changing dimensions to prevent stuck pointer
+  React.useEffect(() => {
+    document.body.style.cursor = 'auto';
+    return () => {
+      document.body.style.cursor = 'auto';
+    };
+  }, [activeLevelId]);
+
   return (
     <LevelErrorBoundary key={activeLevelId} levelId={activeLevelId}>
       <Suspense fallback={<LoadingFallback />}>

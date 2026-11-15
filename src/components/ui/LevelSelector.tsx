@@ -26,6 +26,7 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
     e.stopPropagation();
     if (isTransitioning) return;
     
+    document.body.style.cursor = 'auto';
     setTransitioning(true);
     // Wait for the transition wipe to cover the screen (duration 0.8s, wait ~0.4s)
     setTimeout(() => {
