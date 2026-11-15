@@ -17,6 +17,7 @@ import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher'
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import './ZombieShader';
 import { computeScale } from '../../lib/modelScales';
+import { CustomShaderMaterial } from '../../types/three.d';
 
 const MODEL_BASE = '/models/level1';
 
@@ -41,7 +42,7 @@ function usePreparedModel(url: string, height: number): THREE.Object3D | null {
     const center = box2.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -box2.min.y, -center.z);
     return clone;
-  }, [scene, height]);
+  }, [scene, height, url]);
 }
 
 const WhiteHouse: React.FC = () => {
@@ -96,7 +97,7 @@ const ZombieDogs: React.FC<{
 };
 
 export const ZombieCapitol: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
     return () => {
@@ -114,7 +115,7 @@ export const ZombieCapitol: React.FC = () => {
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

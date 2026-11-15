@@ -60,7 +60,7 @@ export const ScrollEngine: React.FC = () => {
     const t = progressRef.current;
     const point = hubCurve.getPointAt(t);
     const lookAhead = hubCurve.getPointAt(Math.min(t + 0.1, 1));
-    const controls = (state as any).controls;
+    const controls = (state as unknown as { controls?: { target: THREE.Vector3; update: () => void } }).controls;
 
     if (isScrolling) {
       camera.position.copy(point);

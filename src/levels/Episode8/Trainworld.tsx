@@ -7,11 +7,12 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { AfterlifeExpress, SteampunkFlyby, BearObservatory } from './TrainProps';
+import { CustomShaderMaterial } from '../../types/three.d';
 import { HeroTram, RedVortex, PinkFatePlanet } from './HeroProps';
 import './TrainworldShader';
 
 export const Trainworld: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
     return () => {
@@ -45,7 +46,7 @@ export const Trainworld: React.FC = () => {
     }
   });
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

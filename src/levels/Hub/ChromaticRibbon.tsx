@@ -6,6 +6,7 @@ import { LevelSelector } from '../../components/ui/LevelSelector';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { HubDecorations } from './HubDecorations';
+import { CustomShaderMaterial } from '../../types/three.d';
 import './ChromaticShader';
 
 const SpaceIsland = ({ position }: { position: [number, number, number] }) => {
@@ -36,7 +37,7 @@ const CenterIsland = () => {
 
 
 const ChromaticRibbon: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
     return () => {

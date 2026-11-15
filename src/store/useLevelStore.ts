@@ -31,6 +31,6 @@ export const useLevelStore = create<LevelState>((set) => ({
 }));
 
 if (typeof window !== 'undefined') {
-  (window as any).useLevelStore = useLevelStore;
+  (window as unknown as { useLevelStore: typeof useLevelStore }).useLevelStore = useLevelStore;
 }
 

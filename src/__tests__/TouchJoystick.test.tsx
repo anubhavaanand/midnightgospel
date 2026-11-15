@@ -12,8 +12,7 @@ describe('TouchJoystick Component', () => {
       configurable: true,
     });
     if ('ontouchstart' in window) {
-      // @ts-ignore
-      delete window.ontouchstart;
+      delete (window as unknown as { ontouchstart?: unknown }).ontouchstart;
     }
   });
 

@@ -112,6 +112,6 @@ export const useDialogueStore = create<DialogueState>((set, get) => ({
 }));
 
 if (typeof window !== 'undefined') {
-  (window as any).useDialogueStore = useDialogueStore;
+  (window as unknown as { useDialogueStore: typeof useDialogueStore }).useDialogueStore = useDialogueStore;
 }
 

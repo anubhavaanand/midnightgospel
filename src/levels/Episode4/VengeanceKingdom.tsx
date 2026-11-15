@@ -7,10 +7,11 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { DuelArena, Banners, HealingRose, ForgeCauldron } from './KingdomProps';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
+import { CustomShaderMaterial } from '../../types/three.d';
 import './VengeanceKingdomShader';
 
 export const VengeanceKingdom: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
     return () => {
@@ -44,7 +45,7 @@ export const VengeanceKingdom: React.FC = () => {
     }
   });
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

@@ -1,4 +1,11 @@
-import type { ThreeElements } from '@react-three/fiber';
+import * as THREE from 'three';
+
+export interface CustomShaderMaterial extends THREE.ShaderMaterial {
+  uTime?: number;
+  uSpeed?: number;
+  uDistortion?: number;
+  uMouse: { copy: (v: THREE.Vector2) => void; set: (x: number, y: number) => void };
+}
 
 declare module '@react-three/fiber' {
   interface ThreeElements {

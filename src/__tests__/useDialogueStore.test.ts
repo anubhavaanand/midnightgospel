@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useDialogueStore } from '../store/useDialogueStore';
 import { DIALOGUE_TREES } from '../data/dialogues';
 
+import type { LevelId } from '../data/levels';
+
 describe('useDialogueStore', () => {
   beforeEach(() => {
     // Reset store before each test
     useDialogueStore.setState({
-      progressMap: {} as any,
+      progressMap: {} as Record<LevelId, string>,
       activeText: null,
       currentMood: { intensity: 0, colorTarget: '#000000', speed: 1.0 },
       isOpen: false,
