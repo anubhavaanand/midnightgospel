@@ -55,6 +55,12 @@ export const DialogueOverlay: React.FC = () => {
   // Listen to space/enter key presses to advance dialogue
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept keypresses if the user is typing in an input or textarea
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
       if (e.code === 'Space' || e.code === 'Enter') {
         e.preventDefault();
         handleAdvance();
