@@ -66,7 +66,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-screen bg-black overflow-hidden relative font-mono-diagnostic">
+    <div className="h-screen h-[100dvh] w-screen bg-black overflow-hidden relative font-mono-diagnostic">
       {/* HUD & Overlay layers */}
       <LayoutOverlay />
       <NavigationMenu />
@@ -86,12 +86,16 @@ function App() {
       <Canvas
         gl={{ antialias: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 10], fov: 60 }}
-        dpr={window.devicePixelRatio}
+        dpr={[1, 2]}
         onCreated={(state) => {
           // Debug hooks for automated QA
           (window as unknown as { __r3f: unknown }).__r3f = state;
           state.gl.domElement.addEventListener('webglcontextlost', (e: Event) => {
-            console.error('WEBGL_CONTEXT_LOST', e);
+            e.preventDefault();
+            console.warn('[WebGL] Context lost. Preventing default termination to allow recovery.');
+          });
+          state.gl.domElement.addEventListener('webglcontextrestored', () => {
+            console.info('[WebGL] Context restored successfully. Resuming simulation.');
           });
         }}
       >
