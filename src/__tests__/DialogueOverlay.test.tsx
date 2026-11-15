@@ -82,4 +82,51 @@ describe('DialogueOverlay Component', () => {
 
     expect(advanceSpy).not.toHaveBeenCalled();
   });
+
+  it('should canonically map Duncan to Space Caster role tag and Clancy wizard avatar', () => {
+    useDialogueStore.setState({
+      activeSpeaker: 'Duncan',
+      activeText: 'My mom taught me how to cry...',
+    });
+    const { container } = render(<DialogueOverlay />);
+
+    expect(screen.getByText('Duncan')).toBeDefined();
+    expect(screen.getByText('Space Caster')).toBeDefined();
+    expect(container.querySelector('path[fill="#FFE94A"]')).not.toBeNull();
+  });
+
+  it('should map President speaker to Glasses Man avatar', () => {
+    useDialogueStore.setState({
+      activeSpeaker: 'President',
+      activeText: 'There is no such thing as a bad drug!',
+    });
+    const { container } = render(<DialogueOverlay />);
+
+    expect(screen.getByText('President')).toBeDefined();
+    expect(screen.getByText('Simulated entity')).toBeDefined();
+    expect(container.querySelector('line[stroke="#FFE94A"]')).not.toBeNull();
+  });
+
+  it('should map Annie speaker to Baby Clown King avatar', () => {
+    useDialogueStore.setState({
+      activeSpeaker: 'Annie',
+      activeText: 'Laughter is carbonated holiness.',
+    });
+    const { container } = render(<DialogueOverlay />);
+
+    expect(screen.getByText('Annie')).toBeDefined();
+    expect(container.querySelector('circle[fill="#FF0000"]')).not.toBeNull();
+  });
+
+  it('should map Simulator Core to simulator portrait background', () => {
+    useDialogueStore.setState({
+      activeSpeaker: 'Simulator Core',
+      activeText: 'Bio-organic simulator core wobbling...',
+    });
+    const { container } = render(<DialogueOverlay />);
+
+    expect(screen.getByText('Simulator Core')).toBeDefined();
+    const img = container.querySelector('img');
+    expect(img?.getAttribute('src')).toBe('/images/characters/simulator.png');
+  });
 });

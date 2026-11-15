@@ -82,13 +82,20 @@ export const DialogueOverlay: React.FC = () => {
 
   const portraitMap: Record<string, string> = {
     'clancy': '/images/characters/clancy.png',
+    'duncan': '/images/characters/clancy.png',
     'simulator': '/images/characters/simulator.png',
+    'simulator-core': '/images/characters/simulator.png',
+    'computer': '/images/characters/simulator.png',
     'death': '/images/characters/death.png',
     'charlotte': '/images/characters/charlotte.png',
   };
 
   const speakerKey = (activeSpeaker || '').toLowerCase().replace(/\s+/g, '-');
   const portraitSrc = portraitMap[speakerKey] || null;
+
+  const isClancy = activeSpeaker?.toLowerCase() === 'clancy' || activeSpeaker?.toLowerCase() === 'duncan';
+  const isGlassesMan = activeSpeaker?.toLowerCase() === 'glasses man' || activeSpeaker?.toLowerCase() === 'president';
+  const isBabyClown = activeSpeaker?.toLowerCase() === 'baby clown king' || activeSpeaker?.toLowerCase() === 'annie';
 
   const glowColor = currentMood.colorTarget || '#FF00FF';
 
@@ -280,11 +287,11 @@ export const DialogueOverlay: React.FC = () => {
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                 )}
-                {activeSpeaker?.toLowerCase() === 'clancy' ? (
+                {isClancy ? (
                   <ClancyAvatar />
-                ) : activeSpeaker?.toLowerCase() === 'glasses man' ? (
+                ) : isGlassesMan ? (
                   <GlassesManAvatar />
-                ) : activeSpeaker?.toLowerCase() === 'baby clown king' ? (
+                ) : isBabyClown ? (
                   <BabyClownAvatar />
                 ) : (
                   <DefaultAvatar />
@@ -306,7 +313,7 @@ export const DialogueOverlay: React.FC = () => {
                   {activeSpeaker || 'System'}
                 </span>
                 <span className="text-[8px] font-mono text-white/30 tracking-widest mt-1 uppercase text-center hidden md:block">
-                  {activeSpeaker?.toLowerCase() === 'clancy' ? 'Space Caster' : 'Simulated entity'}
+                  {isClancy ? 'Space Caster' : 'Simulated entity'}
                 </span>
               </div>
             </div>
