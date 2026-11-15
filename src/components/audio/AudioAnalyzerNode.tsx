@@ -6,7 +6,7 @@ interface AudioAnalyzerNodeProps {
   audioUrl?: string; // Optional for testing or actual use
 }
 
-export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = ({ audioUrl: _audioUrl }) => {
+export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyzerRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
@@ -34,7 +34,7 @@ export const AudioAnalyzerNode: React.FC<AudioAnalyzerNodeProps> = ({ audioUrl: 
         const analyze = () => {
           if (!analyzerRef.current || !dataArrayRef.current) return;
           
-          analyzerRef.current.getByteFrequencyData(dataArrayRef.current as any);
+          analyzerRef.current.getByteFrequencyData(dataArrayRef.current as unknown as Uint8Array<ArrayBuffer>);
           
           let bassSum = 0;
           let midSum = 0;

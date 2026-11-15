@@ -41,7 +41,7 @@ function usePreparedModel(url: string, height: number): THREE.Object3D | null {
     const center = box2.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -box2.min.y, -center.z);
     return clone;
-  }, [scene, height]);
+  }, [scene, height, url]);
 }
 
 const WhiteHouse: React.FC = () => {
@@ -95,8 +95,10 @@ const ZombieDogs: React.FC<{
   );
 };
 
+import { CustomShaderMaterial } from '../../types/three.d';
+
 export const ZombieCapitol: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
   const coreRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
   const zombiesRef = useRef<THREE.Group>(null);
@@ -108,7 +110,7 @@ export const ZombieCapitol: React.FC = () => {
   const setTransitioning = useLevelStore((state) => state.setTransitioning);
   const isTransitioning = useLevelStore((state) => state.isTransitioning);
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

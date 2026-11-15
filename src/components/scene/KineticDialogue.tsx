@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text, Billboard } from '@react-three/drei';
+import * as THREE from 'three';
 import { useDialogueStore } from '../../store/useDialogueStore';
 import { useLevelStore } from '../../store/useLevelStore';
 import { PositionalDialogueAudio } from '../audio/PositionalDialogueAudio';
@@ -19,7 +20,7 @@ interface KineticDialogueProps {
 export const KineticDialogue: React.FC<KineticDialogueProps> = ({ position = [0, 2, 0] }) => {
   const { isOpen, activeText, currentMood, advanceNode } = useDialogueStore();
   const activeLevelId = useLevelStore((state) => state.activeLevelId);
-  const textRef = useRef<any>(null);
+  const textRef = useRef<THREE.Object3D | null>(null);
 
   const [displayedText, setDisplayedText] = useState('');
   const [tickCount, setTickCount] = useState(0);

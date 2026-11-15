@@ -35,8 +35,10 @@ const CenterIsland = () => {
 };
 
 
+import { CustomShaderMaterial } from '../../types/three.d';
+
 const ChromaticRibbon: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
   const openDialogue = useDialogueStore((state) => state.openDialogue);
 
   useFrame((state) => {
