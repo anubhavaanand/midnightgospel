@@ -6,19 +6,31 @@ import { useState, useCallback } from 'react';
 export function useIntroState() {
     const [hasSeenIntro, setHasSeenIntro] = useState(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem('midnight-intro-seen') === 'true';
+            try {
+                return localStorage.getItem('midnight-intro-seen') === 'true';
+            } catch {
+                return false;
+            }
         }
         return false;
     });
 
     const markIntroSeen = useCallback(() => {
         setHasSeenIntro(true);
-        localStorage.setItem('midnight-intro-seen', 'true');
+        try {
+            localStorage.setItem('midnight-intro-seen', 'true');
+        } catch {
+            // Ignore restricted localStorage
+        }
     }, []);
 
     const resetIntro = useCallback(() => {
         setHasSeenIntro(false);
-        localStorage.removeItem('midnight-intro-seen');
+        try {
+            localStorage.removeItem('midnight-intro-seen');
+        } catch {
+            // Ignore restricted localStorage
+        }
     }, []);
 
     return { hasSeenIntro, markIntroSeen, resetIntro };
