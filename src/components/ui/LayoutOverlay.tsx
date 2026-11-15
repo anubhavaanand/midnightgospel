@@ -73,7 +73,7 @@ export const LayoutOverlay: React.FC = () => {
     5: { avatar: "Prismatic Glass Form", guest: "Inmate Bob (Jason Louv)", theme: "Buddhism & Letting Go", status: "Soul Prison Secure" },
     6: { avatar: "Zen Meditation Form", guest: "Teacher David (David Nichtern)", theme: "Meditation Practice & Mind Working", status: "Cave Resonance Calm" },
     7: { avatar: "Golden Sphere Form", guest: "Death (Caitlin Doughty)", theme: "Death Positivity & Mortality", status: "Void Observation Active" },
-    8: { avatar: "Golden Heart Form", guest: "Mom (Duncan's Mother)", theme: "Mother-Son Love & Rebirth", status: "Life Cycle in Transit" },
+    8: { avatar: "Golden Heart Form", guest: "Mom (Deneen Fendig)", theme: "Mother-Son Love & Rebirth", status: "Life Cycle in Transit" },
     9: { avatar: "Transcendent Unity Form", guest: "The Simulator Core", theme: "Integration & Cosmic Chaos", status: "Sandbox Mode Engaged" },
   };
 

@@ -32,6 +32,14 @@ describe('LayoutOverlay Component', () => {
     expect(screen.getByText(/98.7% Zombie Overrun/)).toBeDefined();
   });
 
+  it('should render canonical show lore guest for Episode 8 (Mouse of Silver)', () => {
+    useLevelStore.setState({ activeLevelId: 8 });
+    render(<LayoutOverlay />);
+
+    expect(screen.getByText(/Mom \(Deneen Fendig\)/)).toBeDefined();
+    expect(screen.getByText(/Life Cycle in Transit/)).toBeDefined();
+  });
+
   it('should toggle menu open state when dimension selector button is clicked', () => {
     render(<LayoutOverlay />);
 
