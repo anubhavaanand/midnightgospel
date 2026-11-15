@@ -100,8 +100,9 @@ export const ZombieCapitol: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
+    const mat = materialRef.current;
     return () => {
-      materialRef.current?.dispose();
+      mat?.dispose();
     };
   }, []);
   const coreRef = useRef<THREE.Group>(null);

@@ -40,8 +40,9 @@ const ChromaticRibbon: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
+    const mat = materialRef.current;
     return () => {
-      materialRef.current?.dispose();
+      mat?.dispose();
     };
   }, []);
   const openDialogue = useDialogueStore((state) => state.openDialogue);

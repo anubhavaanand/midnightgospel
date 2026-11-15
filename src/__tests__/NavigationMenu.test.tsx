@@ -9,8 +9,9 @@ vi.mock('framer-motion', () => ({
     {},
     {
       get: (_target, prop: string) => {
-        return React.forwardRef(({ children, ...props }: any, ref: any) =>
-          React.createElement(prop, { ...props, ref }, children)
+        return React.forwardRef(
+          ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }, ref: React.ForwardedRef<unknown>) =>
+            React.createElement(prop, { ...props, ref }, children)
         );
       },
     }

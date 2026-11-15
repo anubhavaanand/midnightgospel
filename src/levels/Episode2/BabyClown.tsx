@@ -14,8 +14,9 @@ const BabyClown: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
+    const mat = materialRef.current;
     return () => {
-      materialRef.current?.dispose();
+      mat?.dispose();
     };
   }, []);
   const clancyRef = useRef<THREE.Group>(null);

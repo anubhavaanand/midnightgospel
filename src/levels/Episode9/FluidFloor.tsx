@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -104,6 +104,13 @@ export const FluidFloor = () => {
         wireframe: false,
         side: THREE.DoubleSide
     }), []);
+
+    // Cleanup ShaderMaterial GPU resources on unmount
+    useEffect(() => {
+        return () => {
+            fluidShader.dispose();
+        };
+    }, [fluidShader]);
 
     useFrame((state) => {
         if (materialRef.current) {
