@@ -31,7 +31,7 @@ export const TouchJoystick: React.FC = () => {
     });
 
     // Set global decoupled movement vector state
-    (window as any).joystickDelta = {
+    (window as unknown as { joystickDelta: { x: number; y: number } }).joystickDelta = {
       x: (Math.cos(angle) * distance) / 50,
       y: -(Math.sin(angle) * distance) / 50
     };
@@ -40,7 +40,7 @@ export const TouchJoystick: React.FC = () => {
   const handleTouchEnd = () => {
     setTouching(false);
     setPosition({ x: 0, y: 0 });
-    (window as any).joystickDelta = { x: 0, y: 0 };
+    (window as unknown as { joystickDelta: { x: number; y: number } }).joystickDelta = { x: 0, y: 0 };
   };
 
   return (

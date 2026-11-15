@@ -7,10 +7,11 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { SingingBowls, CandleLanterns, CrystalClusters } from './CaveProps';
+import { CustomShaderMaterial } from '../../types/three.d';
 import './MeditationCaveShader';
 
 export const MeditationCave: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
   const npcRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
 
@@ -38,7 +39,7 @@ export const MeditationCave: React.FC = () => {
     }
   });
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

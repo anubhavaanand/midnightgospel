@@ -22,7 +22,7 @@ const Portal = ({ levelId, position }: { levelId: LevelId; position: [number, nu
 
   if (!level) return null;
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     

@@ -110,8 +110,6 @@ CRITICAL: You MUST write in CLEAN, PROPER English. No text effects, no glitch te
 
 
 export class GeminiService {
-  private static apiKey = import.meta.env.VITE_GEMINI_API_KEY ?? import.meta.env.VITE_GOOGLE_API_KEY;
-
   // Conversation memory — persists across page reloads via localStorage
   private static readonly MEMORY_KEY = 'midnight-computer-memory';
   private static readonly MEMORY_LIMIT = 100;
@@ -148,7 +146,7 @@ export class GeminiService {
   private static getFullTranscriptsContext(): string {
     let context = "=== COMPLETE CRYSTALLINE DATA LATTICE: ALL 8 SIMULATED UNIVERSE TRANSCRIPTS ===\n\n";
     
-    ALL_TRANSCRIPTS.forEach((transcript: any) => {
+    ALL_TRANSCRIPTS.forEach((transcript: { levelId: number; nodes?: Record<string, { speaker: string; text: string }> }) => {
       const levelId = transcript.levelId;
       const meta = EPISODE_META[levelId];
       
@@ -160,7 +158,7 @@ export class GeminiService {
       }
       
       if (transcript.nodes) {
-        Object.values(transcript.nodes).forEach((node: any) => {
+        Object.values(transcript.nodes).forEach((node) => {
           context += `  [${node.speaker}]: "${node.text}"\n`;
         });
       }
@@ -171,7 +169,7 @@ export class GeminiService {
     const hubTree = DIALOGUE_TREES[0];
     if (hubTree?.nodes) {
       context += "━━━ THE CHROMATIC RIBBON (HUB) ━━━\n";
-      Object.values(hubTree.nodes).forEach((node: any) => {
+      Object.values(hubTree.nodes).forEach((node) => {
         context += `  [${node.speaker}]: "${node.text}"\n`;
       });
       context += "\n";
@@ -269,12 +267,7 @@ export class GeminiService {
     // Record Clancy's message in memory
     this.addToMemory('clancy', feeling, currentLevelId);
 
-    if (!this.apiKey) {
-      console.warn("Gemini API key is missing. Engaging local procedural diagnostic fallback.");
-      const result = this.getOfflineFallback(feeling, currentLevelId);
-      this.addToMemory('computer', result.response, currentLevelId);
-      return result;
-    }
+    // Removed API key check — authentication is now handled by the backend Worker
 
     try {
       const transcriptsContext = this.getFullTranscriptsContext();
@@ -306,9 +299,8 @@ Provide the output strictly in the following JSON schema:
   }
 }`;
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`,
-        {
+      const workerUrl = import.meta.env.VITE_AI_BACKEND_URL || 'http://localhost:8787';
+      const response = await fetch(workerUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -344,7 +336,7 @@ Provide the output strictly in the following JSON schema:
       return result;
     } catch (error) {
       console.error("Gemini service error, routing to offline portal generator:", error);
-      const result = this.getOfflineFallback(feeling, currentLevelId);
+      const result = this.getOfflineFallback(feeling);
       this.addToMemory('computer', result.response, currentLevelId);
       return result;
     }
@@ -355,14 +347,8 @@ Provide the output strictly in the following JSON schema:
    * The computer decides on its own what to say, when to say it, and why.
    * Truly personal — references past conversation, current level, and transcript themes.
    */
-  public static async generateProactiveInsight(currentLevelId: number, _chatHistory: string[] = []): Promise<GeminiQuestResponse> {
-    if (!this.apiKey) {
-      const result = this.getOfflineProactiveFallback(currentLevelId);
-      this.addToMemory('computer', result.response, currentLevelId);
-      this.lastTransmissionTime = Date.now();
-      this.transmissionCount++;
-      return result;
-    }
+  public static async generateProactiveInsight(currentLevelId: number): Promise<GeminiQuestResponse> {
+    // Removed API key check — authentication is now handled by the backend Worker
 
     try {
       const transcriptsContext = this.getFullTranscriptsContext();
@@ -414,9 +400,8 @@ Provide the output strictly in the following JSON schema:
   }
 }`;
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`,
-        {
+      const workerUrl = import.meta.env.VITE_AI_BACKEND_URL || 'http://localhost:8787';
+      const response = await fetch(workerUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -463,7 +448,7 @@ Provide the output strictly in the following JSON schema:
   /**
    * Local procedural fallback generator — speaks in the Computer's actual show voice
    */
-  private static getOfflineFallback(feeling: string, _currentLevelId: number): GeminiQuestResponse {
+  private static getOfflineFallback(feeling: string): GeminiQuestResponse {
     const fLower = feeling.toLowerCase();
     let level: LevelId = 1;
     let npc = "Glasses Man";
