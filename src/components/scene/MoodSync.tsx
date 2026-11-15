@@ -14,28 +14,31 @@ export const MoodSync: React.FC = () => {
     
     // We traverse the scene to find any material that has our base uniforms
     // and animate them towards the current mood values.
-    scene.traverse((object: any) => {
-      if (object.isMesh && object.material && object.material.uniforms) {
-        const uniforms = object.material.uniforms;
-        
-        if (uniforms.uColorBloom) {
-          uniforms.uColorBloom.value.lerp(targetColor.current, delta * 2.0);
-        }
-        
-        if (uniforms.uIntensity) {
-          uniforms.uIntensity.value = THREE.MathUtils.lerp(
-            uniforms.uIntensity.value, 
-            currentMood.intensity, 
-            delta * 2.0
-          );
-        }
-        
-        if (uniforms.uSpeed) {
-          uniforms.uSpeed.value = THREE.MathUtils.lerp(
-            uniforms.uSpeed.value, 
-            currentMood.speed, 
-            delta * 2.0
-          );
+    scene.traverse((object: THREE.Object3D) => {
+      if (object instanceof THREE.Mesh && object.material) {
+        const mat = object.material as THREE.Material & { uniforms?: Record<string, { value: THREE.Color | number }> };
+        if (mat.uniforms) {
+          const uniforms = mat.uniforms;
+          
+          if (uniforms.uColorBloom && uniforms.uColorBloom.value instanceof THREE.Color) {
+            uniforms.uColorBloom.value.lerp(targetColor.current, delta * 2.0);
+          }
+          
+          if (uniforms.uIntensity && typeof uniforms.uIntensity.value === 'number') {
+            uniforms.uIntensity.value = THREE.MathUtils.lerp(
+              uniforms.uIntensity.value, 
+              currentMood.intensity, 
+              delta * 2.0
+            );
+          }
+          
+          if (uniforms.uSpeed && typeof uniforms.uSpeed.value === 'number') {
+            uniforms.uSpeed.value = THREE.MathUtils.lerp(
+              uniforms.uSpeed.value, 
+              currentMood.speed, 
+              delta * 2.0
+            );
+          }
         }
       }
     });

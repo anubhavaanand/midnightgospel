@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLevelStore } from '../../store/useLevelStore';
-import { LEVELS } from '../../data/levels';
+import { LEVELS, LevelId } from '../../data/levels';
 
 export const NavigationMenu: React.FC = () => {
   const { isMenuOpen, setMenuOpen, activeLevelId, setLevel, setTransitioning } = useLevelStore();
@@ -23,7 +23,7 @@ export const NavigationMenu: React.FC = () => {
 
     // circular portal transition wipe timing
     setTimeout(() => {
-      setLevel(id as any);
+      setLevel(id as LevelId);
       setTransitioning(false);
     }, 1000);
   };

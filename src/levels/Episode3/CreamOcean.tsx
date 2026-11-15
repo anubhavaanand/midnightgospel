@@ -7,10 +7,11 @@ import { useDialogueStore } from '../../store/useDialogueStore';
 import { NPCAttentionCatcher } from '../../components/scene/NPCAttentionCatcher';
 import { KineticDialogue } from '../../components/scene/KineticDialogue';
 import { IceFloes, CatShip, SleepingGiant } from './OceanProps';
+import { CustomShaderMaterial } from '../../types/three.d';
 import './CreamOceanShader';
 
 export const CreamOcean: React.FC = () => {
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<CustomShaderMaterial | null>(null);
   const npcRef = useRef<THREE.Group>(null);
   const clancyRef = useRef<THREE.Group>(null);
 
@@ -20,9 +21,10 @@ export const CreamOcean: React.FC = () => {
   const openDialogue = useDialogueStore((state) => state.openDialogue);
 
   useEffect(() => {
+    const mat = materialRef.current;
     return () => {
-      if (materialRef.current) {
-        materialRef.current.dispose();
+      if (mat) {
+        mat.dispose();
       }
     };
   }, []);
@@ -47,7 +49,7 @@ export const CreamOcean: React.FC = () => {
     }
   });
 
-  const handleBackToHub = (e: any) => {
+  const handleBackToHub = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     if (isTransitioning) return;
     setTransitioning(true);

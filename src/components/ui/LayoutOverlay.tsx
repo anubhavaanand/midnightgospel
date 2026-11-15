@@ -36,9 +36,9 @@ export const LayoutOverlay: React.FC = () => {
         const ctx = THREE.AudioContext.getContext();
         if (ctx.state === 'suspended') {
           await ctx.resume();
-          setAudioState(ctx.state as any);
+          setAudioState(ctx.state as 'suspended' | 'running' | 'uninitialized');
         }
-      } catch (e) {
+      } catch {
         // Safe to ignore in test or background envs
       }
     };
@@ -58,9 +58,9 @@ export const LayoutOverlay: React.FC = () => {
       if (ctx.state === 'suspended') {
         await ctx.resume();
       }
-      setAudioState(ctx.state as any);
-    } catch (e) {
-      console.warn("Failed to resume AudioContext manually:", e);
+      setAudioState((ctx.state === 'closed' ? 'uninitialized' : ctx.state) as 'suspended' | 'running' | 'uninitialized');
+    } catch (err) {
+      console.warn("Failed to resume AudioContext manually:", err);
     }
   };
 

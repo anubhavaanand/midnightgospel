@@ -22,7 +22,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
   try {
     const three = useThree();
     camera = three.camera;
-  } catch (e) {
+  } catch {
     // Graceful fallback for test environments running outside an R3F Canvas
   }
 
@@ -35,7 +35,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
   // Lazy-initialize THREE.PositionalAudio when the listener becomes available on the camera
   useEffect(() => {
     if (!camera) return;
-    const listener = camera.children.find((child) => (child as any).isAudioListener) as THREE.AudioListener | undefined;
+    const listener = camera.children.find((child) => (child as THREE.Object3D & { isAudioListener?: boolean }).isAudioListener) as THREE.AudioListener | undefined;
     if (!listener) return;
 
     const positionalAudio = new THREE.PositionalAudio(listener);
@@ -49,14 +49,16 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
       groupRef.current.add(positionalAudio);
     }
 
+    const currentGroup = groupRef.current;
+
     return () => {
-      if (groupRef.current && positionalAudioRef.current) {
-        groupRef.current.remove(positionalAudioRef.current);
+      if (currentGroup && positionalAudioRef.current) {
+        currentGroup.remove(positionalAudioRef.current);
       }
       if (positionalAudioRef.current) {
         try {
           positionalAudioRef.current.disconnect();
-        } catch (e) {
+        } catch {
           // Ignore if already disconnected
         }
       }
@@ -67,7 +69,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
   useEffect(() => {
     if (!camera || tickCount === 0 || !positionalAudioRef.current || audioState !== 'running') return;
 
-    const listener = camera.children.find((child) => (child as any).isAudioListener) as THREE.AudioListener | undefined;
+    const listener = camera.children.find((child) => (child as THREE.Object3D & { isAudioListener?: boolean }).isAudioListener) as THREE.AudioListener | undefined;
     if (!listener) return;
 
     const ctx = listener.context;
@@ -92,7 +94,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
 
     // Connect node chain to spatializer node
     osc.connect(gain);
-    positionalAudioRef.current.setNodeSource(gain as any);
+    positionalAudioRef.current.setNodeSource(gain as unknown as AudioBufferSourceNode);
 
     osc.start(now);
     osc.stop(now + 0.09);
@@ -102,7 +104,7 @@ export const PositionalDialogueAudio: React.FC<PositionalDialogueAudioProps> = (
         osc.stop();
         osc.disconnect();
         gain.disconnect();
-      } catch (e) {
+      } catch {
         // already stopped
       }
     };

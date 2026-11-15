@@ -1,0 +1,9 @@
+name = "midnight-gospel-ai-backend"
+main = "src/index.ts"
+compatibility_date = "2024-09-14"
+
+[ai]
+binding = "AI"
+
+[vars]
+# You will set GEMINI_API_KEY as a secret

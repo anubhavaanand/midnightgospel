@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { KineticDialogue } from '../components/scene/KineticDialogue';
 
@@ -8,9 +9,10 @@ vi.mock('../store/useDialogueStore', () => {
     isOpen: true,
     activeText: "Whoa Clancy check this out",
     currentMood: { intensity: 0.8, colorTarget: "#FF00FF", speed: 1.5 },
+    advanceNode: vi.fn(),
   };
   return {
-    useDialogueStore: (cb?: any) => cb ? cb(storeState) : storeState,
+    useDialogueStore: (cb?: (state: typeof storeState) => unknown) => cb ? cb(storeState) : storeState,
   };
 });
 
@@ -19,14 +21,21 @@ vi.mock('@react-three/fiber', () => ({
   useFrame: vi.fn(),
 }));
 
-vi.mock('@react-three/drei', () => ({
-  Text: ({ children, position, scale }: any) => (
-    <div data-testid="3d-text" data-pos={JSON.stringify(position)} data-scale={JSON.stringify(scale)}>
-      {children}
-    </div>
-  ),
-  Billboard: ({ children }: any) => <div>{children}</div>,
+vi.mock('../components/audio/PositionalDialogueAudio', () => ({
+  PositionalDialogueAudio: () => <div data-testid="audio-mock" />,
 }));
+
+vi.mock('@react-three/drei', async () => {
+  const ReactModule = await import('react');
+  return {
+    Text: ReactModule.forwardRef(({ children, position, scale }: { children?: React.ReactNode; position?: unknown; scale?: unknown }, ref: React.Ref<HTMLDivElement>) => (
+      <div ref={ref} data-testid="3d-text" data-pos={JSON.stringify(position)} data-scale={JSON.stringify(scale)}>
+        {children}
+      </div>
+    )),
+    Billboard: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  };
+});
 
 describe('KineticDialogue Component', () => {
   beforeEach(() => {
@@ -36,11 +45,14 @@ describe('KineticDialogue Component', () => {
   it('should render physical word meshes sequentially based on activeText updates', () => {
     render(<KineticDialogue />);
     
-    // Fast forward to trigger word spawning intervals
-    vi.advanceTimersByTime(1000);
+    // Fast forward to trigger typewriter intervals cleanly wrapped in act
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
     
-    // We expect some active words to have mounted
+    // We expect 3d-text to mount
     const textElements = screen.queryAllByTestId ? screen.queryAllByTestId('3d-text') : [];
     expect(textElements).toBeDefined();
   });
 });
+
