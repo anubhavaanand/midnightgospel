@@ -9,6 +9,7 @@ export const RaymarchedFractal = () => {
     const oscillatorRef = useRef<OscillatorNode | null>(null);
     const gainNodeRef = useRef<GainNode | null>(null);
     const isMuted = useDialogueStore((state) => state.isMuted);
+    const initialMutedRef = useRef(isMuted);
 
     // Initialize Synthetic Ambient Drone using shared AudioContext singleton
     useEffect(() => {
@@ -22,7 +23,7 @@ export const RaymarchedFractal = () => {
             osc.type = 'sine';
             osc.frequency.value = 55; // Low A for a deep space drone
 
-            gain.gain.value = isMuted ? 0 : 0.05; // Keep it ambient and quiet, obey master mute
+            gain.gain.value = initialMutedRef.current ? 0 : 0.05; // Keep it ambient and quiet, obey master mute
             
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -138,6 +139,13 @@ export const RaymarchedFractal = () => {
         transparent: true,
         side: THREE.DoubleSide
     }), []);
+
+    // Cleanup ShaderMaterial GPU resources on unmount
+    useEffect(() => {
+        return () => {
+            fractalShader.dispose();
+        };
+    }, [fractalShader]);
 
     useFrame((state) => {
         if (materialRef.current) {

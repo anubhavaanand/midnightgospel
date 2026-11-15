@@ -14,8 +14,9 @@ export const MeditationCave: React.FC = () => {
   const materialRef = useRef<CustomShaderMaterial | null>(null);
 
   React.useEffect(() => {
+    const mat = materialRef.current;
     return () => {
-      materialRef.current?.dispose();
+      mat?.dispose();
     };
   }, []);
   const npcRef = useRef<THREE.Group>(null);
